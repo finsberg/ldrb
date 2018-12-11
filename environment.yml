@@ -1,0 +1,6 @@
+
+fenics=2017.2.0
+mshr=2017.2.0
+numba=0.40.1
+numpy-quaternion=2018.7.5.21.55.13
+h5py=1.13.3
