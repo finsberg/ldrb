@@ -102,7 +102,7 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
-autodoc_mock_imports = ['dolfin', 'mshr']
+autodoc_mock_imports = ['dolfin', 'mshr', 'numpy']
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
