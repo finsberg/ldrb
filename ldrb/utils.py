@@ -419,6 +419,6 @@ def space_from_string(space_string, mesh, dim):
             ),
         )
     else:
-        raise df.error(f'Cannot create function space of dimension {dim}')
+        raise df.error('Cannot create function space of dimension {dim}')
     
     return V
