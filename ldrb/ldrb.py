@@ -306,7 +306,7 @@ def compute_fiber_sheet_system(
         grad_epi = epi_gradient[dof]
         grad_ab = apex_gradient[dof]
 
-        df.debug(f"LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}")
+        df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv, rv=rv, epi=epi))
 
         if lv > tol and rv < tol:
             # We are in the LV region

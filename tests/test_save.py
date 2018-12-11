@@ -41,17 +41,17 @@ def test_save():
     ]
 
     for f, space in zip(scalar_functions, spaces):
-        name = f'test_scalar_fun_{space}'
+        name = 'test_scalar_fun_{space}'.format(space=space)
         ldrb.fun_to_xdmf(f, name)
         os.remove(name + '.xdmf')
         os.remove(name + '.h5')
 
     for f, space in zip(vector_functions, spaces):
-        name = f'test_vector_fun_{space}'
+        name = 'test_vector_fun_{space}'.format(space=space)
         ldrb.fun_to_xdmf(f, name)
         os.remove(name + '.xdmf')
         os.remove(name + '.h5')
-        name =  f'test_vector_fiber_{space}'
+        name =  'test_vector_fiber_{space}'.format(space=space)
         ldrb.fiber_to_xdmf(f, name)
         os.remove(name + '.xdmf')
         os.remove(name + '.h5')
