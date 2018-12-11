@@ -1,7 +1,10 @@
 from collections import namedtuple
 import numpy as np
 import dolfin as df
-import mshr
+try:
+    import mshr
+except ImportError:
+    df.warning('mshr is not installed')
 
 geometry = namedtuple("geometry", "mesh, ffun, markers")
 
