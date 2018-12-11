@@ -11,7 +11,6 @@ minor = 1
 
 REQUIREMENTS = ['h5py==2.8.0',
                 'numba==0.40.1',
-                'numpy>=1.7',
                 'numpy-quaternion==2018.7.5.21.55.13']
 
 on_rtd = os.environ.get("READTHEDOCS") == "True"
