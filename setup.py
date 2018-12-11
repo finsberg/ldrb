@@ -42,7 +42,8 @@ setup(
     author_email="henriknf@simula.no",
     license="LGPL version 3 or later",
     install_requires=REQUIREMENTS,
-    # dependency_links=dependency_links,
+    dependency_links=dependency_links,
+    setup_requires=['numpy>1.7']
     packages=["ldrb"],
     package_dir={"ldrb": "ldrb"},
 )
