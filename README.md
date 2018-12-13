@@ -46,12 +46,12 @@ ldrb.fiber_to_xdmf(fiber, 'lv_fiber')
 ![](docs/source/_static/figures/biv_fiber.png)
 
 # Installation
-In order to install the software you need to have installed [FEniCS](https://fenicsproject.org) verision 2016.x or 2017.x.
+In order to install the software you need to have installed [FEniCS](https://fenicsproject.org) version 2016.x or 2017.x.
 Next you can install the dependencies
 ```
 pip install -r requirements.txt
 ```
-and finally you can instll the `ldrb` package using either
+and finally you can install the `ldrb` package using either
 
 ```shell
 pip install .
@@ -65,7 +65,7 @@ python setup.py install
 Documentation is hosted at https://ldrb.readthedocs.io.
 
 # Getting started
-Check out the [demos](demos) and the [documetation](https://ldrb.readthedocs.io)
+Check out the [demos](demos) and the [documentation](https://ldrb.readthedocs.io)
 
 # Contributors
 Henrik Finsberg (henriknf@simula.no)
