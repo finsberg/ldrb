@@ -16,7 +16,7 @@ def normalize(u):
 
 
 def axis(u, v):
-    """
+    r"""
     Construct the fiber orientation coordinate system.
 
     Given two vectors :math:`u` and :math:`v` in the apicobasal
@@ -38,7 +38,7 @@ def axis(u, v):
 
 
 def orient(Q, alpha, beta):
-    """
+    r"""
     Define the orthotropic fiber orientations.
 
     Given a coordinate system :math:`Q`, in the canonical
@@ -84,7 +84,7 @@ def laplace(mesh, fiber_space, markers):
 
 
 def bislerp(Qa, Qb, t):
-    """
+    r"""
     Linear interpolation of two orthogonal matrices.
     Assiume that :math:`Q_a` and :math:`Q_b` refers to
     timepoint :math:`0` and :math:`1` respectively.
