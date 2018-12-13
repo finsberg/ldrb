@@ -12,9 +12,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('../..'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -102,7 +102,7 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
-autodoc_mock_imports = ['dolfin', 'mshr', 
+autodoc_mock_imports = ['dolfin', 'mshr',
                         'numpy', 'h5py', 'quaternion']
 
 # -- Options for HTMLHelp output ---------------------------------------------
