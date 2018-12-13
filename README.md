@@ -31,7 +31,7 @@ angles = dict(alpha_endo_lv=30,    # Fiber angle on the LV endocardium
 # This is a string on the form {family}_{degree}
 fiber_space = 'Quadrature_2'
 
-# Compte the microstructure
+# Compute the microstructure
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
                                               fiber_space=fiber_space,
                                               ffun=ffun,
