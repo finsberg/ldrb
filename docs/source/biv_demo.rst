@@ -80,7 +80,7 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
     df.File('biv_sheet.xml') << sheet
     df.File('biv_sheet_normal.xml') << sheet_normal
 
-    # If you run in paralell you should skip the visualization step and do that in
+    # If you run in parallel you should skip the visualization step and do that in
     # serial in stead. In that case you can read the the functions from the xml
     # Using the following code
     # V = ldrb.space_from_string(fiber_space, mesh, dim=3)
@@ -89,7 +89,7 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
     # sheet_normal = df.Function(V, 'biv_sheet_normal.xml')
 
     # Store files in XDMF to be visualized in Paraview
-    # (These function are not tested in paralell)
+    # (These function are not tested in parallel)
     ldrb.fiber_to_xdmf(fiber, 'biv_fiber')
     ldrb.fiber_to_xdmf(sheet, 'biv_sheet')
     ldrb.fiber_to_xdmf(sheet_normal, 'biv_sheet_normal')

@@ -28,7 +28,7 @@ angles = dict(alpha_endo_lv=30,    # Fiber angle on the LV endocardium
               beta_epi_rv=0)        # Sheet angle on the RV epicardium
 
 # Choose space for the fiber fields
- # This is a string on the form {family}_{degree}
+# This is a string on the form {family}_{degree}
 fiber_space = 'Quadrature_2'
 
 # Compte the microstructure
@@ -38,7 +38,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
                                               markers=markers,
                                               **angles)
 # Store files using a built in xdmf viewer that also works for functions
-# defing in quadrature spaces
+# defined in quadrature spaces
 ldrb.fiber_to_xdmf(fiber, 'lv_fiber')
 # And visualize it in Paraview
 ```

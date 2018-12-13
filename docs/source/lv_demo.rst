@@ -54,7 +54,7 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
                   beta_epi_lv=0)     # Sheet angle on the epicardium
 
     # Choose space for the fiber fields
-     # This is a string on the form {family}_{degree}
+    # This is a string on the form {family}_{degree}
     fiber_space = 'Quadrature_2'
     # fiber_space = 'Lagrange_1'
 
@@ -70,7 +70,7 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
     df.File('lv_sheet.xml') << sheet
     df.File('lv_sheet_normal.xml') << sheet_normal
 
-    # If you run in paralell you should skip the visualization step and do that in
+    # If you run in parallel you should skip the visualisation step and do that in
     # serial in stead. In that case you can read the the functions from the xml
     # Using the following code
     # V = ldrb.space_from_string(fiber_space, mesh, dim=3)
@@ -78,8 +78,8 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
     # sheet = df.Function(V, 'lv_sheet.xml')
     # sheet_normal = df.Function(V, 'lv_sheet_normal.xml')
 
-    # Store files in XDMF to be visualized in Paraview
-    # (These function are not tested in paralell)
+    # Store files in XDMF to be visualised in Paraview
+    # (These function are not tested in parallel)
     ldrb.fiber_to_xdmf(fiber, 'lv_fiber')
     ldrb.fiber_to_xdmf(sheet, 'lv_sheet')
     ldrb.fiber_to_xdmf(sheet_normal, 'lv_sheet_normal')

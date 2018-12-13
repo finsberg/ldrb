@@ -48,7 +48,7 @@ angles = dict(alpha_endo_lv=60,  # Fiber angle on the endocardium
               beta_epi_lv=0)     # Sheet angle on the epicardium
 
 # Choose space for the fiber fields
- # This is a string on the form {family}_{degree}
+# This is a string on the form {family}_{degree}
 fiber_space = 'Quadrature_2'
 # fiber_space = 'Lagrange_1'
 
