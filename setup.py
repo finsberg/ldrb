@@ -11,8 +11,8 @@ minor = 1
 
 REQUIREMENTS = ['h5py==2.8.0',
                 'numba==0.40.1',
-                'quaternion']
-dependency_links = ['git+https://github.com/moble/quaternion#egg=quaternion']
+                'numpy-quaternion']
+dependency_links = ['git+https://github.com/moble/quaternion#egg=numpy-quaternion']
 
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 scripts = []

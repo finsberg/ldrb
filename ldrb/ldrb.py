@@ -66,7 +66,7 @@ def orient(Q, alpha, beta):
     return C
 
 
-def laplace(mesh, fiber_space):
+def laplace(mesh, fiber_space, markers):
     """
     Solve the laplace equation and project the gradients
     of the solutions.
@@ -74,7 +74,7 @@ def laplace(mesh, fiber_space):
 
     # Create scalar laplacian solutions
     df.info("Calculating scalar fields")
-    scalar_solutions = scalar_laplacians(mesh)
+    scalar_solutions = scalar_laplacians(mesh, markers)
 
     # Create gradients
     df.info("\nCalculating gradients")
@@ -286,12 +286,39 @@ def compute_fiber_sheet_system(
     beta_epi_sept = beta_epi_sept or beta_epi_lv
 
     df.info("Compute fiber-sheet system")
+    df.info('Angles: ')
+    df.info(('alpha: '
+             '\n endo_lv: {endo_lv}'
+             '\n epi_lv: {epi_lv}'
+             '\n endo_septum: {endo_sept}'
+             '\n epi_septum: {endo_sept}'
+             '\n endo_rv: {endo_rv}'
+             '\n epi_rv: {epi_rv}'
+             '').format(endo_lv=alpha_endo_lv,
+                        epi_lv=alpha_epi_lv,
+                        endo_sept=alpha_endo_sept,
+                        epi_sept=alpha_epi_sept,
+                        endo_rv=alpha_endo_rv,
+                        epi_rv=alpha_epi_rv))
+    df.info(('beta: '
+             '\n endo_lv: {endo_lv}'
+             '\n epi_lv: {epi_lv}'
+             '\n endo_septum: {endo_sept}'
+             '\n epi_septum: {endo_sept}'
+             '\n endo_rv: {endo_rv}'
+             '\n epi_rv: {epi_rv}'
+             '').format(endo_lv=beta_endo_lv,
+                        epi_lv=beta_epi_lv,
+                        endo_sept=beta_endo_sept,
+                        epi_sept=beta_epi_sept,
+                        endo_rv=beta_endo_rv,
+                        epi_rv=beta_epi_rv))
 
     f0 = np.zeros_like(lv_gradient)
     s0 = np.zeros_like(lv_gradient)
     n0 = np.zeros_like(lv_gradient)
 
-    tol = 1e-7
+    tol = 1e-3
     grad_tol = 1e-7
 
     for (x_dof, y_dof, z_dof, s_dof) in dofs:
@@ -306,7 +333,9 @@ def compute_fiber_sheet_system(
         grad_epi = epi_gradient[dof]
         grad_ab = apex_gradient[dof]
 
-        df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv, rv=rv, epi=epi))
+        df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv,
+                                                                     rv=rv,
+                                                                     epi=epi))
 
         if lv > tol and rv < tol:
             # We are in the LV region
@@ -379,8 +408,6 @@ def dofs_from_function_space(mesh, fiber_space):
     y_dofs = np.arange(1, end - start, dim)
     z_dofs = np.arange(2, end - start, dim)
 
-    
-
     start, end = V.dofmap().ownership_range()
     scalar_dofs = [
         dof
@@ -413,9 +440,9 @@ def dolfin_ldrb(
         be used.
     markers : dict (optional)
         A dictionary with the markers for the
-        different bondaries defined in the facet function 
+        different bondaries defined in the facet function
         or within the mesh itself.
-        The follwing markers must be provided: 
+        The follwing markers must be provided:
         'base', 'lv', 'epi, 'rv' (optional).
         If the markers are not provided the following default
         vales will be used: base = 10, rv = 20, lv = 30, epi = 40
@@ -431,7 +458,7 @@ def dolfin_ldrb(
         original paper, namely
 
         .. math::
-        
+
             \alpha_{\text{endo}} &= 40 \\
             \alpha_{\text{epi}} &= -50 \\
             \beta_{\text{endo}} &= -65 \\
@@ -464,7 +491,7 @@ def dolfin_ldrb(
         beta_epi_sept : scalar
             Sheet angle at the septum epicardium.
 
-    
+
     """
     log_level = df.get_log_level()
     df.set_log_level(df.INFO)
@@ -476,11 +503,11 @@ def dolfin_ldrb(
         utils.mark_facets(mesh, ffun)
 
     # Solve the Laplace-Dirichlet problem
-    data = laplace(mesh, fiber_space)
+    data = laplace(mesh, fiber_space, markers)
 
     dofs = dofs_from_function_space(mesh, fiber_space)
 
-    system = compute_fiber_sheet_system(dofs=dofs, **data)
+    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)
 
     df.set_log_level(log_level)
     return fiber_system_to_dolfin(system, mesh, fiber_space)
@@ -523,9 +550,6 @@ def apex_to_base(mesh, base_marker, ffun=None):
         If not provided, the markers stored within the mesh will
         be used.
     """
-
-    coords = mesh.coordinates()
-
     # Find apex by solving a laplacian with base solution = 0
     # Create Base variational problem
     V = df.FunctionSpace(mesh, "CG", 1)
@@ -547,21 +571,10 @@ def apex_to_base(mesh, base_marker, ffun=None):
         solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
     )
 
-    # TODO: Make this work in parallell using MPI.max
-    
     dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
-        # apex_local_vert = apex_local[local_dofs]
     apex_values = utils.gather_broadcast(apex.vector().get_local())
     # Reorder to vertex map
     ind = apex_values.argmax()
-
-    # from IPython import embed; embed()
-    # exit()
-    # inds = np.array(utils.gather_broadcast(df.dof_to_vertex_map(V)), dtype=int)
-    # apex_values[inds] = apex_values
-    
-    # ind_apex_max = apex_values.argmax()
-    # apex_coord = coords[ind_apex_max, :]
     apex_coord = dof_x[ind]
 
     df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
@@ -627,9 +640,9 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
        A dolfin mesh
     markers : dict (optional)
         A dictionary with the markers for the
-        different bondaries defined in the facet function 
+        different bondaries defined in the facet function
         or within the mesh itself.
-        The follwing markers must be provided: 
+        The follwing markers must be provided:
         'base', 'lv', 'epi, 'rv' (optional).
         If the markers are not provided the following default
         vales will be used: base = 10, rv = 20, lv = 30, epi = 40.
@@ -649,6 +662,11 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     # Boundary markers, solutions and cases
     if markers is None:
         markers = utils.default_markers()
+
+    markers_str = '\n'.join(['{}: {}'.format(k, v)
+                             for k, v in markers.items()])
+    df.info(('Compute scalar laplacian solutions with the markers: \n'
+             '{}').format(markers_str))
 
     cases = ["rv", "lv", "epi"]
     boundaries = cases + ["base"]

@@ -22,7 +22,7 @@ series = dedent(
         <Time TimeType="List">
             <DataItem Format="XML" Dimensions="{N}"> {lst}</DataItem>
         </Time>
-    {entry}  
+    {entry}
     </Grid>
     """
 )
@@ -63,7 +63,7 @@ topology_polyvert = dedent(
 
 geometry = dedent(
     """
-    <Geometry GeometryType="{coords}"> 
+    <Geometry GeometryType="{coords}">
         <DataItem Dimensions="{nverts} {dim}" Format="HDF">{h5name}:/{h5group}</DataItem>
     </Geometry>
     """
@@ -88,17 +88,17 @@ scalar_attribute = dedent(
 
 def dolfin_to_hd5(obj, h5name, time="", comm=df.mpi_comm_world(), name=None):
     """
-    Save object to and HDF file. 
-    
+    Save object to and HDF file.
+
     Parameters
     ----------
-    
+
     obj : dolfin.Mesh or dolfin.Function
         The object you want to save
     name : str
         Name of the object
     h5group : str
-        The folder you want to save the object 
+        The folder you want to save the object
         withing the HDF file. Default: ''
 
     """
@@ -324,7 +324,7 @@ def fiber_to_xdmf(fun, fname, comm=df.mpi_comm_world()):
     fx = fun.split(deepcopy=True)[0]
     # TODO: gather
     fx_arr = fx.vector().get_local()
-    scalar = np.arcsin(fx_arr) * 180 / np.pi
+    scalar = np.arcsin(-fx_arr) * 180 / np.pi
     with h5py.File(h5name, "a") as h5file:
         if comm.rank == 0:
             h5file.create_dataset("fiber/scalar", data=scalar)

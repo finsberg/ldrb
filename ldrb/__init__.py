@@ -5,4 +5,4 @@ from . import ldrb
 from .ldrb import dolfin_ldrb, scalar_laplacians, project_gradients
 
 from . import utils
-from .utils import create_biv_mesh, create_lv_mesh
+from .utils import create_biv_mesh, create_lv_mesh, space_from_string

@@ -54,12 +54,12 @@ def create_lv_mesh(
     in :math:`x`-direction and as default the base is located
     at the :math:`x=0` plane.
     """
-
-    ### LV
+    df.info('Creating LV mesh. This could take some time...')
+    # LV
     # The center of the LV ellipsoid
     center = df.Point(*center)
 
-    ## Markers
+    # Markers
     if markers is None:
         markers = default_markers()
 
@@ -158,9 +158,10 @@ def create_biv_mesh(
     at the :math:`x=0` plane.
 
     """
+    df.info('Creating BiV mesh. This could take some time...')
 
     # The center of the LV ellipsoid
-    center_lv = df.Point(*center_rv)
+    center_lv = df.Point(*center_lv)
     # The center of the RV ellipsoid (slightly translated)
     center_rv = df.Point(*center_rv)
 
@@ -241,7 +242,7 @@ def create_biv_mesh(
 
     # Create mesh
     mesh = mshr.generate_mesh(m, N)
- 
+
     ffun = df.MeshFunction("size_t", mesh, 2)
     ffun.set_all(0)
 
@@ -262,13 +263,13 @@ def broadcast(array, from_process):
     "Broadcast array to all processes"
     if not hasattr(broadcast, "cpp_module"):
         cpp_code = '''
-    
+
         namespace dolfin {
             std::vector<double> broadcast(const MPI_Comm mpi_comm, const Array<double>& inarray, int from_process)
             {
                 int this_process = dolfin::MPI::rank(mpi_comm);
                 std::vector<double> outvector(inarray.size());
-    
+
                 if(this_process == from_process) {
                     for(int i=0; i<inarray.size(); i++)
                     {
@@ -277,17 +278,17 @@ def broadcast(array, from_process):
                 }
                 dolfin::MPI::barrier(mpi_comm);
                 dolfin::MPI::broadcast(mpi_comm, outvector, from_process);
-    
+
                 return outvector;
             }
         }
         '''
         cpp_module = df.compile_extension_module(cpp_code, additional_system_headers=["dolfin/common/MPI.h"])
-        
+
         broadcast.cpp_module = cpp_module
-    
+
     cpp_module = broadcast.cpp_module
-    
+
     if df.MPI.rank(df.mpi_comm_world()) == from_process:
         array = np.array(array, dtype=np.float)
         shape = array.shape
@@ -295,12 +296,12 @@ def broadcast(array, from_process):
     else:
         array = np.array([], dtype=np.float)
         shape = np.array([], dtype=np.float_)
-    
+
     shape = cpp_module.broadcast(df.mpi_comm_world(), shape, from_process)
     array = array.flatten()
-    
+
     out_array = cpp_module.broadcast(df.mpi_comm_world(), array, from_process)
-   
+
     if len(shape) > 1:
         out_array = out_array.reshape(*shape)
 
@@ -314,15 +315,15 @@ def gather(array, on_process=0, flatten=False):
             std::vector<double> gather(const MPI_Comm mpi_comm, const Array<double>& inarray, int on_process)
             {
                 int this_process = dolfin::MPI::rank(mpi_comm);
-    
+
                 std::vector<double> outvector(dolfin::MPI::size(mpi_comm)*dolfin::MPI::sum(mpi_comm, inarray.size()));
                 std::vector<double> invector(inarray.size());
-    
+
                 for(int i=0; i<inarray.size(); i++)
                 {
                     invector[i] = inarray[i];
                 }
-    
+
                 dolfin::MPI::gather(mpi_comm, invector, outvector, on_process);
                 return outvector;
             }
@@ -353,9 +354,9 @@ def distribution(number):
                 // Variables to help in synchronization
                 int num_processes = dolfin::MPI::size(mpi_comm);
                 int this_process = dolfin::MPI::rank(mpi_comm);
-    
+
                 std::vector<uint> distribution(num_processes);
-    
+
                 for(uint i=0; i<num_processes; i++) {
                     if(i==this_process) {
                         distribution[i] = number;
@@ -423,5 +424,5 @@ def space_from_string(space_string, mesh, dim):
         )
     else:
         raise df.error('Cannot create function space of dimension {dim}')
-    
+
     return V
