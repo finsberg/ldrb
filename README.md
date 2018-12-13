@@ -5,11 +5,11 @@
 [![Documentation Status](https://readthedocs.org/projects/ldrb/badge/?version=latest)](https://ldrb.readthedocs.io/en/latest/?badge=latest)
 
 
-A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm[^1]
+A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.
 
-[^1]:Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
-A novel rule-based algorithm for assigning myocardial fiber orientation
-to computational heart models. Annals of biomedical engineering, 40(10), pp.2243-2254.(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/)
+> Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
+> A novel rule-based algorithm for assigning myocardial fiber orientation
+>to computational heart models. Annals of biomedical engineering, 40(10), >pp.2243-2254.(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/)
 
 ```python
 # Decide on the angles you want to use
