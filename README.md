@@ -39,7 +39,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
                                               **angles)
 # Store files using a built in xdmf viewer that also works for functions
 # defined in quadrature spaces
-ldrb.fiber_to_xdmf(fiber, 'lv_fiber')
+ldrb.fiber_to_xdmf(fiber, 'fiber')
 # And visualize it in Paraview
 ```
 
