@@ -1,15 +1,14 @@
 """
-In this demo we will show how you can generte fibers using the ldrb algorthim
+In this demo we will show how you can generate fibers using the ldrb algorithm
 on a LV mesh. In order to run this demo you also need to install mshr if
-you haven't allready.
-
-To run the demo in series do
+you haven't already.
+To run the demo in serial do
 
 .. code::
 
     python demo_lv.py
 
-If you want to run the demo in parallell you should first comment out the lines
+If you want to run the demo in parallel you should first comment out the lines
 that don't work in serial. Say you want to run on 4 cpu's, you run the command:
 
 .. code::
