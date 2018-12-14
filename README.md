@@ -67,5 +67,9 @@ Documentation is hosted at https://ldrb.readthedocs.io.
 # Getting started
 Check out the [demos](demos) and the [documentation](https://ldrb.readthedocs.io)
 
+# Licence
+`ldrb` is licensed under the GNU LGPL, version 3 or (at your option) any later version.
+`ldrb` is Copyright (2011-2016) by the authors and Simula Research Laboratory.
+
 # Contributors
 Henrik Finsberg (henriknf@simula.no)
