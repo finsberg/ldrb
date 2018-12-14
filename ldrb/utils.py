@@ -39,12 +39,12 @@ def create_lv_mesh(
     base_x=0.0,
     markers=None,
 ):
-    """
+    r"""
     Create an lv-ellipsoidal mesh.
 
     An ellipsoid is given by the equation
 
-    ..math::
+    .. math::
 
         \frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1
 
@@ -142,12 +142,12 @@ def create_biv_mesh(
     base_x=0.0,
     markers=None,
 ):
-    """
+    r"""
     Create an biv-ellipsoidal mesh.
 
     An ellipsoid is given by the equation
 
-    ..math::
+    .. math::
 
         \frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1
 
@@ -164,7 +164,6 @@ def create_biv_mesh(
     center_lv = df.Point(*center_lv)
     # The center of the RV ellipsoid (slightly translated)
     center_rv = df.Point(*center_rv)
-
 
     # Markers
     if markers is None:

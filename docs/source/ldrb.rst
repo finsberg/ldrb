@@ -20,6 +20,13 @@ ldrb.save module
     :undoc-members:
     :show-inheritance:
 
+ldrb.utils module
+-----------------
+
+.. automodule:: ldrb.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------
