@@ -1,0 +1,43 @@
+{% set name = "ldrb" %}
+{% set version = "0.1" %}
+{% set sha256 = "94fcb84a92ae2514e0180b9e12cd7a6ba257476314c19e219f5e871d4cbb80b3" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/finsberg/ldrb/archive/v{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+
+build:
+  number: 0
+  script: python setup.py install
+  # skip: True
+
+requirements:
+  build:
+    - python<3.7
+  run:
+    - python
+    - h5py
+    - fenics 2017.*
+    - mshr 2017.*
+    - quaternion 2018.7.5.21.55.13
+    - numpy
+
+test:
+  imports:
+    - ldrb
+
+about:
+  home: https://ldrb.readthedocs.io/en/latest/
+  license: LGPL-3.0
+  license_family: LGPL
+  license_file: LICENSE
+  summary: 'A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm'
+
+  description: |
+    A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.
+  doc_url: https://ldrb.readthedocs.io/en/latest/
+  dev_url: https://github.com/finsberg/ldrb

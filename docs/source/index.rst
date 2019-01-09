@@ -42,6 +42,13 @@ or
     python setup.py install
 
 
+You can also install the library using conda
+
+.. code::
+
+   conda install -c finsberg ldrb
+
+
 .. toctree::
     :maxdepth: 2
     :caption: Demos

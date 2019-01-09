@@ -1,8 +1,9 @@
-# Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
-
+[![InstallConda](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)
 [![CircleCI](https://circleci.com/gh/finsberg/ldrb.svg?style=shield)](https://circleci.com/gh/finsberg/ldrb)
-
 [![Documentation Status](https://readthedocs.org/projects/ldrb/badge/?version=latest)](https://ldrb.readthedocs.io/en/latest/?badge=latest)
+[![Platform](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)
+
+# Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
 
 
 A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.
@@ -46,6 +47,8 @@ ldrb.fiber_to_xdmf(fiber, 'fiber')
 ![](docs/source/_static/figures/biv_fiber.png)
 
 # Installation
+
+## Install with pip
 In order to install the software you need to have installed [FEniCS](https://fenicsproject.org) version 2016.x or 2017.x.
 Next you can install the dependencies
 ```
@@ -61,13 +64,20 @@ or
 python setup.py install
 ```
 
+## Install with conda
+Alternatively you can install with conda
+
+```shell
+conda install -c finsberg ldrb
+```
+
 # Documetation
 Documentation is hosted at https://ldrb.readthedocs.io.
 
 # Getting started
 Check out the [demos](demos) and the [documentation](https://ldrb.readthedocs.io)
 
-# Licence
+# License
 `ldrb` is licensed under the GNU LGPL, version 3 or (at your option) any later version.
 `ldrb` is Copyright (2011-2016) by the authors and Simula Research Laboratory.
 
