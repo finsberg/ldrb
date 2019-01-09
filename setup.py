@@ -9,10 +9,10 @@ from setuptools import setup
 major = 0
 minor = 1
 
-REQUIREMENTS = ['h5py==2.8.0',
-                'numba==0.40.1',
-                'numpy-quaternion']
-dependency_links = ['git+https://github.com/moble/quaternion#egg=numpy-quaternion']
+# REQUIREMENTS = ['h5py==2.8.0',
+                # 'numba==0.40.1',
+                # 'numpy-quaternion']
+# dependency_links = ['git+https://github.com/moble/quaternion#egg=numpy-quaternion']
 
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 scripts = []
@@ -41,9 +41,8 @@ setup(
     author="Henrik Finsberg",
     author_email="henriknf@simula.no",
     license="LGPL version 3 or later",
-    install_requires=REQUIREMENTS,
-    dependency_links=dependency_links,
+    # install_requires=REQUIREMENTS,
+    # dependency_links=dependency_links,
     setup_requires=['numpy>1.7'],
-    packages=["ldrb"],
-    package_dir={"ldrb": "ldrb"},
+    packages=["ldrb"]
 )
