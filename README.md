@@ -1,7 +1,7 @@
-[![InstallConda](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)
+[![InstallConda](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)](https://anaconda.org/finsberg/ldrb)
 [![CircleCI](https://circleci.com/gh/finsberg/ldrb.svg?style=shield)](https://circleci.com/gh/finsberg/ldrb)
 [![Documentation Status](https://readthedocs.org/projects/ldrb/badge/?version=latest)](https://ldrb.readthedocs.io/en/latest/?badge=latest)
-[![Platform](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)
+[![Platform](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)](https://anaconda.org/finsberg/ldrb)
 
 # Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
 
