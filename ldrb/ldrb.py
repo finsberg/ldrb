@@ -662,6 +662,20 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     # Boundary markers, solutions and cases
     if markers is None:
         markers = utils.default_markers()
+    else:
+
+        keys = ['base', 'lv', 'epi']
+        msg = ('Key {key} not found in markers. Make sure to provide a'
+               'key-value pair for {keys}')
+        for key in keys:
+            assert key in markers, msg.format(key=key, keys=keys)
+        if 'rv' not in markers:
+            df.info('No marker for the RV found. Asssume this is an LV geometry')
+            rv_value = 20
+            # Just make sure that this value is not used for any of the other boundaries.
+            while rv_value in markers.values():
+                rv_value += 1
+            markers['rv'] = rv_value
 
     markers_str = '\n'.join(['{}: {}'.format(k, v)
                              for k, v in markers.items()])

@@ -1,3 +1,4 @@
+
 import os
 import pytest
 import numpy as np
@@ -27,16 +28,25 @@ def test_axis():
     assert np.dot(e0, e2) == 0
 
 
+def test_markers(lv_mesh):
+
+    markers = dict(base=10, lv=30, epi=40)
+    system = ldrb.dolfin_ldrb(lv_mesh, 'Lagrange_1', markers=markers)
+
+    
 def test_orient():
     pass
+
 
 @pytest.fixture
 def biv_mesh():
     return ldrb.create_biv_mesh().mesh
-    
+
+
 @pytest.fixture
 def lv_mesh():
     return ldrb.create_lv_mesh().mesh
+
 
 def test_lv_angles():
 
@@ -97,38 +107,18 @@ def test_lv_angles():
 
 @pytest.mark.parametrize("fiber_space", fiber_spaces)
 def test_biv_regression(biv_mesh, fiber_space):
-
-    # meshfile = "biv_mesh_simple.xml"
-    # if not os.path.isfile(meshfile):
-    #     mesh = biv_mesh()
-    #     df.File(meshfile) << mesh
-    # mesh = df.Mesh(meshfile)
-
-    # fiber_space = 'Quadrature_4'
-
     system = ldrb.dolfin_ldrb(biv_mesh, fiber_space)
-    # df.File('fiber_simple_biv.xml') << system.fiber
 
-    # V = ldrb.utils.space_from_string(fiber_space, mesh, dim=3)
-    # f = df.Function(V, 'fiber_simple_biv.xml')
-    # ldrb.fiber_to_xdmf(f, 'fiber_simple_biv_paralell')
 
 @pytest.mark.parametrize("fiber_space", fiber_spaces)
 def test_lv_regression(lv_mesh, fiber_space):
-
-    # meshfile = "lv_mesh_simple.xml"
-    # if not os.path.isfile(meshfile):
-    #     mesh = lv_mesh()
-    #     df.File(meshfile) << mesh
-    # mesh = df.Mesh(meshfile)
-   
     system = ldrb.dolfin_ldrb(lv_mesh, fiber_space)
-    # ldrb.fiber_to_xdmf(system.fiber, 'fiber_simple_lv')
-    # ldrb.fiber_to_xdmf(system.sheet, 'sheet_simple_lv')
-    # ldrb.fiber_to_xdmf(system.sheet_normal, 'sheet_normal_simple_lv')
 
 if __name__ == '__main__':
-    test_axis()
-    test_lv_angles()
-    test_biv_regression()
-    test_lv_regression()
+    # test_axis()
+    # test_lv_angles()
+    # test_biv_regression()
+    # test_lv_regression()
+    # m = lv_mesh()
+    # test_markers(m)
+    pass
