@@ -1,5 +1,5 @@
 {% set name = "ldrb" %}
-{% set version = "0.1" %}
+{% set version = "0.1.1" %}
 {% set sha256 = "94fcb84a92ae2514e0180b9e12cd7a6ba257476314c19e219f5e871d4cbb80b3" %}
 
 package:
@@ -21,6 +21,7 @@ requirements:
   run:
     - python
     - h5py
+    - sympy 1.1.1
     - fenics 2017.*
     - mshr 2017.*
     - quaternion 2018.7.5.21.55.13

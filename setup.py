@@ -7,7 +7,7 @@ from setuptools import setup
 
 # Version number
 major = 0
-minor = 1
+minor = 1.1
 
 # REQUIREMENTS = ['h5py==2.8.0',
                 # 'numba==0.40.1',
