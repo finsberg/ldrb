@@ -8,6 +8,37 @@ except ImportError:
 
 geometry = namedtuple("geometry", "mesh, ffun, markers")
 
+def mark_biv_mesh(mesh, ffun=None, markers=None, tol=0.01,
+                  values={'lv':0, 'septum': 1, 'rv': 2}):
+
+    from .ldrb import scalar_laplacians
+    scalars = scalar_laplacians(mesh=mesh, ffun=ffun, markers=markers)
+
+    for cell in df.cells(mesh):
+
+        lv = scalars['lv'](cell.midpoint())
+        rv = scalars['rv'](cell.midpoint())
+        epi = scalars['epi'](cell.midpoint())
+            
+        print(cell.index(), 'lv = {}, rv = {}'.format(lv, rv))
+        
+        if (lv > tol or epi > 1-tol) and rv < tol:
+            print('LV')
+            value = values['lv']
+            if lv < tol and rv > lv:
+                value = values['rv']
+        elif (rv > tol or epi > 1-tol) and lv < tol:
+            print('RV')
+            value = values['rv']
+        else:
+            print('SEPTUM')
+            value = values['septum']
+
+        mesh.domains().set_marker((cell.index(), value), 3)
+
+    sfun = df.MeshFunction('size_t', mesh, 3, mesh.domains())
+    return sfun
+
 def mark_facets(mesh, ffun):
     """
     Mark mesh according to facet function
