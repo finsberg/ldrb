@@ -72,7 +72,7 @@ Indices and tables
 
 License
 =======
-MIT License
+LGPL version 3 or later
 
 Contributors
 ============

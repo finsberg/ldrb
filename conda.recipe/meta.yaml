@@ -1,6 +1,6 @@
 {% set name = "ldrb" %}
 {% set version = "0.1.1" %}
-{% set sha256 = "94fcb84a92ae2514e0180b9e12cd7a6ba257476314c19e219f5e871d4cbb80b3" %}
+{% set sha256="f315d41c6181011cb3657a3b1360303372481da163234d4335e679d00ed58ee5" %}
 
 package:
   name: {{ name|lower }}
@@ -13,18 +13,18 @@ source:
 build:
   number: 0
   script: python setup.py install
-  # skip: True
+  noarch: python
 
 requirements:
   build:
-    - python<3.7
+    - python 3.6
   run:
-    - python
-    - h5py
+    - python>3.5
+    - h5py>=2.8.0
     - sympy 1.1.1
     - fenics 2017.*
     - mshr 2017.*
-    - quaternion 2018.7.5.21.55.13
+    - quaternion
     - numpy
 
 test:
