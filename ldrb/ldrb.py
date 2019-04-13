@@ -66,7 +66,7 @@ def orient(Q, alpha, beta):
     return C
 
 
-def laplace(mesh, fiber_space, markers):
+def laplace(mesh, fiber_space, markers, ffun=None):
     """
     Solve the laplace equation and project the gradients
     of the solutions.
@@ -74,7 +74,7 @@ def laplace(mesh, fiber_space, markers):
 
     # Create scalar laplacian solutions
     df.info("Calculating scalar fields")
-    scalar_solutions = scalar_laplacians(mesh, markers)
+    scalar_solutions = scalar_laplacians(mesh, markers, ffun=ffun)
 
     # Create gradients
     df.info("\nCalculating gradients")
@@ -345,10 +345,10 @@ def compute_fiber_sheet_system(
             beta_epi = beta_epi_lv
         elif lv < tol and rv > tol:
             # We are in the RV region
-            alpha_endo = alpha_endo_sept
-            beta_endo = beta_endo_sept
-            alpha_epi = alpha_epi_sept
-            beta_epi = beta_epi_sept
+            alpha_endo = alpha_endo_rv
+            beta_endo = beta_endo_rv
+            alpha_epi = alpha_epi_rv
+            beta_epi = beta_epi_rv
         elif lv > tol and rv > tol:
             # We are in the septum
             alpha_endo = alpha_endo_sept
@@ -564,12 +564,25 @@ def apex_to_base(mesh, base_marker, ffun=None):
 
     base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
 
-    df.solve(
-        a == L,
-        apex,
-        base_bc,
-        solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
-    )
+    
+    def solve(solver_parameters):
+        df.solve(
+            a == L,
+            apex,
+            base_bc,
+            solver_parameters=solver_parameters
+        )
+
+    
+    solver_parameters = {"linear_solver": "cg", "preconditioner": "amg"}
+    pcs = (pc for pc in ['petsc_amg', 'default'])
+    while 1:
+        try:    
+            solve(solver_parameters)
+        except RuntimeError:
+            solver_parameters["preconditioner"] = next(pcs)
+        else:
+            break
 
     dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
     apex_values = utils.gather_broadcast(apex.vector().get_local())
