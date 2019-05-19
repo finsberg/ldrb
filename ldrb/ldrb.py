@@ -523,14 +523,18 @@ def fiber_system_to_dolfin(system, mesh, fiber_space):
     f0 = df.Function(Vv)
     f0.vector().set_local(system.fiber)
     f0.vector().apply("insert")
+    f0.rename('fiber', 'fibers')
 
     s0 = df.Function(Vv)
     s0.vector().set_local(system.sheet)
     s0.vector().apply("insert")
+    s0.rename('sheet', 'fibers')
 
     n0 = df.Function(Vv)
     n0.vector().set_local(system.sheet_normal)
     n0.vector().apply("insert")
+    n0.rename('sheet_normal', 'fibers')
+
     return fiber_sheet_system(fiber=f0, sheet=s0, sheet_normal=n0)
 
 
