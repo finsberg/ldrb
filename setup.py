@@ -23,8 +23,7 @@ VERSION = '0.1.2'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'h5py<3.0', '--no-binary=h5py', 'numba',
-    'git+https://github.com/moble/quaternion.git'
+    'h5py', '--no-binary=h5py', 'numba', 'numpy-quaternion'
 ]
 
 # What packages are optional?

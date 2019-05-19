@@ -1,6 +1,6 @@
 pytest
-numpy>=1.7
-numba==0.40.1
-git+https://github.com/moble/quaternion.git
+numpy
+numba
+numpy-quaternion
 --no-binary=h5py
 h5py
