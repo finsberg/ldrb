@@ -1,5 +1,4 @@
 pytest
-numpy
 numba
 numpy-quaternion
 --no-binary=h5py
