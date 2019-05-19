@@ -16,37 +16,27 @@ A software for assigning myocardial fiber orientations based on the Laplace Diri
 Installation
 ------------
 In order to install the software you need to have installed `FEniCS <https://fenicsproject.org>`_ verision
-2016.x or 2017.x. Next you can install `ldrb` package using
+2016.x or 2017.x. The `ldrb` package can be installed with `pip`
+
+.. code::
+
+    pip install ldrb
+
+or if you need the most recent version you can install the source
 
 .. code::
 
     pip install git+https://github.com/finsberg/ldrb.git
-
-Alternatively, you can clone / download the repository at `<https://github.com/finsberg/ldrb>`_
-and install the dependencies
-
-.. code::
-
-    pip install -r requirements.txt
-
-and finally you can instll the `ldrb` package using either
-
-.. code::
-
-    pip install .
-
-or
-
-.. code::
-
-    python setup.py install
-
 
 You can also install the library using conda
 
 .. code::
 
    conda install -c finsberg ldrb
+
+However, note that there are some problems with the 2017 version of FEniCS on conda. 
+If you want a working conda environment with FEniCS 2017 check out
+`this gist <https://gist.github.com/finsberg/96eeb1d564aab4a73f53a46a1588e6a6>`_
 
 
 .. toctree::
@@ -60,6 +50,11 @@ You can also install the library using conda
    :caption: Programmers reference:
 
    ldrb
+
+
+Source code
+-----------
+Source code is avaible at GitHub https://github.com/finsberg/ldrb
 
 
 
