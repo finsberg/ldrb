@@ -49,19 +49,15 @@ ldrb.fiber_to_xdmf(fiber, 'fiber')
 # Installation
 
 ## Install with pip
-In order to install the software you need to have installed [FEniCS](https://fenicsproject.org) version 2016.x or 2017.x.
-Next you can install the dependencies
-```
-pip install -r requirements.txt
-```
-and finally you can install the `ldrb` package using either
+In order to install the software you need to have installed[FEniCS](https://fenicsproject.org) version 2016.x or 2017.x.
 
-```shell
-pip install .
+The package can be installed with pip.
 ```
-or
-```shell
-python setup.py install
+pip install ldrb
+```
+or if you need the most recent version you can install the source
+```
+pip install git+https://github.com/finsberg/ldrb.git
 ```
 
 ## Install with conda
@@ -70,6 +66,9 @@ Alternatively you can install with conda
 ```shell
 conda install -c finsberg ldrb
 ```
+However, note that there are some problems with the 2017 version of FEniCS on conda. 
+If you want a working conda environment with FEniCS 2017 check out
+[this gist](https://gist.github.com/finsberg/96eeb1d564aab4a73f53a46a1588e6a6)
 
 # Documetation
 Documentation is hosted at https://ldrb.readthedocs.io.
