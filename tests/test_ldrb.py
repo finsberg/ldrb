@@ -8,7 +8,7 @@ import ldrb
 
 
 # fiber_spaces = ('Quadrature_2', 'Quadrature_4', 'CG_1', 'CG_2', 'DG_1')
-fiber_spaces = ('CG_1')
+fiber_spaces = ['CG_1']
 
 
 def norm(v):
