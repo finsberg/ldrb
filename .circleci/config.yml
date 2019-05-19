@@ -20,6 +20,10 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: install package and dependencies
+          command: |
+            pip3 install .
 
       - save_cache:
           paths:
