@@ -8,6 +8,20 @@ except ImportError:
 
 geometry = namedtuple("geometry", "mesh, ffun, markers")
 
+if df.__version__.startswith('20'):
+    # Year based versioning
+    DOLFIN_VERSION_MAJOR = float(df.__version__.split('.')[0])
+else:
+    DOLFIN_VERSION_MAJOR = float('.'.join(df.__version__.split('.')[:2]))
+
+def mpi_comm_world():
+    if DOLFIN_VERSION_MAJOR >= 2018:
+        return df.MPI.comm_world
+    else:
+        return df.mpi_comm_world()
+
+    
+
 def mark_biv_mesh(mesh, ffun=None, markers=None, tol=0.01,
                   values={'lv':0, 'septum': 1, 'rv': 2}):
 
@@ -339,6 +353,7 @@ def broadcast(array, from_process):
 
 def gather(array, on_process=0, flatten=False):
     "Gather array from all processes on a single process"
+    
     if not hasattr(gather, "cpp_module"):
         cpp_code = '''
         namespace dolfin {
@@ -374,6 +389,7 @@ def gather(array, on_process=0, flatten=False):
 
     return out_array
 
+
 def distribution(number):
     "Get distribution of number on all processes"
     if not hasattr(distribution, "cpp_module"):
@@ -404,8 +420,11 @@ def distribution(number):
     return cpp_module.distribution(df.mpi_comm_world(), number)
 
 def gather_broadcast(arr):
-    arr = gather(arr, flatten = True)
-    arr = broadcast(arr, 0)
+    if DOLFIN_VERSION_MAJOR >= 2018:
+        arr = arr
+    else:
+        arr = gather(arr, flatten = True)
+        arr = broadcast(arr, 0)
     return arr
 
 def assign_to_vector(v, a):

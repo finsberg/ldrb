@@ -1,4 +1,5 @@
 from collections import namedtuple
+import logging
 import dolfin as df
 import numpy as np
 import quaternion
@@ -333,9 +334,9 @@ def compute_fiber_sheet_system(
         grad_epi = epi_gradient[dof]
         grad_ab = apex_gradient[dof]
 
-        df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv,
-                                                                     rv=rv,
-                                                                     epi=epi))
+        # df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv,
+        #                                                              rv=rv,
+        #                                                              epi=epi))
 
         if lv > tol and rv < tol:
             # We are in the LV region
@@ -364,7 +365,7 @@ def compute_fiber_sheet_system(
                 "Microstructure might be broken at this "
                 "point"
             ).format(lv=lv, rv=rv, epi=epi)
-            df.debug(msg)
+            # df.debug(msg)
 
             alpha_endo = alpha_endo_lv
             beta_endo = beta_endo_lv
@@ -420,7 +421,7 @@ def dofs_from_function_space(mesh, fiber_space):
 
 
 def dolfin_ldrb(
-    mesh, fiber_space="CG_1", ffun=None, markers=None, log_level=df.INFO, **angles
+    mesh, fiber_space="CG_1", ffun=None, markers=None, log_level=logging.INFO, **angles
 ):
     r"""
     Create fiber, cross fibers and sheet directions
@@ -494,7 +495,7 @@ def dolfin_ldrb(
 
     """
     log_level = df.get_log_level()
-    df.set_log_level(df.INFO)
+    df.set_log_level(logging.INFO)
 
     if not isinstance(mesh, df.Mesh):
         raise TypeError("Expected a dolfin.Mesh as the mesh argument.")

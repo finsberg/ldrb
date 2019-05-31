@@ -3,6 +3,7 @@ import os
 import numpy as np
 import dolfin as df
 from textwrap import dedent
+from .utils import mpi_comm_world
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 
@@ -86,7 +87,7 @@ scalar_attribute = dedent(
 )
 
 
-def dolfin_to_hd5(obj, h5name, time="", comm=df.mpi_comm_world(), name=None):
+def dolfin_to_hd5(obj, h5name, time="", comm=mpi_comm_world(), name=None):
     """
     Save object to and HDF file.
 
@@ -237,7 +238,7 @@ def save_vector_function(comm, obj, h5name, h5group="", file_mode="w"):
     }
 
 
-def load_dict_from_h5(fname, h5group="", comm=df.mpi_comm_world()):
+def load_dict_from_h5(fname, h5group="", comm=mpi_comm_world()):
     """
     Load the given h5file into
     a dictionary
@@ -311,7 +312,7 @@ def fun_to_xdmf(fun, fname, name="function"):
         f.write(T)
 
 
-def fiber_to_xdmf(fun, fname, comm=df.mpi_comm_world()):
+def fiber_to_xdmf(fun, fname, comm=mpi_comm_world()):
 
     h5name = "{}.h5".format(fname)
 
