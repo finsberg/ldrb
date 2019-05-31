@@ -20,6 +20,13 @@ def mpi_comm_world():
     else:
         return df.mpi_comm_world()
 
+def value_size(obj):
+    if DOLFIN_VERSION_MAJOR >= 2018:
+        return obj.value_shape()[0]
+    else:
+        return obj.value_size()
+    
+
     
 
 def mark_biv_mesh(mesh, ffun=None, markers=None, tol=0.01,

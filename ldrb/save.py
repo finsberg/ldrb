@@ -3,7 +3,7 @@ import os
 import numpy as np
 import dolfin as df
 from textwrap import dedent
-from .utils import mpi_comm_world
+from .utils import mpi_comm_world, value_size
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 
@@ -112,7 +112,7 @@ def dolfin_to_hd5(obj, h5name, time="", comm=mpi_comm_world(), name=None):
 
     if isinstance(obj, df.Function):
 
-        if obj.value_size() == 1:
+        if value_size(obj) == 1:
             return save_scalar_function(comm, obj, h5name, group, file_mode)
         else:
             return save_vector_function(comm, obj, h5name, group, file_mode)
