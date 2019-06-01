@@ -19,7 +19,7 @@ URL = 'https://github.com/finsberg/ldrb'
 EMAIL = 'henriknf@simula.no'
 AUTHOR = 'Henrik Finsberg'
 REQUIRES_PYTHON = '>=3.5.0'
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 # What packages are required for this module to be executed?
 REQUIRED = [

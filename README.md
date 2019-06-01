@@ -51,7 +51,7 @@ ldrb.fiber_to_xdmf(fiber, 'fiber')
 ## Install with pip
 In order to install the software you need to have
 installed[FEniCS](https://fenicsproject.org) (versions older than 2016
-is not supprted)
+are not supprted)
 
 The package can be installed with pip.
 ```
