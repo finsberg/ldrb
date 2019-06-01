@@ -589,11 +589,21 @@ def apex_to_base(mesh, base_marker, ffun=None):
         else:
             break
 
-    dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
-    apex_values = utils.gather_broadcast(apex.vector().get_local())
-    # Reorder to vertex map
-    ind = apex_values.argmax()
-    apex_coord = dof_x[ind]
+    if utils.DOLFIN_VERSION_MAJOR < 2018:
+        dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
+        apex_values = utils.gather_broadcast(apex.vector().get_local())
+        ind = apex_values.argmax()
+        apex_coord = dof_x[ind]
+    else:
+        dof_x = V.tabulate_dof_coordinates()
+        apex_values = apex.vector().get_local()
+        local_max_val = apex_values.max()
+
+        local_apex_coord = dof_x[apex_values.argmax()]
+        comm = utils.mpi_comm_world()
+
+        from mpi4py import MPI
+        global_max, apex_coord = comm.allreduce(sendobj=(local_max_val, local_apex_coord), op=MPI.MAXLOC)
 
     df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
 

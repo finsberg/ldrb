@@ -22,7 +22,11 @@ def mpi_comm_world():
 
 def value_size(obj):
     if DOLFIN_VERSION_MAJOR >= 2018:
-        return obj.value_shape()[0]
+        value_shape = obj.value_shape()
+        if len(value_shape) == 0:
+            return 1
+        else:
+            return [0]
     else:
         return obj.value_size()
     
@@ -427,11 +431,8 @@ def distribution(number):
     return cpp_module.distribution(df.mpi_comm_world(), number)
 
 def gather_broadcast(arr):
-    if DOLFIN_VERSION_MAJOR >= 2018:
-        arr = arr
-    else:
-        arr = gather(arr, flatten = True)
-        arr = broadcast(arr, 0)
+    arr = gather(arr, flatten = True)
+    arr = broadcast(arr, 0)
     return arr
 
 def assign_to_vector(v, a):

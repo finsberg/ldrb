@@ -275,7 +275,7 @@ def fun_to_xdmf(fun, fname, name="function"):
 
     dim = fun.function_space().mesh().geometry().dim()
 
-    if fun.value_size() == 1:
+    if value_size(fun) == 1:
         nverts = len(fun.vector())
         fun_str = scalar_attribute.format(
             name=name,
