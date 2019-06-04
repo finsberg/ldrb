@@ -756,6 +756,10 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     sol = solutions["apex"].vector().copy()
     sol[:] = 0.0
 
+    if len(ffun.array()[ffun.array() == markers['rv']]) == 0:
+        # Remove the RV
+        cases.pop(next(i for i, c in enumerate(cases) if c == 'rv'))
+
     # Iterate over the three different cases
     df.info("Solving Laplace equation")
     for case in cases:

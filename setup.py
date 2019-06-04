@@ -118,10 +118,10 @@ setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: LGPL version 3 or later',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: Implementation :: CPython',
+        # 'License :: OSI Approved :: LGPL version 3 or later',
+        # 'Programming Language :: Python',
+        # 'Programming Language :: Python :: 3',
+        # 'Programming Language :: Python :: Implementation :: CPython',
     ],
     # $ setup.py publish support.
     cmdclass={
