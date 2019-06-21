@@ -146,8 +146,9 @@ def create_lv_mesh(
             )
 
     # The plane cutting the base
-    diam = -10.0
-    box = mshr.Box(df.Point(base_x, 2, 2), df.Point(diam, diam, diam))
+    diam = -5 * a_epi
+    box = mshr.Box(df.Point(base_x, a_epi, a_epi),
+                   df.Point(diam, diam, diam))
 
     # LV epicardium
     el_lv = mshr.Ellipsoid(center, a_epi, b_epi, c_epi)
@@ -161,6 +162,7 @@ def create_lv_mesh(
     m = lv - box
 
     # Create mesh
+    print('Generate mesh. This can take some time...')
     mesh = mshr.generate_mesh(m, N)
 
     ffun = df.MeshFunction("size_t", mesh, 2)
@@ -272,8 +274,10 @@ def create_biv_mesh(
             )
 
     # The plane cutting the base
-    diam = -10.0
-    box = mshr.Box(df.Point(base_x, 2, 2), df.Point(diam, diam, diam))
+    a_epi = max(a_epi_lv, a_epi_rv)
+    diam = -5 * a_epi
+    box = mshr.Box(df.Point(base_x, a_epi, a_epi),
+                   df.Point(diam, diam, diam))
     # Generate mesh
 
     # LV epicardium
