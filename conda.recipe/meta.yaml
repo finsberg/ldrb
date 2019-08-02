@@ -1,6 +1,6 @@
 {% set name = "ldrb" %}
 {% set version = "2019.0" %}
-{% set sha256="f315d41c6181011cb3657a3b1360303372481da163234d4335e679d00ed58ee5" %}
+{% set sha256="f2e2b2eea14fde0f661788ee4879524a56af4056a7f7755c6b40faba4de65213" %}
 
 package:
   name: {{ name|lower }}
@@ -16,6 +16,12 @@ build:
   noarch: python
 
 requirements:
+  build:
+    - h5py>=2.8.0
+    - mshr 2018
+    - quaternion
+    - fenics 2018
+    - numba
   run:
     - h5py>=2.8.0
     - mshr 2018
