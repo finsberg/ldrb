@@ -1,24 +1,30 @@
 from collections import namedtuple
 import numpy as np
 import dolfin as df
+
 try:
     import mshr
 except ImportError:
-    df.warning('mshr is not installed')
+    df.warning("mshr is not installed")
 
 geometry = namedtuple("geometry", "mesh, ffun, markers")
 
-if df.__version__.startswith('20'):
+if df.__version__.startswith("20"):
     # Year based versioning
-    DOLFIN_VERSION_MAJOR = float(df.__version__.split('.')[0])
+    DOLFIN_VERSION_MAJOR = float(df.__version__.split(".")[0])
 else:
-    DOLFIN_VERSION_MAJOR = float('.'.join(df.__version__.split('.')[:2]))
+    try:
+        DOLFIN_VERSION_MAJOR = float(".".join(df.__version__.split(".")[:2]))
+    except:
+        DOLFIN_VERSION_MAJOR = 1.6
+
 
 def mpi_comm_world():
     if DOLFIN_VERSION_MAJOR >= 2018:
         return df.MPI.comm_world
     else:
         return df.mpi_comm_world()
+
 
 def value_size(obj):
     if DOLFIN_VERSION_MAJOR >= 2018:
@@ -29,40 +35,41 @@ def value_size(obj):
             return [0]
     else:
         return obj.value_size()
-    
 
-    
 
-def mark_biv_mesh(mesh, ffun=None, markers=None, tol=0.01,
-                  values={'lv':0, 'septum': 1, 'rv': 2}):
+def mark_biv_mesh(
+    mesh, ffun=None, markers=None, tol=0.01, values={"lv": 0, "septum": 1, "rv": 2}
+):
 
     from .ldrb import scalar_laplacians
+
     scalars = scalar_laplacians(mesh=mesh, ffun=ffun, markers=markers)
 
     for cell in df.cells(mesh):
 
-        lv = scalars['lv'](cell.midpoint())
-        rv = scalars['rv'](cell.midpoint())
-        epi = scalars['epi'](cell.midpoint())
-            
-        print(cell.index(), 'lv = {}, rv = {}'.format(lv, rv))
-        
-        if (lv > tol or epi > 1-tol) and rv < tol:
-            print('LV')
-            value = values['lv']
+        lv = scalars["lv"](cell.midpoint())
+        rv = scalars["rv"](cell.midpoint())
+        epi = scalars["epi"](cell.midpoint())
+
+        print(cell.index(), "lv = {}, rv = {}".format(lv, rv))
+
+        if (lv > tol or epi > 1 - tol) and rv < tol:
+            print("LV")
+            value = values["lv"]
             if lv < tol and rv > lv:
-                value = values['rv']
-        elif (rv > tol or epi > 1-tol) and lv < tol:
-            print('RV')
-            value = values['rv']
+                value = values["rv"]
+        elif (rv > tol or epi > 1 - tol) and lv < tol:
+            print("RV")
+            value = values["rv"]
         else:
-            print('SEPTUM')
-            value = values['septum']
+            print("SEPTUM")
+            value = values["septum"]
 
         mesh.domains().set_marker((cell.index(), value), 3)
 
-    sfun = df.MeshFunction('size_t', mesh, 3, mesh.domains())
+    sfun = df.MeshFunction("size_t", mesh, 3, mesh.domains())
     return sfun
+
 
 def mark_facets(mesh, ffun):
     """
@@ -110,7 +117,7 @@ def create_lv_mesh(
     in :math:`x`-direction and as default the base is located
     at the :math:`x=0` plane.
     """
-    df.info('Creating LV mesh. This could take some time...')
+    df.info("Creating LV mesh. This could take some time...")
     # LV
     # The center of the LV ellipsoid
     center = df.Point(*center)
@@ -146,9 +153,8 @@ def create_lv_mesh(
             )
 
     # The plane cutting the base
-    diam = -5 * a_epi
-    box = mshr.Box(df.Point(base_x, a_epi, a_epi),
-                   df.Point(diam, diam, diam))
+    diam = -2 * a_epi
+    box = mshr.Box(df.Point(base_x, -diam, -diam), df.Point(diam, diam, diam))
 
     # LV epicardium
     el_lv = mshr.Ellipsoid(center, a_epi, b_epi, c_epi)
@@ -162,7 +168,7 @@ def create_lv_mesh(
     m = lv - box
 
     # Create mesh
-    print('Generate mesh. This can take some time...')
+    print("Generate mesh. This can take some time...")
     mesh = mshr.generate_mesh(m, N)
 
     ffun = df.MeshFunction("size_t", mesh, 2)
@@ -175,7 +181,7 @@ def create_lv_mesh(
     base.mark(ffun, markers["base"])
 
     epi = Epi()
-    epi.mark(ffun, markers['epi'])
+    epi.mark(ffun, markers["epi"])
 
     mark_facets(mesh, ffun)
     return geometry(mesh=mesh, ffun=ffun, markers=markers)
@@ -216,7 +222,7 @@ def create_biv_mesh(
     at the :math:`x=0` plane.
 
     """
-    df.info('Creating BiV mesh. This could take some time...')
+    df.info("Creating BiV mesh. This could take some time...")
 
     # The center of the LV ellipsoid
     center_lv = df.Point(*center_lv)
@@ -276,8 +282,7 @@ def create_biv_mesh(
     # The plane cutting the base
     a_epi = max(a_epi_lv, a_epi_rv)
     diam = -5 * a_epi
-    box = mshr.Box(df.Point(base_x, a_epi, a_epi),
-                   df.Point(diam, diam, diam))
+    box = mshr.Box(df.Point(base_x, a_epi, a_epi), df.Point(diam, diam, diam))
     # Generate mesh
 
     # LV epicardium
@@ -306,22 +311,23 @@ def create_biv_mesh(
     ffun.set_all(0)
 
     endolv = EndoLV()
-    endolv.mark(ffun, markers['lv'])
+    endolv.mark(ffun, markers["lv"])
     base = Base()
-    base.mark(ffun, markers['base'])
+    base.mark(ffun, markers["base"])
     endorv = EndoRV()
-    endorv.mark(ffun, markers['rv'])
+    endorv.mark(ffun, markers["rv"])
     epi = Epi()
-    epi.mark(ffun, markers['epi'])
+    epi.mark(ffun, markers["epi"])
 
     mark_facets(mesh, ffun)
     return geometry(mesh=mesh, ffun=ffun, markers=markers)
 
-#These functions are copied from cbcpost https://bitbucket.org/simula_cbc/cbcpost
+
+# These functions are copied from cbcpost https://bitbucket.org/simula_cbc/cbcpost
 def broadcast(array, from_process):
     "Broadcast array to all processes"
     if not hasattr(broadcast, "cpp_module"):
-        cpp_code = '''
+        cpp_code = """
 
         namespace dolfin {
             std::vector<double> broadcast(const MPI_Comm mpi_comm, const Array<double>& inarray, int from_process)
@@ -341,8 +347,10 @@ def broadcast(array, from_process):
                 return outvector;
             }
         }
-        '''
-        cpp_module = df.compile_extension_module(cpp_code, additional_system_headers=["dolfin/common/MPI.h"])
+        """
+        cpp_module = df.compile_extension_module(
+            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+        )
 
         broadcast.cpp_module = cpp_module
 
@@ -366,11 +374,12 @@ def broadcast(array, from_process):
 
     return out_array
 
+
 def gather(array, on_process=0, flatten=False):
     "Gather array from all processes on a single process"
-    
+
     if not hasattr(gather, "cpp_module"):
-        cpp_code = '''
+        cpp_code = """
         namespace dolfin {
             std::vector<double> gather(const MPI_Comm mpi_comm, const Array<double>& inarray, int on_process)
             {
@@ -388,8 +397,10 @@ def gather(array, on_process=0, flatten=False):
                 return outvector;
             }
         }
-        '''
-        gather.cpp_module = df.compile_extension_module(cpp_code, additional_system_headers=["dolfin/common/MPI.h"])
+        """
+        gather.cpp_module = df.compile_extension_module(
+            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+        )
 
     cpp_module = gather.cpp_module
     array = np.array(array, dtype=np.float)
@@ -399,8 +410,8 @@ def gather(array, on_process=0, flatten=False):
         return out_array
 
     dist = distribution(len(array))
-    cumsum = [0]+[sum(dist[:i+1]) for i in range(len(dist))]
-    out_array = [[out_array[cumsum[i]:cumsum[i+1]]] for i in range(len(cumsum)-1)]
+    cumsum = [0] + [sum(dist[: i + 1]) for i in range(len(dist))]
+    out_array = [[out_array[cumsum[i] : cumsum[i + 1]]] for i in range(len(cumsum) - 1)]
 
     return out_array
 
@@ -408,7 +419,7 @@ def gather(array, on_process=0, flatten=False):
 def distribution(number):
     "Get distribution of number on all processes"
     if not hasattr(distribution, "cpp_module"):
-        cpp_code = '''
+        cpp_code = """
         namespace dolfin {
             std::vector<unsigned int> distribution(const MPI_Comm mpi_comm, int number)
             {
@@ -428,23 +439,28 @@ def distribution(number):
                 return distribution;
           }
         }
-        '''
-        distribution.cpp_module = df.compile_extension_module(cpp_code, additional_system_headers=["dolfin/common/MPI.h"])
+        """
+        distribution.cpp_module = df.compile_extension_module(
+            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+        )
 
     cpp_module = distribution.cpp_module
     return cpp_module.distribution(df.mpi_comm_world(), number)
 
+
 def gather_broadcast(arr):
-    arr = gather(arr, flatten = True)
+    arr = gather(arr, flatten=True)
     arr = broadcast(arr, 0)
     return arr
+
 
 def assign_to_vector(v, a):
     """
     Assign the value of the array a to the dolfin vector v
     """
     lr = v.local_range()
-    v[:] = a[lr[0]:lr[1]]
+    v[:] = a[lr[0] : lr[1]]
+
 
 def space_from_string(space_string, mesh, dim):
     """
@@ -484,6 +500,6 @@ def space_from_string(space_string, mesh, dim):
             ),
         )
     else:
-        raise df.error('Cannot create function space of dimension {dim}')
+        raise df.error("Cannot create function space of dimension {dim}")
 
     return V
