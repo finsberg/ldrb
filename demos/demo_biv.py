@@ -20,27 +20,30 @@ import dolfin as df
 import ldrb
 
 # Here we just create a lv mesh. Here you can use yor own mesh instead.
-geometry = ldrb.create_biv_mesh()
+# geometry = ldrb.create_biv_mesh()
 #
 # The mesh
-mesh = geometry.mesh
+# mesh = geometry.mesh
 # The facet function (function with marking for the boundaries)
-ffun = geometry.ffun
+# ffun = geometry.ffun
 # A dictionary with keys and values for the markers
-markers = geometry.markers
+# markers = geometry.markers
 
 # Also if you want to to this demo in parallell you should create the mesh
 # in serial and save it to e.g xml
 # df.File('biv_mesh.xml') << mesh
+# df.File('mesh.pvd') << mesh
+# df.File('ffun.pvd') << ffun
+# exit()
 
 
 # And when you run the code in paralall you should load the mesh from the file.
-# mesh = df.Mesh('biv_mesh.xml')
+mesh = df.Mesh('biv_mesh.xml')
 
 # Since the markers are the default markers and the facet function is
 # stored within the mesh itself, you can just set
-# markers = None
-# ffun = None
+markers = None
+ffun = None
 
 
 # Decide on the angles you want to use
@@ -67,7 +70,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
                                               fiber_space=fiber_space,
                                               ffun=ffun,
                                               markers=markers,
-                                              log_level=df.debug,
+                                              log_level=20,
                                               **angles)
 
 # # Store the results
@@ -85,6 +88,6 @@ df.File('biv_sheet_normal.xml') << sheet_normal
 
 # Store files in XDMF to be visualized in Paraview
 # (These function are not tested in paralell)
-ldrb.fiber_to_xdmf(fiber, 'biv_fiber')
-ldrb.fiber_to_xdmf(sheet, 'biv_sheet')
-ldrb.fiber_to_xdmf(sheet_normal, 'biv_sheet_normal')
+# ldrb.fiber_to_xdmf(fiber, 'biv_fiber')
+# ldrb.fiber_to_xdmf(sheet, 'biv_sheet')
+# ldrb.fiber_to_xdmf(sheet_normal, 'biv_sheet_normal')
