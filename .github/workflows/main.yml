@@ -14,6 +14,7 @@ jobs:
   test-conda-install:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-18.04]
         python-version: [3.7, 3.8]
