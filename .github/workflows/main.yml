@@ -38,6 +38,11 @@ jobs:
         run: |
           python -m pip install .
 
+      - name: Install pytest
+        shell: bash -l {0}
+        run: |
+          python -m pip install pytest
+
       - name: Test with pytest
         shell: bash -l {0}
         run: |
