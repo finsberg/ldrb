@@ -1,5 +1,5 @@
 {% set name = "ldrb" %}
-{% set version = "2019.1" %}
+{% set version = "2019.1.1" %}
 {% set sha256="b31aa68360a08f63f73bf6e008d92507f0ae31bc630fad94e0ed5bb3a82ea7e0" %}
 
 package:
@@ -27,6 +27,8 @@ requirements:
     - mshr
     - quaternion
     - fenics
+    - numba
+    - scipy 
 test:
   imports:
     - ldrb

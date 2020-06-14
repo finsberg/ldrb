@@ -23,7 +23,7 @@ AUTHOR = "Henrik Finsberg"
 VERSION = "2019.1"
 
 # What packages are required for this module to be executed?
-REQUIRED = ["h5py", "numba", "numpy-quaternion"]
+REQUIRED = ["h5py", "numba", "numpy-quaternion", "scipy", "numpy"]
 
 # What packages are optional?
 EXTRAS = {
