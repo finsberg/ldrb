@@ -18,13 +18,12 @@ jobs:
         python-version: [3.7, 3.8]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
 
-      # Set up Miniconda with environment
       - name: Setup Miniconda
         uses: goanpeca/setup-miniconda@v1.1.2
         with:
@@ -42,4 +41,3 @@ jobs:
         shell: bash -l {0}
         run: |
           python3-m pytest -v tests
-      
