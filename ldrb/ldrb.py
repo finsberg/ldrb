@@ -751,11 +751,14 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     #         linear_solver="gmres",
     #     )
     # )
-    solver_param = dict(
-        solver_parameters=dict(
-            linear_solver="superlu_dist",
+    if "superlu_dist" in dolfin.linear_solver_methods():
+        solver_param = dict(
+            solver_parameters=dict(
+                linear_solver="superlu_dist",
+            )
         )
-    )
+    else:
+        solver_param = {}
 
     # Check that solution of the three last cases all sum to 1.
     sol = solutions["apex"].vector().copy()
