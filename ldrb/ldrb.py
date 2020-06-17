@@ -751,7 +751,7 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     #         linear_solver="gmres",
     #     )
     # )
-    if "superlu_dist" in dolfin.linear_solver_methods():
+    if "superlu_dist" in df.linear_solver_methods():
         solver_param = dict(
             solver_parameters=dict(
                 linear_solver="superlu_dist",
