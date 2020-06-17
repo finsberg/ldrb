@@ -751,7 +751,6 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     #         linear_solver="gmres",
     #     )
     # )
-    # solver_param = {}
     solver_param = dict(
         solver_parameters=dict(
             linear_solver="superlu_dist",

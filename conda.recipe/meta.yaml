@@ -1,19 +1,18 @@
-{% set name = "ldrb" %}
-{% set version = "2019.1.1" %}
-{% set sha256="b31aa68360a08f63f73bf6e008d92507f0ae31bc630fad94e0ed5bb3a82ea7e0" %}
+{% set version = "2019.3" %}
 
 package:
-  name: {{ name|lower }}
+  name: ldrb
   version: {{ version }}
 
 source:
   url: https://github.com/finsberg/ldrb/archive/v{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: fb5b15672b813d7922dfa42c87a116c2ed6632c2f105f0856794f061e7ddd6fe
 
 build:
   number: 0
-  script: python setup.py install
+  skip: True  # [win or py<36]
   noarch: python
+  script: "python -m pip install . -vv"
 
 requirements:
   build:
@@ -28,7 +27,7 @@ requirements:
     - quaternion
     - fenics
     - numba
-    - scipy 
+    - scipy
 test:
   imports:
     - ldrb
