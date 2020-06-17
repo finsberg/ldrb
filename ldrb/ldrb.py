@@ -743,12 +743,18 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     df.info("  Num coords: {0}".format(mesh.num_vertices()))
     df.info("  Num cells: {0}".format(mesh.num_cells()))
 
+    # solver_param = dict(
+    #     solver_parameters=dict(
+    #         preconditioner="ml_amg"
+    #         if df.has_krylov_solver_preconditioner("ml_amg")
+    #         else "default",
+    #         linear_solver="gmres",
+    #     )
+    # )
+    # solver_param = {}
     solver_param = dict(
         solver_parameters=dict(
-            preconditioner="ml_amg"
-            if df.has_krylov_solver_preconditioner("ml_amg")
-            else "default",
-            linear_solver="gmres",
+            linear_solver="superlu_dist",
         )
     )
 
