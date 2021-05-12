@@ -122,29 +122,3 @@ Henrik Finsberg (henriknf@simula.no)
 .. |codecov| image:: https://codecov.io/gh/finsberg/ldrb/branch/master/graph/badge.svg?token=J69bEFdomc
    :target: https://codecov.io/gh/finsberg/ldrb
 .. |image1| image:: _static/figures/biv_fiber.png
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Demos
-
-    demo
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Programmers reference:
-
-   ldrb
-
-
-Source code
------------
-Source code is avaible at GitHub https://github.com/finsberg/ldrb
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
