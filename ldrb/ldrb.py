@@ -370,15 +370,16 @@ def compute_fiber_sheet_system(
             alpha_epi = alpha_epi_sept
             beta_epi = beta_epi_sept
         else:
+            pass
             # We are at the epicardium somewhere
-            msg = (
-                "Unable to determine region. "
-                "LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}.\n"
-                "Will use LV angles in this regions. "
-                "Microstructure might be broken at this "
-                "point"
-            ).format(lv=lv, rv=rv, epi=epi)
-            df.debug(msg)
+            # msg = (
+            #     "Unable to determine region. "
+            #     "LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}.\n"
+            #     "Will use LV angles in this regions. "
+            #     "Microstructure might be broken at this "
+            #     "point"
+            # ).format(lv=lv, rv=rv, epi=epi)
+            # df.debug(msg)
 
             alpha_endo = alpha_endo_lv
             beta_endo = beta_endo_lv
