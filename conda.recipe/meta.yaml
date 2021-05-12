@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/finsberg/ldrb/archive/v{{ version }}.tar.gz
-  sha256: fb5b15672b813d7922dfa42c87a116c2ed6632c2f105f0856794f061e7ddd6fe
+  sha256: d887dcc9625d2bda8b3c831bdbde4c68b04205d2027ece6f3df1bd08d986992d
 
 build:
   number: 0
