@@ -63,7 +63,7 @@ def orient(Q, alpha, beta):
         ]
     )
 
-    C = np.dot(Q.real, A, B)
+    C = np.dot(Q.real, A).dot(B)
     return C
 
 
