@@ -1,10 +1,11 @@
-from collections import namedtuple
 import logging
+from collections import namedtuple
+
 import dolfin as df
 import numpy as np
 import quaternion
-from . import utils
 
+from . import utils
 
 fiber_sheet_system = namedtuple("fiber_sheet_system", "fiber, sheet, sheet_normal")
 
@@ -287,33 +288,45 @@ def compute_fiber_sheet_system(
     beta_epi_sept = beta_epi_sept or beta_epi_lv
 
     df.info("Compute fiber-sheet system")
-    df.info('Angles: ')
-    df.info(('alpha: '
-             '\n endo_lv: {endo_lv}'
-             '\n epi_lv: {epi_lv}'
-             '\n endo_septum: {endo_sept}'
-             '\n epi_septum: {endo_sept}'
-             '\n endo_rv: {endo_rv}'
-             '\n epi_rv: {epi_rv}'
-             '').format(endo_lv=alpha_endo_lv,
-                        epi_lv=alpha_epi_lv,
-                        endo_sept=alpha_endo_sept,
-                        epi_sept=alpha_epi_sept,
-                        endo_rv=alpha_endo_rv,
-                        epi_rv=alpha_epi_rv))
-    df.info(('beta: '
-             '\n endo_lv: {endo_lv}'
-             '\n epi_lv: {epi_lv}'
-             '\n endo_septum: {endo_sept}'
-             '\n epi_septum: {endo_sept}'
-             '\n endo_rv: {endo_rv}'
-             '\n epi_rv: {epi_rv}'
-             '').format(endo_lv=beta_endo_lv,
-                        epi_lv=beta_epi_lv,
-                        endo_sept=beta_endo_sept,
-                        epi_sept=beta_epi_sept,
-                        endo_rv=beta_endo_rv,
-                        epi_rv=beta_epi_rv))
+    df.info("Angles: ")
+    df.info(
+        (
+            "alpha: "
+            "\n endo_lv: {endo_lv}"
+            "\n epi_lv: {epi_lv}"
+            "\n endo_septum: {endo_sept}"
+            "\n epi_septum: {epi_sept}"
+            "\n endo_rv: {endo_rv}"
+            "\n epi_rv: {epi_rv}"
+            ""
+        ).format(
+            endo_lv=alpha_endo_lv,
+            epi_lv=alpha_epi_lv,
+            endo_sept=alpha_endo_sept,
+            epi_sept=alpha_epi_sept,
+            endo_rv=alpha_endo_rv,
+            epi_rv=alpha_epi_rv,
+        )
+    )
+    df.info(
+        (
+            "beta: "
+            "\n endo_lv: {endo_lv}"
+            "\n epi_lv: {epi_lv}"
+            "\n endo_septum: {endo_sept}"
+            "\n epi_septum: {epi_sept}"
+            "\n endo_rv: {endo_rv}"
+            "\n epi_rv: {epi_rv}"
+            ""
+        ).format(
+            endo_lv=beta_endo_lv,
+            epi_lv=beta_epi_lv,
+            endo_sept=beta_endo_sept,
+            epi_sept=beta_epi_sept,
+            endo_rv=beta_endo_rv,
+            epi_rv=beta_epi_rv,
+        )
+    )
 
     f0 = np.zeros_like(lv_gradient)
     s0 = np.zeros_like(lv_gradient)
@@ -365,7 +378,7 @@ def compute_fiber_sheet_system(
                 "Microstructure might be broken at this "
                 "point"
             ).format(lv=lv, rv=rv, epi=epi)
-            # df.debug(msg)
+            df.debug(msg)
 
             alpha_endo = alpha_endo_lv
             beta_endo = beta_endo_lv
@@ -524,17 +537,17 @@ def fiber_system_to_dolfin(system, mesh, fiber_space):
     f0 = df.Function(Vv)
     f0.vector().set_local(system.fiber)
     f0.vector().apply("insert")
-    f0.rename('fiber', 'fibers')
+    f0.rename("fiber", "fibers")
 
     s0 = df.Function(Vv)
     s0.vector().set_local(system.sheet)
     s0.vector().apply("insert")
-    s0.rename('sheet', 'fibers')
+    s0.rename("sheet", "fibers")
 
     n0 = df.Function(Vv)
     n0.vector().set_local(system.sheet_normal)
     n0.vector().apply("insert")
-    n0.rename('sheet_normal', 'fibers')
+    n0.rename("sheet_normal", "fibers")
 
     return fiber_sheet_system(fiber=f0, sheet=s0, sheet_normal=n0)
 
@@ -569,20 +582,13 @@ def apex_to_base(mesh, base_marker, ffun=None):
 
     base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
 
-    
     def solve(solver_parameters):
-        df.solve(
-            a == L,
-            apex,
-            base_bc,
-            solver_parameters=solver_parameters
-        )
+        df.solve(a == L, apex, base_bc, solver_parameters=solver_parameters)
 
-    
     solver_parameters = {"linear_solver": "cg", "preconditioner": "amg"}
-    pcs = (pc for pc in ['petsc_amg', 'default'])
+    pcs = (pc for pc in ["petsc_amg", "default"])
     while 1:
-        try:    
+        try:
             solve(solver_parameters)
         except RuntimeError:
             solver_parameters["preconditioner"] = next(pcs)
@@ -603,7 +609,10 @@ def apex_to_base(mesh, base_marker, ffun=None):
         comm = utils.mpi_comm_world()
 
         from mpi4py import MPI
-        global_max, apex_coord = comm.allreduce(sendobj=(local_max_val, local_apex_coord), op=MPI.MAXLOC)
+
+        global_max, apex_coord = comm.allreduce(
+            sendobj=(local_max_val, local_apex_coord), op=MPI.MAXLOC
+        )
 
     df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
 
@@ -692,23 +701,27 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
         markers = utils.default_markers()
     else:
 
-        keys = ['base', 'lv', 'epi']
-        msg = ('Key {key} not found in markers. Make sure to provide a'
-               'key-value pair for {keys}')
+        keys = ["base", "lv", "epi"]
+        msg = (
+            "Key {key} not found in markers. Make sure to provide a"
+            "key-value pair for {keys}"
+        )
         for key in keys:
             assert key in markers, msg.format(key=key, keys=keys)
-        if 'rv' not in markers:
-            df.info('No marker for the RV found. Asssume this is an LV geometry')
+        if "rv" not in markers:
+            df.info("No marker for the RV found. Asssume this is an LV geometry")
             rv_value = 20
             # Just make sure that this value is not used for any of the other boundaries.
             while rv_value in markers.values():
                 rv_value += 1
-            markers['rv'] = rv_value
+            markers["rv"] = rv_value
 
-    markers_str = '\n'.join(['{}: {}'.format(k, v)
-                             for k, v in markers.items()])
-    df.info(('Compute scalar laplacian solutions with the markers: \n'
-             '{}').format(markers_str))
+    markers_str = "\n".join(["{}: {}".format(k, v) for k, v in markers.items()])
+    df.info(
+        ("Compute scalar laplacian solutions with the markers: \n" "{}").format(
+            markers_str
+        )
+    )
 
     cases = ["rv", "lv", "epi"]
     boundaries = cases + ["base"]
@@ -764,9 +777,9 @@ def scalar_laplacians(mesh, markers=None, ffun=None):
     sol = solutions["apex"].vector().copy()
     sol[:] = 0.0
 
-    if len(ffun.array()[ffun.array() == markers['rv']]) == 0:
+    if len(ffun.array()[ffun.array() == markers["rv"]]) == 0:
         # Remove the RV
-        cases.pop(next(i for i, c in enumerate(cases) if c == 'rv'))
+        cases.pop(next(i for i, c in enumerate(cases) if c == "rv"))
 
     # Iterate over the three different cases
     df.info("Solving Laplace equation")

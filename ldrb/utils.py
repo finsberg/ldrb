@@ -1,6 +1,7 @@
 from collections import namedtuple
-import numpy as np
+
 import dolfin as df
+import numpy as np
 
 try:
     import mshr
@@ -15,7 +16,7 @@ if df.__version__.startswith("20"):
 else:
     try:
         DOLFIN_VERSION_MAJOR = float(".".join(df.__version__.split(".")[:2]))
-    except:
+    except Exception:
         DOLFIN_VERSION_MAJOR = 1.6
 
 
@@ -128,14 +129,11 @@ def create_lv_mesh(
 
     class Endo(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (
-                (x[0] - center.x()) ** 2 / a_endo ** 2
-                + (x[1] - center.y()) ** 2 / b_endo ** 2
-                + (x[2] - center.z()) ** 2 / c_endo ** 2
-                - 1.1
-                < df.DOLFIN_EPS
-                and on_boundary
-            )
+            return (x[0] - center.x()) ** 2 / a_endo ** 2 + (
+                x[1] - center.y()
+            ) ** 2 / b_endo ** 2 + (
+                x[2] - center.z()
+            ) ** 2 / c_endo ** 2 - 1.1 < df.DOLFIN_EPS and on_boundary
 
     class Base(df.SubDomain):
         def inside(self, x, on_boundary):
@@ -143,14 +141,11 @@ def create_lv_mesh(
 
     class Epi(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (
-                (x[0] - center.x()) ** 2 / a_epi ** 2
-                + (x[1] - center.y()) ** 2 / b_epi ** 2
-                + (x[2] - center.z()) ** 2 / c_epi ** 2
-                - 0.9
-                > df.DOLFIN_EPS
-                and on_boundary
-            )
+            return (x[0] - center.x()) ** 2 / a_epi ** 2 + (
+                x[1] - center.y()
+            ) ** 2 / b_epi ** 2 + (
+                x[2] - center.z()
+            ) ** 2 / c_epi ** 2 - 0.9 > df.DOLFIN_EPS and on_boundary
 
     # The plane cutting the base
     diam = -2 * a_epi
@@ -235,14 +230,11 @@ def create_biv_mesh(
 
     class EndoLV(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (
-                (x[0] - center_lv.x()) ** 2 / a_endo_lv ** 2
-                + (x[1] - center_lv.y()) ** 2 / b_endo_lv ** 2
-                + (x[2] - center_lv.z()) ** 2 / c_endo_lv ** 2
-                - 1
-                < df.DOLFIN_EPS
-                and on_boundary
-            )
+            return (x[0] - center_lv.x()) ** 2 / a_endo_lv ** 2 + (
+                x[1] - center_lv.y()
+            ) ** 2 / b_endo_lv ** 2 + (
+                x[2] - center_lv.z()
+            ) ** 2 / c_endo_lv ** 2 - 1 < df.DOLFIN_EPS and on_boundary
 
     class Base(df.SubDomain):
         def inside(self, x, on_boundary):

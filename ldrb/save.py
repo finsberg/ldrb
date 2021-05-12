@@ -1,11 +1,13 @@
-import h5py
 import os
-import numpy as np
-import dolfin as df
 from textwrap import dedent
-from .utils import mpi_comm_world, value_size
-__author__ = "Henrik Finsberg (henriknf@simula.no)"
 
+import dolfin as df
+import h5py
+import numpy as np
+
+from .utils import mpi_comm_world, value_size
+
+__author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 
 body = dedent(
