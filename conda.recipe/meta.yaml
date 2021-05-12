@@ -1,4 +1,4 @@
-{% set version = "2019.3.1" %}
+{% set version = "2020.0.0" %}
 
 package:
   name: ldrb

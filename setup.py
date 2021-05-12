@@ -9,7 +9,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
+from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "ldrb"
@@ -20,7 +20,7 @@ DESCRIPTION = (
 URL = "https://github.com/finsberg/ldrb"
 EMAIL = "henriknf@simula.no"
 AUTHOR = "Henrik Finsberg"
-VERSION = "2019.3.1"
+VERSION = "2020.0.0"
 
 # What packages are required for this module to be executed?
 REQUIRED = ["h5py", "numba", "numpy-quaternion", "scipy", "numpy"]
