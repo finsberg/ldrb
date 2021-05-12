@@ -1,2 +1,7 @@
 pytest
 pytest-cov
+pre-commit
+black
+flake8
+mypy
+isort
