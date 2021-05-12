@@ -60,11 +60,12 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/ldrb.rst
 	rm -f docs/modules.rst
 	pandoc README.md -o docs/source/index.rst
+	sed -i.bak 's+docs/source/_static/figures/biv_fiber.png+_static/figures/biv_fiber.png+g' docs/source/index.rst && rm -f docs/source/index.rst.bak
 	sphinx-apidoc -o docs/ ldrb
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	# $(BROWSER) docs/_build/html/index.html
-	# python -m http.server --directory docs/_build/html
+	# $(BROWSER) docs/build/html/index.html
+	# python -m http.server --directory docs/build/html
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .

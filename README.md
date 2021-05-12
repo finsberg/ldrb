@@ -56,11 +56,11 @@ are not supprted)
 
 The package can be installed with pip.
 ```
-pip install ldrb
+python -m pip install ldrb
 ```
 or if you need the most recent version you can install the source
 ```
-pip install git+https://github.com/finsberg/ldrb.git
+python -m pip install git+https://github.com/finsberg/ldrb.git
 ```
 
 ## Install with conda

@@ -14,9 +14,44 @@
 #
 import os
 import sys
+from pathlib import Path
+from textwrap import dedent
 
 sys.path.insert(0, os.path.abspath("../.."))
+here = Path(__file__).parent
 
+with open(here.joinpath("index.rst"), "a+") as f:
+    f.write(
+        dedent(
+            """
+.. toctree::
+    :maxdepth: 2
+    :caption: Demos
+
+    demo
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Programmers reference:
+
+   ldrb
+
+
+Source code
+-----------
+Source code is avaible at GitHub https://github.com/finsberg/ldrb
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+"""
+        )
+    )
 
 # -- Project information -----------------------------------------------------
 
