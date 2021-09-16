@@ -10,7 +10,7 @@ from .utils import create_biv_mesh
 from .utils import create_lv_mesh
 from .utils import space_from_string
 
-__version__ = "2021.0.0"
+__version__ = "2021.0.1"
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 __all__ = [
