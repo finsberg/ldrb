@@ -7,3 +7,4 @@ mypy
 isort
 twine
 ipython
+bump2version
