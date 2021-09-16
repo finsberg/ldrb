@@ -6,40 +6,50 @@ package:
 
 source:
   url: https://github.com/finsberg/ldrb/archive/v{{ version }}.tar.gz
-  sha256: d887dcc9625d2bda8b3c831bdbde4c68b04205d2027ece6f3df1bd08d986992d
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 
 build:
   number: 0
   skip: True  # [win or py<36]
-  noarch: python
-  script: "python -m pip install . -vv"
+  script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
   build:
-    - h5py>=2.8.0
-    - mshr
-    - quaternion
+    - python
+    - pip
+    - h5py
     - fenics
+    - mshr
     - numba
+    - numpy
+    - quaternion
+    - scipy
   run:
-    - h5py>=2.8.0
-    - mshr
-    - quaternion
+    - python
     - fenics
+    - mshr
+    - h5py
     - numba
+    - numpy
+    - quaternion
     - scipy
 test:
   imports:
     - ldrb
-
 about:
-  home: https://ldrb.readthedocs.io/en/latest/
+  home: https://github.com/finsberg/ldrb
   license: LGPL-3.0
   license_family: LGPL
   license_file: LICENSE
-  summary: 'A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm'
+  summary: 'Laplace-Dirichlet Rule-based algorithm for assigning myocardial fiber orientations'
 
   description: |
-    A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.
-  doc_url: https://ldrb.readthedocs.io/en/latest/
+    A software for assigning myocardial fiber orientations based on the
+    Laplace Dirichlet Ruled-Based algorithm from Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
+    A novel rule-based algorithm for assigning myocardial fiber orientation
+    to computational heart models. Annals of biomedical engineering, 40(10), pp.2243-2254
+  doc_url: https://ldrb.readthedocs.io
   dev_url: https://github.com/finsberg/ldrb
+extra:
+  recipe-maintainers:
+    - finsberg

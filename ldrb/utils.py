@@ -1,5 +1,9 @@
 from collections import namedtuple
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 import dolfin as df
 import numpy as np
@@ -344,7 +348,8 @@ def broadcast(array, from_process):
         }
         """
         cpp_module = df.compile_extension_module(
-            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+            cpp_code,
+            additional_system_headers=["dolfin/common/MPI.h"],
         )
 
         broadcast.cpp_module = cpp_module
@@ -394,7 +399,8 @@ def gather(array, on_process=0, flatten=False):
         }
         """
         gather.cpp_module = df.compile_extension_module(
-            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+            cpp_code,
+            additional_system_headers=["dolfin/common/MPI.h"],
         )
 
     cpp_module = gather.cpp_module
@@ -436,7 +442,8 @@ def distribution(number):
         }
         """
         distribution.cpp_module = df.compile_extension_module(
-            cpp_code, additional_system_headers=["dolfin/common/MPI.h"]
+            cpp_code,
+            additional_system_headers=["dolfin/common/MPI.h"],
         )
 
     cpp_module = distribution.cpp_module

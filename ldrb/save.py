@@ -5,7 +5,8 @@ import dolfin as df
 import h5py
 import numpy as np
 
-from .utils import mpi_comm_world, value_size
+from .utils import mpi_comm_world
+from .utils import value_size
 
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
@@ -16,7 +17,7 @@ body = dedent(
         <Domain>
             {body}
         </Domain>
-    </Xdmf>"""
+    </Xdmf>""",
 )
 
 series = dedent(
@@ -27,7 +28,7 @@ series = dedent(
         </Time>
     {entry}
     </Grid>
-    """
+    """,
 )
 
 
@@ -36,7 +37,7 @@ entry_single = dedent(
     <Grid Name="time_{iter}" GridType="Uniform">
         {frame}
     </Grid>
-    """
+    """,
 )
 
 entry = dedent(
@@ -44,7 +45,7 @@ entry = dedent(
     <Grid Name="time_{iter}" GridType="Uniform">
         {frame}
     </Grid>
-    """
+    """,
 )
 
 
@@ -53,7 +54,7 @@ topology = dedent(
     <Topology NumberOfElements="{ncells}" TopologyType="{cell}">
         <DataItem Dimensions="{ncells} {dim}" Format="HDF">{h5name}:/{h5group}</DataItem>
     </Topology>
-    """
+    """,
 )
 
 
@@ -61,7 +62,7 @@ topology_polyvert = dedent(
     """
     <Topology TopologyType="Polyvertex" NodesPerElement="{nverts}">
     </Topology>
-    """
+    """,
 )
 
 geometry = dedent(
@@ -69,7 +70,7 @@ geometry = dedent(
     <Geometry GeometryType="{coords}">
         <DataItem Dimensions="{nverts} {dim}" Format="HDF">{h5name}:/{h5group}</DataItem>
     </Geometry>
-    """
+    """,
 )
 
 vector_attribute = dedent(
@@ -77,7 +78,7 @@ vector_attribute = dedent(
     <Attribute Name="{name}" AttributeType="Vector" Center="{center}">
         <DataItem Format="HDF" Dimensions="{nverts} {dim}">{h5name}:/{h5group}</DataItem>
     </Attribute>
-    """
+    """,
 )
 
 scalar_attribute = dedent(
@@ -85,7 +86,7 @@ scalar_attribute = dedent(
     <Attribute Name="{name}" AttributeType="Scalar" Center="{center}">
         <DataItem Format="HDF" Dimensions="{nverts} {dim}">{h5name}:/{h5group}</DataItem>
     </Attribute>
-    """
+    """,
 )
 
 
@@ -364,7 +365,8 @@ def fiber_to_xdmf(fun, fname, comm=mpi_comm_world()):
     )
 
     fun_entry = entry_single.format(
-        frame=fun_geo + fun_top + fun_scal + fun_vec, iter=0
+        frame=fun_geo + fun_top + fun_scal + fun_vec,
+        iter=0,
     )
     T = body.format(body=fun_entry, name="Visualzation of {}".format(name))
 
