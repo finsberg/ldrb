@@ -1,23 +1,25 @@
 import logging
 from collections import namedtuple
+from typing import Dict, Iterable, Optional
 
 import dolfin as df
 import numpy as np
 import quaternion
+from dolfin.mesh.meshfunction import MeshFunction
 
 from . import utils
 
-fiber_sheet_system = namedtuple("fiber_sheet_system", "fiber, sheet, sheet_normal")
+FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
 
 
-def normalize(u):
+def normalize(u: np.ndarray) -> np.ndarray:
     """
     Normalize vector
     """
     return u / np.linalg.norm(u)
 
 
-def axis(u, v):
+def axis(u: np.ndarray, v: np.ndarray) -> np.ndarray:
     r"""
     Construct the fiber orientation coordinate system.
 
@@ -39,7 +41,7 @@ def axis(u, v):
     return Q
 
 
-def orient(Q, alpha, beta):
+def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
     r"""
     Define the orthotropic fiber orientations.
 
@@ -68,7 +70,12 @@ def orient(Q, alpha, beta):
     return C
 
 
-def laplace(mesh, fiber_space, markers, ffun=None):
+def laplace(
+    mesh: df.Mesh,
+    fiber_space: str,
+    markers: Optional[Dict[str, int]],
+    ffun: Optional[df.MeshFunction] = None,
+) -> Dict[str, np.ndarray]:
     """
     Solve the laplace equation and project the gradients
     of the solutions.
@@ -85,7 +92,9 @@ def laplace(mesh, fiber_space, markers, ffun=None):
     return data
 
 
-def bislerp(Qa, Qb, t):
+def bislerp(
+    Qa: Optional[np.ndarray], Qb: Optional[np.ndarray], t: float
+) -> Optional[np.ndarray]:
     r"""
     Linear interpolation of two orthogonal matrices.
     Assiume that :math:`Q_a` and :math:`Q_b` refers to
@@ -124,20 +133,20 @@ def bislerp(Qa, Qb, t):
         return np.sum([getattr(qi, s) * getattr(qj, s) for s in ["x", "y", "z", "w"]])
 
     dot_arr = [abs(dot(qi, qb)) for qi in quat_array]
-    max_idx = np.argmax(dot_arr)
+    max_idx = int(np.argmax(dot_arr))
     max_dot = dot_arr[max_idx]
     qm = quat_array[max_idx]
 
     if max_dot > 1 - tol:
         return Qb
-    else:
-        qm_slerp = quaternion.slerp(qm, qb, 0, 1, t)
-        qm_norm = qm_slerp.normalized()
-        Qab = quaternion.as_rotation_matrix(qm_norm)
-        return Qab
+
+    qm_slerp = quaternion.slerp(qm, qb, 0, 1, t)
+    qm_norm = qm_slerp.normalized()
+    Qab = quaternion.as_rotation_matrix(qm_norm)
+    return Qab
 
 
-def standard_dofs(n):
+def standard_dofs(n: int) -> Iterable:
     """
     Get the standard list of dofs for a given length
     """
@@ -150,20 +159,20 @@ def standard_dofs(n):
 
 
 def system_at_dof(
-    lv,
-    rv,
-    epi,
-    grad_lv,
-    grad_rv,
-    grad_epi,
-    grad_ab,
-    alpha_endo,
-    alpha_epi,
-    beta_endo,
-    beta_epi,
-    tol=1e-7,
-    grad_tol=1e-7,
-):
+    lv: float,
+    rv: float,
+    epi: float,
+    grad_lv: np.ndarray,
+    grad_rv: np.ndarray,
+    grad_epi: np.ndarray,
+    grad_ab: np.ndarray,
+    alpha_endo: float,
+    alpha_epi: float,
+    beta_endo: float,
+    beta_epi: float,
+    tol: float = 1e-7,
+    grad_tol: float = 1e-7,
+) -> Optional[np.ndarray]:
     """
     Compte the fiber, sheet and sheet normal at a
     single degre of freedom
@@ -211,62 +220,58 @@ def system_at_dof(
     else:
         depth = rv / (lv + rv)
 
+    Q_lv = None
     if lv > tol:
         Q_lv = axis(grad_ab, -1 * grad_lv)
         papilary = 1 / (1 + pow(np.linalg.norm(grad_lv) / grad_tol, 2))
         Q_lv = orient(
             Q_lv, alpha_s(depth) * (1 - papilary), beta_s(depth) * (1 - papilary)
         )
-    else:
-        Q_lv = None
 
+    Q_rv = None
     if rv > tol:
         Q_rv = axis(grad_ab, grad_rv)
         papilary = 1 / (1 + pow(np.linalg.norm(grad_rv) / grad_tol, 2))
         Q_rv = orient(
             Q_rv, alpha_s(depth) * (1 - papilary), beta_s(depth) * (1 - papilary)
         )
-    else:
-        Q_rv = None
 
     Q_endo = bislerp(Q_lv, Q_rv, depth)
 
+    Q_epi = None
     if epi > tol:
         Q_epi = axis(grad_ab, grad_epi)
         papilary = 1 / (1 + pow(np.linalg.norm(grad_epi) / grad_tol, 2))
-
         Q_epi = orient(
             Q_epi, alpha_w(epi) * (1 - papilary), beta_w(epi) * (1 - papilary)
         )
-    else:
-        Q_epi = None
 
     Q_fiber = bislerp(Q_endo, Q_epi, epi)
     return Q_fiber
 
 
 def compute_fiber_sheet_system(
-    lv_scalar,
-    lv_gradient,
-    epi_scalar,
-    epi_gradient,
-    apex_gradient,
-    dofs=None,
-    rv_scalar=None,
-    rv_gradient=None,
-    alpha_endo_lv=40,
-    alpha_epi_lv=-50,
-    alpha_endo_rv=None,
-    alpha_epi_rv=None,
-    alpha_endo_sept=None,
-    alpha_epi_sept=None,
-    beta_endo_lv=-65,
-    beta_epi_lv=25,
-    beta_endo_rv=None,
-    beta_epi_rv=None,
-    beta_endo_sept=None,
-    beta_epi_sept=None,
-):
+    lv_scalar: np.ndarray,
+    lv_gradient: np.ndarray,
+    epi_scalar: np.ndarray,
+    epi_gradient: np.ndarray,
+    apex_gradient: np.ndarray,
+    dofs: Optional[Iterable] = None,
+    rv_scalar: Optional[np.ndarray] = None,
+    rv_gradient: Optional[np.ndarray] = None,
+    alpha_endo_lv: float = 40,
+    alpha_epi_lv: float = -50,
+    alpha_endo_rv: Optional[float] = None,
+    alpha_epi_rv: Optional[float] = None,
+    alpha_endo_sept: Optional[float] = None,
+    alpha_epi_sept: Optional[float] = None,
+    beta_endo_lv: float = -65,
+    beta_epi_lv: float = 25,
+    beta_endo_rv: Optional[float] = None,
+    beta_epi_rv: Optional[float] = None,
+    beta_endo_sept: Optional[float] = None,
+    beta_epi_sept: Optional[float] = None,
+) -> FiberSheetSystem:
     """
     Compute the fiber-sheets system on all degrees of freedom.
     """
@@ -401,15 +406,17 @@ def compute_fiber_sheet_system(
             tol=tol,
             grad_tol=grad_tol,
         )
-
+        if Q_fiber is None:
+            df.info(f"Invalid system at dof {dof}")
+            continue
         f0[dof] = Q_fiber.T[0]
         s0[dof] = Q_fiber.T[1]
         n0[dof] = Q_fiber.T[2]
 
-    return fiber_sheet_system(fiber=f0, sheet=s0, sheet_normal=n0)
+    return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
 
 
-def dofs_from_function_space(mesh, fiber_space):
+def dofs_from_function_space(mesh: df.Mesh, fiber_space: str) -> Iterable:
     """
     Get the dofs from a function spaces define in the
     fiber_space string.
@@ -435,7 +442,12 @@ def dofs_from_function_space(mesh, fiber_space):
 
 
 def dolfin_ldrb(
-    mesh, fiber_space="CG_1", ffun=None, markers=None, log_level=logging.INFO, **angles
+    mesh: df.Mesh,
+    fiber_space: str = "CG_1",
+    ffun: Optional[df.MeshFunction] = None,
+    markers: Optional[Dict[str, int]] = None,
+    log_level: int = logging.INFO,
+    **angles: Optional[float],
 ):
     r"""
     Create fiber, cross fibers and sheet directions
@@ -522,13 +534,15 @@ def dolfin_ldrb(
 
     dofs = dofs_from_function_space(mesh, fiber_space)
 
-    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)
+    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)  # type:ignore
 
     df.set_log_level(log_level)
     return fiber_system_to_dolfin(system, mesh, fiber_space)
 
 
-def fiber_system_to_dolfin(system, mesh, fiber_space):
+def fiber_system_to_dolfin(
+    system: FiberSheetSystem, mesh: df.Mesh, fiber_space: str
+) -> FiberSheetSystem:
     """
     Convert fiber-sheet system of numpy arrays to dolfin
     functions.
@@ -550,10 +564,12 @@ def fiber_system_to_dolfin(system, mesh, fiber_space):
     n0.vector().apply("insert")
     n0.rename("sheet_normal", "fibers")
 
-    return fiber_sheet_system(fiber=f0, sheet=s0, sheet_normal=n0)
+    return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
 
 
-def apex_to_base(mesh, base_marker, ffun=None):
+def apex_to_base(
+    mesh: df.Mesh, base_marker: int, ffun: Optional[df.MeshFunction] = None
+):
     """
     Find the apex coordinate and compute the laplace
     equation to find the apex to base solution
@@ -632,7 +648,9 @@ def apex_to_base(mesh, base_marker, ffun=None):
     return apex
 
 
-def project_gradients(mesh, fiber_space, scalar_solutions):
+def project_gradients(
+    mesh: df.Mesh, fiber_space: str, scalar_solutions: Dict[str, df.Function]
+) -> Dict[str, np.ndarray]:
     """
     Calculate the gradients using projections
 
@@ -668,7 +686,11 @@ def project_gradients(mesh, fiber_space, scalar_solutions):
     return data
 
 
-def scalar_laplacians(mesh, markers=None, ffun=None):
+def scalar_laplacians(
+    mesh: df.Mesh,
+    markers: Optional[Dict[str, int]] = None,
+    ffun: Optional[MeshFunction] = None,
+) -> Dict[str, df.Function]:
     """
     Calculate the laplacians
 
