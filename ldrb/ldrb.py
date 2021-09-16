@@ -1,6 +1,8 @@
 import logging
 from collections import namedtuple
-from typing import Dict, Iterable, Optional
+from typing import Dict
+from typing import Iterable
+from typing import Optional
 
 import dolfin as df
 import numpy as np
@@ -66,7 +68,7 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
             [np.cos(np.radians(alpha)), -np.sin(np.radians(alpha)), 0],
             [np.sin(np.radians(alpha)), np.cos(np.radians(alpha)), 0],
             [0, 0, 1],
-        ]
+        ],
     )
 
     B = np.array(
@@ -74,7 +76,7 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
             [1, 0, 0],
             [0, np.cos(np.radians(beta)), np.sin(np.radians(beta))],
             [0, -np.sin(np.radians(beta)), np.cos(np.radians(beta))],
-        ]
+        ],
     )
 
     C = np.dot(Q.real, A).dot(B)
@@ -104,7 +106,9 @@ def laplace(
 
 
 def bislerp(
-    Qa: Optional[np.ndarray], Qb: Optional[np.ndarray], t: float
+    Qa: Optional[np.ndarray],
+    Qb: Optional[np.ndarray],
+    t: float,
 ) -> Optional[np.ndarray]:
     r"""
     Linear interpolation of two orthogonal matrices.
@@ -309,7 +313,7 @@ def compute_fiber_sheet_system(
             epi_sept=alpha_epi_sept,
             endo_rv=alpha_endo_rv,
             epi_rv=alpha_epi_rv,
-        )
+        ),
     )
     df.info(
         (
@@ -328,7 +332,7 @@ def compute_fiber_sheet_system(
             epi_sept=beta_epi_sept,
             endo_rv=beta_endo_rv,
             epi_rv=beta_epi_rv,
-        )
+        ),
     )
 
     f0 = np.zeros_like(lv_gradient)
@@ -537,7 +541,9 @@ def dolfin_ldrb(
 
 
 def fiber_system_to_dolfin(
-    system: FiberSheetSystem, mesh: df.Mesh, fiber_space: str
+    system: FiberSheetSystem,
+    mesh: df.Mesh,
+    fiber_space: str,
 ) -> FiberSheetSystem:
     """
     Convert fiber-sheet system of numpy arrays to dolfin
@@ -564,7 +570,9 @@ def fiber_system_to_dolfin(
 
 
 def apex_to_base(
-    mesh: df.Mesh, base_marker: int, ffun: Optional[df.MeshFunction] = None
+    mesh: df.Mesh,
+    base_marker: int,
+    ffun: Optional[df.MeshFunction] = None,
 ):
     """
     Find the apex coordinate and compute the laplace
@@ -624,7 +632,8 @@ def apex_to_base(
         from mpi4py import MPI
 
         global_max, apex_coord = comm.allreduce(
-            sendobj=(local_max_val, local_apex_coord), op=MPI.MAXLOC
+            sendobj=(local_max_val, local_apex_coord),
+            op=MPI.MAXLOC,
         )
 
     df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
@@ -632,20 +641,25 @@ def apex_to_base(
     # Update rhs
     L = v * df.Constant(0) * df.dx
     apex_domain = df.CompiledSubDomain(
-        "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord)
+        "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord),
     )
     apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
     # Solve the poisson equation
     df.solve(
-        a == L, apex, [base_bc, apex_bc], solver_parameters={"linear_solver": "gmres"}
+        a == L,
+        apex,
+        [base_bc, apex_bc],
+        solver_parameters={"linear_solver": "gmres"},
     )
 
     return apex
 
 
 def project_gradients(
-    mesh: df.Mesh, fiber_space: str, scalar_solutions: Dict[str, df.Function]
+    mesh: df.Mesh,
+    fiber_space: str,
+    scalar_solutions: Dict[str, df.Function],
 ) -> Dict[str, np.ndarray]:
     """
     Calculate the gradients using projections
@@ -738,8 +752,8 @@ def scalar_laplacians(
     markers_str = "\n".join(["{}: {}".format(k, v) for k, v in markers.items()])
     df.info(
         ("Compute scalar laplacian solutions with the markers: \n" "{}").format(
-            markers_str
-        )
+            markers_str,
+        ),
     )
 
     cases = ["rv", "lv", "epi"]
@@ -748,7 +762,7 @@ def scalar_laplacians(
     # Check that all boundary faces are marked
     num_boundary_facets = df.BoundaryMesh(mesh, "exterior").num_cells()
     if num_boundary_facets != sum(
-        [np.sum(ffun.array() == markers[boundary]) for boundary in boundaries]
+        [np.sum(ffun.array() == markers[boundary]) for boundary in boundaries],
     ):
 
         df.error(
@@ -756,7 +770,7 @@ def scalar_laplacians(
                 "Not all boundary faces are marked correctly. Make sure all "
                 "boundary facets are marked as: {}"
                 ""
-            ).format(", ".join(["{} = {}".format(k, v) for k, v in markers.items()]))
+            ).format(", ".join(["{} = {}".format(k, v) for k, v in markers.items()])),
         )
 
     # Compte the apex to base solutons
@@ -787,7 +801,7 @@ def scalar_laplacians(
         solver_param = dict(
             solver_parameters=dict(
                 linear_solver="superlu_dist",
-            )
+            ),
         )
     else:
         solver_param = {}
@@ -804,12 +818,19 @@ def scalar_laplacians(
     df.info("Solving Laplace equation")
     for case in cases:
         df.info(
-            " {0} = 1, {1} = 0".format(case, ", ".join([c for c in cases if c != case]))
+            " {0} = 1, {1} = 0".format(
+                case,
+                ", ".join([c for c in cases if c != case]),
+            ),
         )
         # Solve linear system
         bcs = [
             df.DirichletBC(
-                V, 1 if what == case else 0, ffun, markers[what], "topological"
+                V,
+                1 if what == case else 0,
+                ffun,
+                markers[what],
+                "topological",
             )
             for what in cases
         ]

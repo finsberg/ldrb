@@ -1,7 +1,14 @@
-from . import ldrb, save, utils
-from .ldrb import dolfin_ldrb, project_gradients, scalar_laplacians
-from .save import fiber_to_xdmf, fun_to_xdmf
-from .utils import create_biv_mesh, create_lv_mesh, space_from_string
+from . import ldrb
+from . import save
+from . import utils
+from .ldrb import dolfin_ldrb
+from .ldrb import project_gradients
+from .ldrb import scalar_laplacians
+from .save import fiber_to_xdmf
+from .save import fun_to_xdmf
+from .utils import create_biv_mesh
+from .utils import create_lv_mesh
+from .utils import space_from_string
 
 __version__ = "2021.0.0"
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
