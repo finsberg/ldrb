@@ -20,7 +20,7 @@ DESCRIPTION = (
 URL = "https://github.com/finsberg/ldrb"
 EMAIL = "henriknf@simula.no"
 AUTHOR = "Henrik Finsberg"
-VERSION = "2020.0.3"
+VERSION = "2021.0.0"
 
 # What packages are required for this module to be executed?
 REQUIRED = ["h5py", "numba", "numpy-quaternion", "scipy", "numpy"]
