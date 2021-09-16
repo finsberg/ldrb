@@ -171,7 +171,6 @@ def system_at_dof(
     beta_endo: float,
     beta_epi: float,
     tol: float = 1e-7,
-    grad_tol: float = 1e-7,
 ) -> Optional[np.ndarray]:
     """
     Compte the fiber, sheet and sheet normal at a
@@ -205,9 +204,6 @@ def system_at_dof(
     tol : scalar
         Tolerance for whether to consider the scalar values.
         Default: 1e-7
-    grad_tol : scalar
-        Tolerance used to smooth the gradient if it is close to
-        zero. Default: 1e-7
     """
 
     alpha_s = lambda d: alpha_endo * (1 - d) - alpha_endo * d
@@ -223,28 +219,19 @@ def system_at_dof(
     Q_lv = None
     if lv > tol:
         Q_lv = axis(grad_ab, -1 * grad_lv)
-        papilary = 1 / (1 + pow(np.linalg.norm(grad_lv) / grad_tol, 2))
-        Q_lv = orient(
-            Q_lv, alpha_s(depth) * (1 - papilary), beta_s(depth) * (1 - papilary)
-        )
+        Q_lv = orient(Q_lv, alpha_s(depth), beta_s(depth))
 
     Q_rv = None
     if rv > tol:
         Q_rv = axis(grad_ab, grad_rv)
-        papilary = 1 / (1 + pow(np.linalg.norm(grad_rv) / grad_tol, 2))
-        Q_rv = orient(
-            Q_rv, alpha_s(depth) * (1 - papilary), beta_s(depth) * (1 - papilary)
-        )
+        Q_rv = orient(Q_rv, alpha_s(depth), beta_s(depth))
 
     Q_endo = bislerp(Q_lv, Q_rv, depth)
 
     Q_epi = None
     if epi > tol:
         Q_epi = axis(grad_ab, grad_epi)
-        papilary = 1 / (1 + pow(np.linalg.norm(grad_epi) / grad_tol, 2))
-        Q_epi = orient(
-            Q_epi, alpha_w(epi) * (1 - papilary), beta_w(epi) * (1 - papilary)
-        )
+        Q_epi = orient(Q_epi, alpha_w(epi), beta_w(epi))
 
     Q_fiber = bislerp(Q_endo, Q_epi, epi)
     return Q_fiber
@@ -338,7 +325,6 @@ def compute_fiber_sheet_system(
     n0 = np.zeros_like(lv_gradient)
 
     tol = 1e-3
-    grad_tol = 1e-7
 
     for (x_dof, y_dof, z_dof, s_dof) in dofs:
 
@@ -404,7 +390,6 @@ def compute_fiber_sheet_system(
             beta_endo=beta_endo,
             beta_epi=beta_epi,
             tol=tol,
-            grad_tol=grad_tol,
         )
         if Q_fiber is None:
             df.info(f"Invalid system at dof {dof}")
