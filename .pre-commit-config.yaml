@@ -3,6 +3,7 @@ repos:
     rev: v4.0.1
     hooks:
       - id: check-yaml
+        exclude: conda.recipe/meta.yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-docstring-first
