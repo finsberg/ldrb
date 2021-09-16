@@ -17,8 +17,8 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
 """
 import dolfin as df
 import pulse
-import ldrb
 
+import ldrb
 
 # comm = ldrb.utils.mpi_comm_world()
 

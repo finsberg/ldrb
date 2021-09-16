@@ -17,6 +17,7 @@ that don't work in serial. Say you want to run on 4 cpu's, you run the command:
     mpirun -n 4 python demo_biv.py
 """
 import dolfin as df
+
 import ldrb
 
 # Here we just create a lv mesh. Here you can use yor own mesh instead.
@@ -38,7 +39,7 @@ import ldrb
 
 
 # And when you run the code in paralall you should load the mesh from the file.
-mesh = df.Mesh('biv_mesh.xml')
+mesh = df.Mesh("biv_mesh.xml")
 
 # Since the markers are the default markers and the facet function is
 # stored within the mesh itself, you can just set
@@ -47,36 +48,40 @@ ffun = None
 
 
 # Decide on the angles you want to use
-angles = dict(alpha_endo_lv=30,    # Fiber angle on the LV endocardium
-              alpha_epi_lv=-30,    # Fiber angle on the LV epicardium
-              beta_endo_lv=0,      # Sheet angle on the LV endocardium
-              beta_epi_lv=0,       # Sheet angle on the LV epicardium
-              alpha_endo_sept=60,  # Fiber angle on the Septum endocardium
-              alpha_epi_sept=-60,  # Fiber angle on the Septum epicardium
-              beta_endo_sept=0,   # Sheet angle on the Septum endocardium
-              beta_epi_sept=0,   # Sheet angle on the Septum epicardium
-              alpha_endo_rv=80,    # Fiber angle on the RV endocardium
-              alpha_epi_rv=-80,    # Fiber angle on the RV epicardium
-              beta_endo_rv=0,      # Sheet angle on the RV endocardium
-              beta_epi_rv=0)        # Sheet angle on the RV epicardium
+angles = dict(
+    alpha_endo_lv=30,  # Fiber angle on the LV endocardium
+    alpha_epi_lv=-30,  # Fiber angle on the LV epicardium
+    beta_endo_lv=0,  # Sheet angle on the LV endocardium
+    beta_epi_lv=0,  # Sheet angle on the LV epicardium
+    alpha_endo_sept=60,  # Fiber angle on the Septum endocardium
+    alpha_epi_sept=-60,  # Fiber angle on the Septum epicardium
+    beta_endo_sept=0,  # Sheet angle on the Septum endocardium
+    beta_epi_sept=0,  # Sheet angle on the Septum epicardium
+    alpha_endo_rv=80,  # Fiber angle on the RV endocardium
+    alpha_epi_rv=-80,  # Fiber angle on the RV epicardium
+    beta_endo_rv=0,  # Sheet angle on the RV endocardium
+    beta_epi_rv=0,
+)  # Sheet angle on the RV epicardium
 
 # Choose space for the fiber fields.
 # This is a string on the form {family}_{degree}
-fiber_space = 'Quadrature_2'
+fiber_space = "Quadrature_2"
 # fiber_space = 'Lagrange_1'
 
 # Compute the microstructure
-fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
-                                              fiber_space=fiber_space,
-                                              ffun=ffun,
-                                              markers=markers,
-                                              log_level=20,
-                                              **angles)
+fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=ffun,
+    markers=markers,
+    log_level=20,
+    **angles
+)
 
 # # Store the results
-df.File('biv_fiber.xml') << fiber
-df.File('biv_sheet.xml') << sheet
-df.File('biv_sheet_normal.xml') << sheet_normal
+df.File("biv_fiber.xml") << fiber
+df.File("biv_sheet.xml") << sheet
+df.File("biv_sheet_normal.xml") << sheet_normal
 
 # If you run in paralell you should skip the visualization step and do that in
 # serial in stead. In that case you can read the the functions from the xml
