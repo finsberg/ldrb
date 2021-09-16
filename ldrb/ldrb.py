@@ -6,6 +6,7 @@ import dolfin as df
 import numpy as np
 import quaternion
 from dolfin.mesh.meshfunction import MeshFunction
+from scipy import optimize
 
 from . import utils
 
@@ -30,12 +31,22 @@ def axis(u: np.ndarray, v: np.ndarray) -> np.ndarray:
     """
 
     e1 = normalize(u)
+
+    # Create an initial guess for e0
     e2 = normalize(v)
     e2 -= e1.dot(e2) * e1
     e2 = normalize(e2)
 
     e0 = np.cross(e1, e2)
     e0 = normalize(e0)
+
+    def f(e0):
+        e2 = normalize(v - e0.dot(v) * e0)
+        return e0 - np.cross(e1, e2)
+
+    sol = optimize.root(f, e0)
+    e0 = sol.x
+    e2 = normalize(v - e0.dot(v) * e0)
 
     Q = np.array([e0, e1, e2]).T
     return Q
