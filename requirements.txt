@@ -2,3 +2,4 @@ numba
 numpy-quaternion
 --no-binary=h5py
 h5py
+scipy
