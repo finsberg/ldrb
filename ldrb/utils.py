@@ -1,14 +1,16 @@
 from collections import namedtuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import dolfin as df
 import numpy as np
+import ufl
 
 try:
     import mshr
 except ImportError:
     df.warning("mshr is not installed")
 
-geometry = namedtuple("geometry", "mesh, ffun, markers")
+Geometry = namedtuple("Geometry", "mesh, ffun, markers")
 
 if df.__version__.startswith("20"):
     # Year based versioning
@@ -23,24 +25,25 @@ else:
 def mpi_comm_world():
     if DOLFIN_VERSION_MAJOR >= 2018:
         return df.MPI.comm_world
-    else:
-        return df.mpi_comm_world()
+    return df.mpi_comm_world()
 
 
-def value_size(obj):
+def value_size(obj: ufl.Coefficient) -> Union[List[int], int]:
     if DOLFIN_VERSION_MAJOR >= 2018:
         value_shape = obj.value_shape()
         if len(value_shape) == 0:
             return 1
-        else:
-            return [0]
-    else:
-        return obj.value_size()
+        return [0]
+    return obj.value_size()
 
 
 def mark_biv_mesh(
-    mesh, ffun=None, markers=None, tol=0.01, values={"lv": 0, "septum": 1, "rv": 2}
-):
+    mesh: df.Mesh,
+    ffun: Optional[df.MeshFunction] = None,
+    markers: Optional[Dict[str, int]] = None,
+    tol: float = 0.01,
+    values: Dict[str, int] = {"lv": 0, "septum": 1, "rv": 2},
+) -> df.MeshFunction:
 
     from .ldrb import scalar_laplacians
 
@@ -72,7 +75,7 @@ def mark_biv_mesh(
     return sfun
 
 
-def mark_facets(mesh, ffun):
+def mark_facets(mesh: df.Mesh, ffun: df.MeshFunction):
     """
     Mark mesh according to facet function
     """
@@ -84,7 +87,7 @@ def mark_facets(mesh, ffun):
         mesh.domains().set_marker((facet.index(), ffun[facet]), 2)
 
 
-def default_markers():
+def default_markers() -> Dict[str, int]:
     """
     Default markers for the mesh boundaries
     """
@@ -92,17 +95,17 @@ def default_markers():
 
 
 def create_lv_mesh(
-    N=13,
-    a_endo=1.5,
-    b_endo=0.5,
-    c_endo=0.5,
-    a_epi=2.0,
-    b_epi=1.0,
-    c_epi=1.0,
-    center=(0.0, 0.0, 0.0),
-    base_x=0.0,
-    markers=None,
-):
+    N: int = 13,
+    a_endo: float = 1.5,
+    b_endo: float = 0.5,
+    c_endo: float = 0.5,
+    a_epi: float = 2.0,
+    b_epi: float = 1.0,
+    c_epi: float = 1.0,
+    center: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    base_x: float = 0.0,
+    markers: Optional[Dict[str, int]] = None,
+) -> Geometry:
     r"""
     Create an lv-ellipsoidal mesh.
 
@@ -179,28 +182,28 @@ def create_lv_mesh(
     epi.mark(ffun, markers["epi"])
 
     mark_facets(mesh, ffun)
-    return geometry(mesh=mesh, ffun=ffun, markers=markers)
+    return Geometry(mesh=mesh, ffun=ffun, markers=markers)
 
 
 def create_biv_mesh(
-    N=13,
-    a_endo_lv=1.5,
-    b_endo_lv=0.5,
-    c_endo_lv=0.5,
-    a_epi_lv=2.0,
-    b_epi_lv=1.0,
-    c_epi_lv=1.0,
-    center_lv=(0.0, 0.0, 0.0),
-    a_endo_rv=1.45,
-    b_endo_rv=1.25,
-    c_endo_rv=0.75,
-    a_epi_rv=1.75,
-    b_epi_rv=1.5,
-    c_epi_rv=1.0,
-    center_rv=(0.0, 0.5, 0.0),
-    base_x=0.0,
-    markers=None,
-):
+    N: int = 13,
+    a_endo_lv: float = 1.5,
+    b_endo_lv: float = 0.5,
+    c_endo_lv: float = 0.5,
+    a_epi_lv: float = 2.0,
+    b_epi_lv: float = 1.0,
+    c_epi_lv: float = 1.0,
+    center_lv: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    a_endo_rv: float = 1.45,
+    b_endo_rv: float = 1.25,
+    c_endo_rv: float = 0.75,
+    a_epi_rv: float = 1.75,
+    b_epi_rv: float = 1.5,
+    c_epi_rv: float = 1.0,
+    center_rv: Tuple[float, float, float] = (0.0, 0.5, 0.0),
+    base_x: float = 0.0,
+    markers: Optional[Dict[str, int]] = None,
+) -> Geometry:
     r"""
     Create an biv-ellipsoidal mesh.
 
@@ -312,7 +315,7 @@ def create_biv_mesh(
     epi.mark(ffun, markers["epi"])
 
     mark_facets(mesh, ffun)
-    return geometry(mesh=mesh, ffun=ffun, markers=markers)
+    return Geometry(mesh=mesh, ffun=ffun, markers=markers)
 
 
 # These functions are copied from cbcpost https://bitbucket.org/simula_cbc/cbcpost
@@ -454,7 +457,7 @@ def assign_to_vector(v, a):
     v[:] = a[lr[0] : lr[1]]
 
 
-def space_from_string(space_string, mesh, dim):
+def space_from_string(space_string: str, mesh: df.Mesh, dim: int) -> df.FunctionSpace:
     """
     Constructed a finite elements space from a string
     representation of the space
