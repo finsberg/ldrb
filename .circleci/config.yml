@@ -24,30 +24,17 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
       - run:
           name: install dependencies
           command: |
             python3 -m pip install --upgrade pip
             python3 -m pip install h5py --no-binary=h5py
-            python3 -m pip install -r requirements.txt
-            python3 -m pip install -r requirements-dev.txt
+            python3 -m pip install ".[dev]"
 
       - run:
           name: install package
           command: |
             python3 -m pip install .
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
       - restore_cache:
           keys:
