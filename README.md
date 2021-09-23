@@ -1,4 +1,4 @@
-[![InstallConda](https://anaconda.org/finsberg/ldrb/badges/installer/conda.svg)](https://anaconda.org/finsberg/ldrb)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/ldrb/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
 [![CircleCI](https://circleci.com/gh/finsberg/ldrb.svg?style=shield)](https://circleci.com/gh/finsberg/ldrb)
 [![Documentation Status](https://readthedocs.org/projects/ldrb/badge/?version=latest)](https://ldrb.readthedocs.io/en/latest/?badge=latest)
 [![Platform](https://anaconda.org/finsberg/ldrb/badges/platforms.svg)](https://anaconda.org/finsberg/ldrb)
@@ -16,32 +16,32 @@ pp.2243-2254.(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/)
 
 ```python
 # Decide on the angles you want to use
-angles = dict(alpha_endo_lv=30,    # Fiber angle on the LV endocardium
-              alpha_epi_lv=-30,    # Fiber angle on the LV epicardium
-              beta_endo_lv=0,      # Sheet angle on the LV endocardium
-              beta_epi_lv=0,       # Sheet angle on the LV epicardium
-              alpha_endo_sept=60,  # Fiber angle on the Septum endocardium
-              alpha_epi_sept=-60,  # Fiber angle on the Septum epicardium
-              beta_endo_sept=0,   # Sheet angle on the Septum endocardium
-              beta_epi_sept=0,   # Sheet angle on the Septum epicardium
-              alpha_endo_rv=80,    # Fiber angle on the RV endocardium
-              alpha_epi_rv=-80,    # Fiber angle on the RV epicardium
-              beta_endo_rv=0,      # Sheet angle on the RV endocardium
-              beta_epi_rv=0)        # Sheet angle on the RV epicardium
+angles = dict(
+    alpha_endo_lv=30,  # Fiber angle on the LV endocardium
+    alpha_epi_lv=-30,  # Fiber angle on the LV epicardium
+    beta_endo_lv=0,  # Sheet angle on the LV endocardium
+    beta_epi_lv=0,  # Sheet angle on the LV epicardium
+    alpha_endo_sept=60,  # Fiber angle on the Septum endocardium
+    alpha_epi_sept=-60,  # Fiber angle on the Septum epicardium
+    beta_endo_sept=0,  # Sheet angle on the Septum endocardium
+    beta_epi_sept=0,  # Sheet angle on the Septum epicardium
+    alpha_endo_rv=80,  # Fiber angle on the RV endocardium
+    alpha_epi_rv=-80,  # Fiber angle on the RV epicardium
+    beta_endo_rv=0,  # Sheet angle on the RV endocardium
+    beta_epi_rv=0,  # Sheet angle on the RV epicardium
+)
 
 # Choose space for the fiber fields
 # This is a string on the form {family}_{degree}
-fiber_space = 'Quadrature_2'
+fiber_space = "Quadrature_2"
 
 # Compute the microstructure
-fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(mesh=mesh,
-                                              fiber_space=fiber_space,
-                                              ffun=ffun,
-                                              markers=markers,
-                                              **angles)
+fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
+    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=markers, **angles
+)
 # Store files using a built in xdmf viewer that also works for functions
 # defined in quadrature spaces
-ldrb.fiber_to_xdmf(fiber, 'fiber')
+ldrb.fiber_to_xdmf(fiber, "fiber")
 # And visualize it in Paraview
 ```
 
@@ -67,8 +67,9 @@ python -m pip install git+https://github.com/finsberg/ldrb.git
 Alternatively you can install with conda
 
 ```shell
-conda install -c finsberg ldrb
+conda install -c conda-forge ldrb
 ```
+which will also install FEniCS through `conda`.
 
 # Documetation
 Documentation is hosted at https://ldrb.readthedocs.io.
