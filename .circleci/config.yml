@@ -24,33 +24,33 @@ jobs:
     steps:
       - checkout
 
+      - restore_cache:
+          keys:
+            - dolfin-jit-cache-pip
+
       - run:
           name: install dependencies
           command: |
             python3 -m pip install --upgrade pip
             python3 -m pip install h5py --no-binary=h5py
-            python3 -m pip install ".[dev]"
 
       - run:
           name: install package
           command: |
-            python3 -m pip install .
-
-      - restore_cache:
-          keys:
-            - v2-dolfin-jit-cache
+            python3 -m pip install -e ".[dev]"
 
       # run tests!
       - run:
           name: run tests
           command: |
-            python3 -m pytest -v tests
+            python3 -m pytest
 
       - save_cache:
           key: v2-dolfin-jit-cache
           paths:
             - ~/.cache/instant
             - ~/.cache/dijitso
+            - ~/.cache/pip
 
       - store_artifacts:
           path: htmlcov
