@@ -166,11 +166,11 @@ def standard_dofs(n: int) -> Iterable:
     Get the standard list of dofs for a given length
     """
 
-    x_dofs = np.arange(0, 3 * n, n)
-    y_dofs = np.arange(1, 3 * n, n)
-    z_dofs = np.arange(2, 3 * n, n)
+    x_dofs = np.arange(0, 3 * n, 3)
+    y_dofs = np.arange(1, 3 * n, 3)
+    z_dofs = np.arange(2, 3 * n, 3)
     scalar_dofs = np.arange(0, n)
-    return zip(x_dofs, y_dofs, z_dofs, scalar_dofs)
+    return np.stack([x_dofs, y_dofs, z_dofs, scalar_dofs], -1)
 
 
 def system_at_dof(
@@ -438,7 +438,7 @@ def dofs_from_function_space(mesh: df.Mesh, fiber_space: str) -> Iterable:
         not in V.dofmap().local_to_global_unowned()
     ]
 
-    return zip(x_dofs, y_dofs, z_dofs, scalar_dofs)
+    return np.stack([x_dofs, y_dofs, z_dofs, scalar_dofs], -1)
 
 
 def dolfin_ldrb(
@@ -804,18 +804,31 @@ def scalar_laplacians(
             ),
         )
     else:
-        solver_param = {}
+        solver_param = dict(
+            solver_parameters=dict(
+                linear_solver="mumps",
+            ),
+        )
+
+    from mpi4py import MPI
+
+    comm = utils.mpi_comm_world()
 
     # Check that solution of the three last cases all sum to 1.
     sol = solutions["apex"].vector().copy()
     sol[:] = 0.0
+    has_rv = comm.allreduce(
+        sendobj=len(ffun.array()[ffun.array() == markers["rv"]]),
+        op=MPI.MAX,
+    )
 
-    if len(ffun.array()[ffun.array() == markers["rv"]]) == 0:
+    if not has_rv:
         # Remove the RV
         cases.pop(next(i for i, c in enumerate(cases) if c == "rv"))
 
     # Iterate over the three different cases
     df.info("Solving Laplace equation")
+
     for case in cases:
         df.info(
             " {0} = 1, {1} = 0".format(
