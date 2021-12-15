@@ -1,6 +1,6 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/ldrb/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
 [![CI](https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/main.yml)
-[![Documentation Status](https://readthedocs.org/projects/ldrb/badge/?version=latest)](https://ldrb.readthedocs.io/en/latest/?badge=latest)
+[![github pages](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml)
 [![codecov](https://codecov.io/gh/finsberg/ldrb/branch/master/graph/badge.svg?token=J69bEFdomc)](https://codecov.io/gh/finsberg/ldrb)
 
 # Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
@@ -71,7 +71,7 @@ conda install -c conda-forge ldrb
 which will also install FEniCS through `conda`.
 
 # Documetation
-Documentation is hosted at https://ldrb.readthedocs.io.
+Documentation is hosted at http://finsberg.github.io/ldrb
 
 # Getting started
 Check out the [demos](demos) and the [documentation](https://ldrb.readthedocs.io)
