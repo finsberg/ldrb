@@ -1,7 +1,6 @@
 import logging
 from collections import namedtuple
 from typing import Dict
-from typing import Iterable
 from typing import Optional
 
 import dolfin as df
@@ -161,7 +160,7 @@ def bislerp(
     return Qab
 
 
-def standard_dofs(n: int) -> Iterable:
+def standard_dofs(n: int) -> np.ndarray:
     """
     Get the standard list of dofs for a given length
     """
@@ -258,7 +257,7 @@ def compute_fiber_sheet_system(
     epi_scalar: np.ndarray,
     epi_gradient: np.ndarray,
     apex_gradient: np.ndarray,
-    dofs: Optional[Iterable] = None,
+    dofs: Optional[np.ndarray] = None,
     rv_scalar: Optional[np.ndarray] = None,
     rv_gradient: Optional[np.ndarray] = None,
     alpha_endo_lv: float = 40,
@@ -273,6 +272,7 @@ def compute_fiber_sheet_system(
     beta_epi_rv: Optional[float] = None,
     beta_endo_sept: Optional[float] = None,
     beta_epi_sept: Optional[float] = None,
+    use_numba: bool = False,
 ) -> FiberSheetSystem:
     """
     Compute the fiber-sheets system on all degrees of freedom.
@@ -341,21 +341,84 @@ def compute_fiber_sheet_system(
 
     tol = 1e-3
 
-    for (x_dof, y_dof, z_dof, s_dof) in dofs:
+    if use_numba:
+        from ._numba import _compute_fiber_sheet_system as func
+    else:
+        func = _compute_fiber_sheet_system
 
-        dof = np.array([x_dof, y_dof, z_dof])
+    func(
+        f0,
+        s0,
+        n0,
+        dofs[:, 0],
+        dofs[:, 1],
+        dofs[:, 2],
+        dofs[:, 3],
+        lv_scalar,
+        rv_scalar,
+        epi_scalar,
+        lv_gradient,
+        rv_gradient,
+        epi_gradient,
+        apex_gradient,
+        alpha_endo_lv,
+        alpha_epi_lv,
+        alpha_endo_rv,
+        alpha_epi_rv,
+        alpha_endo_sept,
+        alpha_epi_sept,
+        beta_endo_lv,
+        beta_epi_lv,
+        beta_endo_rv,
+        beta_epi_rv,
+        beta_endo_sept,
+        beta_epi_sept,
+        tol,
+    )
 
-        lv = lv_scalar[s_dof]
-        rv = rv_scalar[s_dof]
-        epi = epi_scalar[s_dof]
-        grad_lv = lv_gradient[dof]
-        grad_rv = rv_gradient[dof]
-        grad_epi = epi_gradient[dof]
-        grad_ab = apex_gradient[dof]
+    return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
 
-        # df.debug("LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}".format(lv=lv,
-        #                                                              rv=rv,
-        #                                                              epi=epi))
+
+def _compute_fiber_sheet_system(
+    f0,
+    s0,
+    n0,
+    xdofs,
+    ydofs,
+    zdofs,
+    sdofs,
+    lv_scalar,
+    rv_scalar,
+    epi_scalar,
+    lv_gradient,
+    rv_gradient,
+    epi_gradient,
+    apex_gradient,
+    alpha_endo_lv,
+    alpha_epi_lv,
+    alpha_endo_rv,
+    alpha_epi_rv,
+    alpha_endo_sept,
+    alpha_epi_sept,
+    beta_endo_lv,
+    beta_epi_lv,
+    beta_endo_rv,
+    beta_epi_rv,
+    beta_endo_sept,
+    beta_epi_sept,
+    tol,
+):
+    for i in range(len(xdofs)):
+
+        dof = np.array([xdofs[i], ydofs[i], zdofs[i]])
+
+        lv = lv_scalar[sdofs[i]]
+        rv = rv_scalar[sdofs[i]]
+        epi = epi_scalar[sdofs[i]]
+        grad_lv = lv_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
+        grad_rv = rv_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
+        grad_epi = epi_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
+        grad_ab = apex_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
 
         if lv > tol and rv < tol:
             # We are in the LV region
@@ -376,17 +439,6 @@ def compute_fiber_sheet_system(
             alpha_epi = alpha_epi_sept
             beta_epi = beta_epi_sept
         else:
-            pass
-            # We are at the epicardium somewhere
-            # msg = (
-            #     "Unable to determine region. "
-            #     "LV: {lv:.2f}, RV: {rv:.2f}, EPI: {epi:.2f}.\n"
-            #     "Will use LV angles in this regions. "
-            #     "Microstructure might be broken at this "
-            #     "point"
-            # ).format(lv=lv, rv=rv, epi=epi)
-            # df.debug(msg)
-
             alpha_endo = alpha_endo_lv
             beta_endo = beta_endo_lv
             alpha_epi = alpha_epi_lv
@@ -409,14 +461,12 @@ def compute_fiber_sheet_system(
         if Q_fiber is None:
             df.info(f"Invalid system at dof {dof}")
             continue
-        f0[dof] = Q_fiber.T[0]
-        s0[dof] = Q_fiber.T[1]
-        n0[dof] = Q_fiber.T[2]
-
-    return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
+        f0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[0]
+        s0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[1]
+        n0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[2]
 
 
-def dofs_from_function_space(mesh: df.Mesh, fiber_space: str) -> Iterable:
+def dofs_from_function_space(mesh: df.Mesh, fiber_space: str) -> np.ndarray:
     """
     Get the dofs from a function spaces define in the
     fiber_space string.
@@ -447,6 +497,7 @@ def dolfin_ldrb(
     ffun: Optional[df.MeshFunction] = None,
     markers: Optional[Dict[str, int]] = None,
     log_level: int = logging.INFO,
+    use_numba: bool = False,
     **angles: Optional[float],
 ):
     r"""
@@ -534,7 +585,9 @@ def dolfin_ldrb(
 
     dofs = dofs_from_function_space(mesh, fiber_space)
 
-    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)  # type:ignore
+    system = compute_fiber_sheet_system(
+        dofs=dofs, **data, **angles, use_numba=use_numba  # type:ignore
+    )
 
     df.set_log_level(log_level)
     return fiber_system_to_dolfin(system, mesh, fiber_space)

@@ -45,7 +45,8 @@ def lv_mesh():
     return ldrb.create_lv_mesh().mesh
 
 
-def test_lv_angles_alpha():
+@pytest.mark.parametrize("use_numba", [True, False])
+def test_lv_angles_alpha(use_numba):
 
     data = {}
     eps = 0
@@ -64,7 +65,12 @@ def test_lv_angles_alpha():
     sheet_normal[::3] = -1
 
     fib = ldrb.ldrb.compute_fiber_sheet_system(
-        alpha_endo_lv=90, alpha_epi_lv=-90, beta_endo_lv=0, beta_epi_lv=0, **data
+        alpha_endo_lv=90,
+        alpha_epi_lv=-90,
+        beta_endo_lv=0,
+        beta_epi_lv=0,
+        **data,
+        use_numba=use_numba
     )
 
     assert norm(fib.fiber[:3] - np.array([0, 1, 0])) < tol
@@ -73,7 +79,12 @@ def test_lv_angles_alpha():
     assert norm(fib.sheet_normal - sheet_normal) < tol
 
     fib = ldrb.ldrb.compute_fiber_sheet_system(
-        alpha_endo_lv=-90, alpha_epi_lv=90, beta_endo_lv=0, beta_epi_lv=0, **data
+        alpha_endo_lv=-90,
+        alpha_epi_lv=90,
+        beta_endo_lv=0,
+        beta_epi_lv=0,
+        **data,
+        use_numba=use_numba
     )
     assert norm(fib.fiber[:3] - np.array([0, -1, 0])) < tol
     assert norm(fib.fiber[3:6] - np.array([0, -1 / np.sqrt(2), 1 / np.sqrt(2)])) < tol
@@ -87,7 +98,8 @@ def test_lv_angles_alpha():
             alpha_epi_lv=-alpha,
             beta_endo_lv=0,
             beta_epi_lv=0,
-            **data
+            **data,
+            use_numba=use_numba
         )
         assert norm(fib.fiber[:3] - np.array([0, np.sin(a), np.cos(a)])) < tol
         assert (
@@ -111,7 +123,8 @@ def test_lv_angles_alpha():
             alpha_epi_lv=-alpha,
             beta_endo_lv=0,
             beta_epi_lv=0,
-            **data
+            **data,
+            use_numba=use_numba
         )
         assert norm(fib.fiber[:3] - np.array([0, np.sin(a), np.cos(a)])) < tol
         assert norm(fib.fiber[6:] - np.array([0, np.sin(-a), np.cos(-a)])) < tol
@@ -125,7 +138,8 @@ def test_lv_angles_alpha():
         assert norm(fib.sheet[6:] - np.cross(fib.sheet_normal[6:], fib.fiber[6:])) < tol
 
 
-def test_lv_angles_beta():
+@pytest.mark.parametrize("use_numba", [True, False])
+def test_lv_angles_beta(use_numba):
 
     data = {}
     eps = 0
@@ -144,7 +158,12 @@ def test_lv_angles_beta():
     fiber = np.array([0, 0, 1, 0, 0, 1, 0, 0, 1])
 
     fib = ldrb.ldrb.compute_fiber_sheet_system(
-        alpha_endo_lv=0, alpha_epi_lv=0, beta_endo_lv=90, beta_epi_lv=-90, **data
+        alpha_endo_lv=0,
+        alpha_epi_lv=0,
+        beta_endo_lv=90,
+        beta_epi_lv=-90,
+        **data,
+        use_numba=use_numba
     )
 
     assert np.linalg.norm(fib.fiber - fiber) < tol
@@ -172,7 +191,8 @@ def test_lv_angles_beta():
             alpha_epi_lv=-0,
             beta_endo_lv=beta,
             beta_epi_lv=beta,
-            **data
+            **data,
+            use_numba=use_numba
         )
         assert np.linalg.norm(fib.fiber - fiber) < tol
 
