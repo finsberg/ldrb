@@ -12,7 +12,6 @@ jobs:
           [
             "quay.io/fenicsproject/stable:latest",
             "quay.io/dolfinadjoint/pyadjoint:latest",
-            "finsberg/fenics2017",
           ]
 
     container:
@@ -28,11 +27,10 @@ jobs:
           path: |
             ~/.cache/instant
             ~/.cache/dijitso
-            ~/.cache/pulse
             ~/.cache/pip
-          key: ${{ matrix.container }}-cache_v7
+          key: ${{ matrix.container }}-cache_v1
           restore-keys: |
-            ${{ matrix.container }}-cache_v7
+            ${{ matrix.container }}-cache_v1
 
       - name: Install dependencies
         run: |
