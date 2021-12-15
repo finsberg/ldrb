@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/fenicsproject/stable:latest
+      image: finsberg/fenics-extra
     steps:
       - uses: actions/checkout@v2
 
@@ -26,11 +26,16 @@ jobs:
           restore-keys: |
             cache_v4
 
+      - name: Upgrade pip
+        run: |
+          # install pip=>20.1 to use "pip cache dir"
+          # python3 -m pip install --upgrade pip
+
       - name: Install dependencies
         run: |
           sudo apt install -y pandoc
           python3 -m pip install h5py --no-binary=h5py
-          python3 -m pip install ".[docs]" --use-deprecated=legacy-resolver
+          python3 -m pip install ".[docs]"
 
       - name: Build docs
         run: |
