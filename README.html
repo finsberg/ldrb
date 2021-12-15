@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations &#8212; pulse</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script>
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Demo" href="DEMO.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">pulse</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 current">
+  <a class="reference internal" href="#">
+   Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="DEMO.html">
+   Demo
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="lv_demo.html">
+     LV Geometry
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="biv_demo.html">
+     BiV Geometry
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ldrb.html">
+   ldrb package
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  <a href="https://www.simula.no/research/projects/department-computational-physiology">Computational Physiology at Simula</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/README.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/finsberg/pulse"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/finsberg/pulse/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installation">
+   Installation
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#install-with-pip">
+     Install with pip
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#install-with-conda">
+     Install with conda
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#documetation">
+   Documetation
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started">
+   Getting started
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#known-issues">
+   Known issues
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#license">
+   License
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   Contributors
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><a class="reference external" href="https://conda.anaconda.org/conda-forge"><img alt="Anaconda-Server Badge" src="https://anaconda.org/conda-forge/ldrb/badges/installer/conda.svg" /></a>
+<a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/main.yml"><img alt="CI" src="https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg" /></a>
+<a class="reference external" href="https://ldrb.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/ldrb/badge/?version=latest" /></a>
+<a class="reference external" href="https://codecov.io/gh/finsberg/ldrb"><img alt="codecov" src="https://codecov.io/gh/finsberg/ldrb/branch/master/graph/badge.svg?token=J69bEFdomc" /></a></p>
+<div class="tex2jax_ignore mathjax_ignore section" id="laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations">
+<h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations<a class="headerlink" href="#laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations" title="Permalink to this headline">¶</a></h1>
+<p>A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.</p>
+<blockquote>
+<div><p>Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
+A novel rule-based algorithm for assigning myocardial fiber orientation
+to computational heart models. Annals of biomedical engineering, 40(10),
+pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/</a>)</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decide on the angles you want to use</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV endocardium</span>
+    <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV epicardium</span>
+    <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV endocardium</span>
+    <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV epicardium</span>
+    <span class="n">alpha_endo_sept</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum endocardium</span>
+    <span class="n">alpha_epi_sept</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum epicardium</span>
+    <span class="n">beta_endo_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum endocardium</span>
+    <span class="n">beta_epi_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum epicardium</span>
+    <span class="n">alpha_endo_rv</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV endocardium</span>
+    <span class="n">alpha_epi_rv</span><span class="o">=-</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV epicardium</span>
+    <span class="n">beta_endo_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV endocardium</span>
+    <span class="n">beta_epi_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV epicardium</span>
+<span class="p">)</span>
+
+<span class="c1"># Choose space for the fiber fields</span>
+<span class="c1"># This is a string on the form {family}_{degree}</span>
+<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;Quadrature_2&quot;</span>
+
+<span class="c1"># Compute the microstructure</span>
+<span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
+<span class="p">)</span>
+<span class="c1"># Store files using a built in xdmf viewer that also works for functions</span>
+<span class="c1"># defined in quadrature spaces</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;fiber&quot;</span><span class="p">)</span>
+<span class="c1"># And visualize it in Paraview</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/biv_fiber.png" /></p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-with-pip">
+<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
+<p>In order to install the software you need to have
+installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
+are not supprted)</p>
+<p>The package can be installed with pip.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ldrb</span>
+</pre></div>
+</div>
+<p>or if you need the most recent version you can install the source</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-with-conda">
+<h2>Install with conda<a class="headerlink" href="#install-with-conda" title="Permalink to this headline">¶</a></h2>
+<p>Alternatively you can install with conda</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge ldrb
+</pre></div>
+</div>
+<p>which will also install FEniCS through <code class="docutils literal notranslate"><span class="pre">conda</span></code>.</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="documetation">
+<h1>Documetation<a class="headerlink" href="#documetation" title="Permalink to this headline">¶</a></h1>
+<p>Documentation is hosted at <a class="reference external" href="https://ldrb.readthedocs.io">https://ldrb.readthedocs.io</a>.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Check out the <span class="xref myst">demos</span> and the <a class="reference external" href="https://ldrb.readthedocs.io">documentation</a></p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="known-issues">
+<h1>Known issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h1>
+<p>If you encounter the following error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">ImportError</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">multiarray</span> <span class="n">failed</span> <span class="n">to</span> <span class="kn">import</span>
+</pre></div>
+</div>
+<p>see <a class="reference external" href="https://github.com/moble/quaternion/issues/72">https://github.com/moble/quaternion/issues/72</a> for how to troubleshoot.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is licensed under the GNU LGPL, version 3 or (at your option) any later version.
+<code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is Copyright (2011-2019) by the authors and Simula Research Laboratory.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="contributors">
+<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h1>
+<p>Henrik Finsberg (<a class="reference external" href="mailto:henriknf&#37;&#52;&#48;simula&#46;no">henriknf<span>&#64;</span>simula<span>&#46;</span>no</a>)</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "finsberg/pulse",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='right-next' id="next-link" href="DEMO.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Demo</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Henrik Finsberg<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
