@@ -59,13 +59,14 @@ test: ## run tests on every Python version with tox
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/ldrb.rst
 	rm -f docs/modules.rst
-	pandoc README.md -o docs/source/index.rst
-	sed -i.bak 's+docs/source/_static/figures/biv_fiber.png+_static/figures/biv_fiber.png+g' docs/source/index.rst && rm -f docs/source/index.rst.bak
-	sphinx-apidoc -o docs/ ldrb
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	# $(BROWSER) docs/build/html/index.html
-	# python -m http.server --directory docs/build/html
+	jupytext demos/demo_patient_lv.py -o docs/demo_patient_lv.md
+	jupytext demos/demo_lv.py -o docs/demo_lv.md
+	jupytext demos/demo_biv.py -o docs/demo_biv.md
+	cp README.md docs/.
+	sed -i.bak 's+docs/source/_static/figures/biv_fiber.png+_static/figures/biv_fiber.png+g' docs/README.md && rm -f docs/README.md.bak
+	sphinx-apidoc -o docs ldrb
+	jupyter-book build docs
+	# python -m http.server --directory docs/_build/html
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .

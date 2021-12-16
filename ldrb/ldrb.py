@@ -49,7 +49,11 @@ def axis(u: np.ndarray, v: np.ndarray) -> np.ndarray:
     e0 = sol.x
     e2 = normalize(v - e0.dot(v) * e0)
 
-    Q = np.array([e0, e1, e2]).T
+    Q = np.zeros((3, 3))
+    Q[:, 0] = e0
+    Q[:, 1] = e1
+    Q[:, 2] = e2
+
     return Q
 
 
@@ -62,21 +66,15 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
     and sheet-normal axis determine by the angles :math:`\alpha`
     (fiber) and :math:`\beta` (sheets).
     """
-    A = np.array(
-        [
-            [np.cos(np.radians(alpha)), -np.sin(np.radians(alpha)), 0],
-            [np.sin(np.radians(alpha)), np.cos(np.radians(alpha)), 0],
-            [0, 0, 1],
-        ],
-    )
+    A = np.zeros((3, 3))
+    A[0, :] = [np.cos(np.radians(alpha)), -np.sin(np.radians(alpha)), 0]
+    A[1, :] = [np.sin(np.radians(alpha)), np.cos(np.radians(alpha)), 0]
+    A[2, :] = [0, 0, 1]
 
-    B = np.array(
-        [
-            [1, 0, 0],
-            [0, np.cos(np.radians(beta)), np.sin(np.radians(beta))],
-            [0, -np.sin(np.radians(beta)), np.cos(np.radians(beta))],
-        ],
-    )
+    B = np.zeros((3, 3))
+    B[0, :] = [1, 0, 0]
+    B[1, :] = [0, np.cos(np.radians(beta)), np.sin(np.radians(beta))]
+    B[2, :] = [0, -np.sin(np.radians(beta)), np.cos(np.radians(beta))]
 
     C = np.dot(Q.real, A).dot(B)
     return C
@@ -143,10 +141,7 @@ def bislerp(
         -qa * quat_k,
     ]
 
-    def dot(qi, qj):
-        return np.sum([getattr(qi, s) * getattr(qj, s) for s in ["x", "y", "z", "w"]])
-
-    dot_arr = [abs(dot(qi, qb)) for qi in quat_array]
+    dot_arr = [abs((qi.components * qb.components).sum()) for qi in quat_array]
     max_idx = int(np.argmax(dot_arr))
     max_dot = dot_arr[max_idx]
     qm = quat_array[max_idx]
@@ -220,32 +215,32 @@ def system_at_dof(
         Default: 1e-7
     """
 
-    alpha_s = lambda d: alpha_endo * (1 - d) - alpha_endo * d
-    alpha_w = lambda d: alpha_endo * (1 - d) + alpha_epi * d
-    beta_s = lambda d: beta_endo * (1 - d) - beta_endo * d
-    beta_w = lambda d: beta_endo * (1 - d) + beta_epi * d
-
     if lv + rv < tol:
         depth = 0.5
     else:
         depth = rv / (lv + rv)
 
+    alpha_s = alpha_endo * (1 - depth) - alpha_endo * depth
+    alpha_w = alpha_endo * (1 - epi) + alpha_epi * epi
+    beta_s = beta_endo * (1 - depth) - beta_endo * depth
+    beta_w = beta_endo * (1 - epi) + beta_epi * epi
+
     Q_lv = None
     if lv > tol:
         Q_lv = axis(grad_ab, -1 * grad_lv)
-        Q_lv = orient(Q_lv, alpha_s(depth), beta_s(depth))
+        Q_lv = orient(Q_lv, alpha_s, beta_s)
 
     Q_rv = None
     if rv > tol:
         Q_rv = axis(grad_ab, grad_rv)
-        Q_rv = orient(Q_rv, alpha_s(depth), beta_s(depth))
+        Q_rv = orient(Q_rv, alpha_s, beta_s)
 
     Q_endo = bislerp(Q_lv, Q_rv, depth)
 
     Q_epi = None
     if epi > tol:
         Q_epi = axis(grad_ab, grad_epi)
-        Q_epi = orient(Q_epi, alpha_w(epi), beta_w(epi))
+        Q_epi = orient(Q_epi, alpha_w, beta_w)
 
     Q_fiber = bislerp(Q_endo, Q_epi, epi)
     return Q_fiber

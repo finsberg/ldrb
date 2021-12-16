@@ -13,6 +13,7 @@ repos:
     rev: v2.6.0
     hooks:
       - id: reorder-python-imports
+        exclude: ^demos/
 
   - repo: https://github.com/psf/black
     rev: 21.8b0

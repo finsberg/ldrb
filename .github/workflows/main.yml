@@ -1,0 +1,55 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container:
+          [
+            "quay.io/fenicsproject/stable:latest",
+            "quay.io/dolfinadjoint/pyadjoint:latest",
+          ]
+
+    container:
+      image: ${{ matrix.container }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache
+        id: cache-primes
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/instant
+            ~/.cache/dijitso
+            ~/.cache/pip
+          key: ${{ matrix.container }}-cache_v1
+          restore-keys: |
+            ${{ matrix.container }}-cache_v1
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install h5py --no-binary=h5py
+          python3 -m pip install -e ".[test]"
+
+      - name: Run flake8
+        run: |
+          python3 -m flake8 ldrb tests
+
+      - name: Run black
+        run: |
+          python3 -m black --check ldrb tests
+
+      - name: Run mypy
+        run: |
+          python3 -m mypy ldrb tests
+
+      - name: Test with pytest
+        run: |
+          python3 -m pytest

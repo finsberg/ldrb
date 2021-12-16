@@ -1,0 +1,48 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: finsberg/fenics-extra
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache
+        id: cache-primes
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/instant
+            ~/.cache/dijitso
+            ~/.cache/pip
+            docs/_build/jupyter_execute
+          key: cache_v4
+          restore-keys: |
+            cache_v4
+
+      - name: Upgrade pip
+        run: |
+          # install pip=>20.1 to use "pip cache dir"
+          # python3 -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: |
+          sudo apt install -y pandoc
+          python3 -m pip install h5py --no-binary=h5py
+          python3 -m pip install ".[docs]"
+
+      - name: Build docs
+        run: |
+          make docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build/html
