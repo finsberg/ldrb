@@ -1,9 +1,19 @@
+# # Generating fibers for patient specific geometries
+#
+# In this demo we will show how to generate fiber orientations from a patient specific geometry. We will use a mesh of an LV that is constructed using gmsh (https://gmsh.info).
+#
+# It is important that the mesh contains physical surfaces of the endocardium (lv and rv if present), the base and the epicardium. You can find an example of how to generate such a geometry using the python API for gmsh here: https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160
+#
+# First we import the necessary packages. Note that we also import `meshio` which is used for converted from `.msh` (gmsh) to `.xdmf` (FEnICS).
 from pathlib import Path
 
 import dolfin
 import meshio
 
 import ldrb
+
+
+# Next we define some helper functions for reading the mesh from gmsh. The mesh consists of different cell-types. In this demo we only work with tetrahedral (volume) and triangle (surface) cell-types, but there are also lower dimensional cell types, see e.g https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L61
 
 
 def create_mesh(mesh, cell_type):
@@ -21,6 +31,9 @@ def create_mesh(mesh, cell_type):
 def read_meshfunction(fname, obj):
     with dolfin.XDMFFile(Path(fname).as_posix()) as f:
         f.read(obj, "name_to_read")
+
+
+# Next we define a function for converting the gmsh file into an xdmf file. This function returns the mesh, as well as the facet function (which contains the markers for all the facets) as well as a dictionary containing the available markers.
 
 
 def gmsh2dolfin(msh_file):
@@ -63,6 +76,9 @@ def gmsh2dolfin(msh_file):
     return mesh, ffun, markers
 
 
+# In the final function we simply generate the fibers by first converting the mesh and then generating the fibers
+
+
 def main():
     mesh, ffun, markers = gmsh2dolfin("mesh.msh")
 
@@ -84,6 +100,12 @@ def main():
     fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
         mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=ldrb_markers, **angles
     )
+
+    # Save to xdmf
+    # with dolfin.XDMFFile(mesh.mpi_comm(), "patient_fiber.xdmf") as xdmf:
+    #     xdmf.write(fiber)
+
+    ldrb.fiber_to_xdmf(fiber, "patient_fiber")
 
 
 if __name__ == "__main__":

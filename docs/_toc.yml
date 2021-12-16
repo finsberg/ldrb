@@ -6,6 +6,7 @@ root: README
 chapters:
   - file: DEMO
     sections:
-      - file: lv_demo
-      - file: biv_demo
+      - file: demo_lv
+      - file: demo_biv
+      - file: demo_patient_lv
   - file: ldrb

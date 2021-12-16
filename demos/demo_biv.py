@@ -1,51 +1,49 @@
-"""
-In this demo we will show how you can generate fibers using the ldrb algorithm
-on a BiV mesh. In order to run this demo you also need to install mshr if
-you haven't already.
-
-To run the demo in serial do
-
-.. code::
-
-    python demo_biv.py
-
-If you want to run the demo in parallel you should first comment out the lines
-that don't work in serial. Say you want to run on 4 cpu's, you run the command:
-
-.. code::
-
-    mpirun -n 4 python demo_biv.py
-"""
+# # Creating fibers on a simple BiV ellipsoid
+#
+# In this demo we create a simple BiV ellipsoid using `mshr`.
+# You can install `mshr` using `conda`. It also possible to create ellipsoidal geometries using gmsh, see e.g https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160
+#
+#
 import dolfin as df
 
 import ldrb
 
 # Here we just create a lv mesh. Here you can use yor own mesh instead.
-# geometry = ldrb.create_biv_mesh()
-#
+geometry = ldrb.create_biv_mesh()
+
 # The mesh
-# mesh = geometry.mesh
+mesh = geometry.mesh
 # The facet function (function with marking for the boundaries)
-# ffun = geometry.ffun
+ffun = geometry.ffun
 # A dictionary with keys and values for the markers
-# markers = geometry.markers
+markers = geometry.markers
 
 # Also if you want to to this demo in parallell you should create the mesh
 # in serial and save it to e.g xml
-# df.File('biv_mesh.xml') << mesh
-# df.File('mesh.pvd') << mesh
-# df.File('ffun.pvd') << ffun
-# exit()
-
+# +
+# df.File('lv_mesh.xml') << mesh
+# -
+# or xdmf
+with df.XDMFFile(mesh.mpi_comm(), "mesh.xdmf") as xdmf:
+    xdmf.write(mesh)
 
 # And when you run the code in paralall you should load the mesh from the file.
-mesh = df.Mesh("biv_mesh.xml")
+# +
+# mesh = df.Mesh('lv_mesh.xml')
+# -
+# or with xdmf
+mesh = df.Mesh()
+with df.XDMFFile("mesh.xdmf") as xdmf:
+    xdmf.read(mesh)
 
-# Since the markers are the default markers and the facet function is
-# stored within the mesh itself, you can just set
-markers = None
-ffun = None
+# You should also save the facet function
+with df.XDMFFile(mesh.mpi_comm(), "ffun.xdmf") as xdmf:
+    xdmf.write(ffun)
 
+# and read it agin
+ffun = df.MeshFunction("size_t", mesh, 2)
+with df.XDMFFile("ffun.xdmf") as xdmf:
+    xdmf.read(ffun)
 
 # Decide on the angles you want to use
 angles = dict(
@@ -61,38 +59,44 @@ angles = dict(
     alpha_epi_rv=-80,  # Fiber angle on the RV epicardium
     beta_endo_rv=0,  # Sheet angle on the RV endocardium
     beta_epi_rv=0,
-)  # Sheet angle on the RV epicardium
+)
 
-# Choose space for the fiber fields.
+# Choose space for the fiber fields
 # This is a string on the form {family}_{degree}
-fiber_space = "Quadrature_2"
-# fiber_space = 'Lagrange_1'
+fiber_space = "Lagrange_1"
 
 # Compute the microstructure
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh,
-    fiber_space=fiber_space,
-    ffun=ffun,
-    markers=markers,
-    log_level=20,
-    **angles
+    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=markers, **angles
 )
 
-# # Store the results
-df.File("biv_fiber.xml") << fiber
-df.File("biv_sheet.xml") << sheet
-df.File("biv_sheet_normal.xml") << sheet_normal
+# Store the results
+with df.HDF5File(mesh.mpi_comm(), "biv.h5", "w") as h5file:
+    h5file.write(fiber, "/fiber")
+    h5file.write(sheet, "/sheet")
+    h5file.write(sheet_normal, "/sheet_normal")
 
-# If you run in paralell you should skip the visualization step and do that in
+# If you run in parallel you should skip the visualisation step and do that in
 # serial in stead. In that case you can read the the functions from the xml
 # Using the following code
-# V = ldrb.space_from_string(fiber_space, mesh, dim=3)
-# fiber = df.Function(V, 'biv_fiber.xml')
-# sheet = df.Function(V, 'biv_sheet.xml')
-# sheet_normal = df.Function(V, 'biv_sheet_normal.xml')
 
-# Store files in XDMF to be visualized in Paraview
-# (These function are not tested in paralell)
-# ldrb.fiber_to_xdmf(fiber, 'biv_fiber')
-# ldrb.fiber_to_xdmf(sheet, 'biv_sheet')
-# ldrb.fiber_to_xdmf(sheet_normal, 'biv_sheet_normal')
+# +
+V = ldrb.space_from_string(fiber_space, mesh, dim=3)
+
+fiber = df.Function(V)
+sheet = df.Function(V)
+sheet_normal = df.Function(V)
+
+with df.HDF5File(mesh.mpi_comm(), "biv.h5", "r") as h5file:
+    h5file.read(fiber, "/fiber")
+    h5file.read(sheet, "/sheet")
+    h5file.read(sheet_normal, "/sheet_normal")
+
+# -
+
+# You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don't work (yet) using mpirun
+
+# (These function are not tested in parallel)
+ldrb.fiber_to_xdmf(fiber, "biv_fiber")
+ldrb.fiber_to_xdmf(sheet, "biv_sheet")
+ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
