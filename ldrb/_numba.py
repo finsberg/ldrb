@@ -3,7 +3,57 @@ import numpy as np
 import quaternion
 
 
-@numba.jit
+@numba.njit
+def from_rotation_matrix(rot):
+    diagonals = np.empty(4)
+    diagonals[0] = rot[0, 0]
+    diagonals[1] = rot[1, 1]
+    diagonals[2] = rot[2, 2]
+    diagonals[3] = rot[0, 0] + rot[1, 1] + rot[2, 2]
+    indices = np.argmax(diagonals)
+
+    q = diagonals  # reuse storage space
+
+    if indices == 0:
+
+        q[0] = rot[2, 1] - rot[1, 2]
+        q[1] = 1 + rot[0, 0] - rot[1, 1] - rot[2, 2]
+        q[2] = rot[0, 1] + rot[1, 0]
+        q[3] = rot[0, 2] + rot[2, 0]
+
+    if indices == 1:
+        q[0] = rot[0, 2] - rot[2, 0]
+        q[1] = rot[1, 0] + rot[0, 1]
+        q[2] = 1 - rot[0, 0] + rot[1, 1] - rot[2, 2]
+        q[3] = rot[1, 2] + rot[2, 1]
+
+    if indices == 2:
+        q[0] = rot[1, 0] - rot[0, 1]
+        q[1] = rot[2, 0] + rot[0, 2]
+        q[2] = rot[2, 1] + rot[1, 2]
+        q[3] = 1 - rot[0, 0] - rot[1, 1] + rot[2, 2]
+
+    if indices == 3:
+        q[0] = 1 + rot[0, 0] + rot[1, 1] + rot[2, 2]
+        q[1] = rot[2, 1] - rot[1, 2]
+        q[2] = rot[0, 2] - rot[2, 0]
+        q[3] = rot[1, 0] - rot[0, 1]
+
+    q /= np.linalg.norm(q)
+    return q
+
+
+@numba.njit
+def quat_multiply(q1, q2):
+    q = np.zeros(4)
+    q[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3]
+    q[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2]
+    q[2] = q1[0] * q2[2] - q1[1] * q2[3] + q1[2] * q2[0] + q1[3] * q2[1]
+    q[3] = q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1] + q1[3] * q2[0]
+    return q
+
+
+# @numba.jit
 def bislerp(
     Qa: np.ndarray,
     Qb: np.ndarray,
@@ -25,8 +75,11 @@ def bislerp(
         return Qa
 
     tol = 1e-12
-    qa = quaternion.from_rotation_matrix(Qa)
-    qb = quaternion.from_rotation_matrix(Qb)
+    qa = from_rotation_matrix(Qa)
+    qb = from_rotation_matrix(Qb)
+
+    qa = np.quaternion(*qa)
+    qb = np.quaternion(*qb)
 
     quat_i = np.quaternion(0, 1, 0, 0)
     quat_j = np.quaternion(0, 0, 1, 0)
@@ -56,7 +109,7 @@ def bislerp(
     return Qab
 
 
-@numba.jit
+# @numba.jit
 def system_at_dof(
     lv: float,
     rv: float,
@@ -197,7 +250,8 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
     return C
 
 
-@numba.jit
+#
+# @numba.jit
 def _compute_fiber_sheet_system(
     f0,
     s0,
