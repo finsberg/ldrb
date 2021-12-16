@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; ldrb</title>
+    <title>Creating fibers on a simple LV ellipsoid &#8212; ldrb</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,7 +52,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="demo_biv.html" />
+    <link rel="next" title="Creating fibers on a simple BiV ellipsoid" href="demo_biv.html" />
     <link rel="prev" title="Demo" href="DEMO.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -97,7 +97,7 @@
   </a>
  </li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="DEMO.html">
    Demo
@@ -190,14 +190,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -206,13 +198,11 @@
         
               <div>
                 
-  <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Creating fibers on a simple LV ellipsoid</span>
-<span class="c1">#</span>
-<span class="c1"># In this demo we create a simple LV ellipsoid using `mshr`.</span>
-<span class="c1"># You can install `mshr` using `conda`. It also possible to create ellipsoidal geometries using gmsh, see e.g https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">dolfin</span> <span class="k">as</span> <span class="nn">df</span>
+  <div class="tex2jax_ignore mathjax_ignore section" id="creating-fibers-on-a-simple-lv-ellipsoid">
+<h1>Creating fibers on a simple LV ellipsoid<a class="headerlink" href="#creating-fibers-on-a-simple-lv-ellipsoid" title="Permalink to this headline">¶</a></h1>
+<p>In this demo we create a simple LV ellipsoid using <code class="docutils literal notranslate"><span class="pre">mshr</span></code>.
+You can install <code class="docutils literal notranslate"><span class="pre">mshr</span></code> using <code class="docutils literal notranslate"><span class="pre">conda</span></code>. It also possible to create ellipsoidal geometries using gmsh, see e.g <a class="reference external" href="https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160">https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span> <span class="k">as</span> <span class="nn">df</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
@@ -315,6 +305,7 @@ Using the following code</p>
 <span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;lv_sheet_normal&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
 
     <script type="text/x-thebe-config">
     {
@@ -351,7 +342,7 @@ Using the following code</p>
     <a class='right-next' id="next-link" href="demo_biv.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Creating fibers on a simple BiV ellipsoid</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

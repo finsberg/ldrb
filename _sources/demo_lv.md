@@ -1,10 +1,11 @@
+# Creating fibers on a simple LV ellipsoid
+
+In this demo we create a simple LV ellipsoid using `mshr`.
+You can install `mshr` using `conda`. It also possible to create ellipsoidal geometries using gmsh, see e.g https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160
+
+
+
 ```python
-# # Creating fibers on a simple LV ellipsoid
-#
-# In this demo we create a simple LV ellipsoid using `mshr`.
-# You can install `mshr` using `conda`. It also possible to create ellipsoidal geometries using gmsh, see e.g https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160
-#
-#
 import dolfin as df
 ```
 
