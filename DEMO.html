@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo &#8212; pulse</title>
+    <title>Demo &#8212; ldrb</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,7 +52,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="LV Geometry" href="lv_demo.html" />
+    <link rel="next" title="&lt;no title&gt;" href="demo_lv.html" />
     <link rel="prev" title="Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations" href="README.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -82,7 +82,7 @@
       <img src="_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">pulse</h1>
+      <h1 class="site-logo" id="site-title">ldrb</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -98,27 +98,10 @@
  </li>
 </ul>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active has-children">
+ <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Demo
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="lv_demo.html">
-     LV Geometry
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="biv_demo.html">
-     BiV Geometry
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="ldrb.html">
@@ -182,11 +165,11 @@
         aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
     <div class="dropdown-buttons sourcebuttons">
         <a class="repository-button"
-            href="https://github.com/finsberg/pulse"><button type="button" class="btn btn-secondary topbarbtn"
+            href="https://github.com/finsberg/ldrb"><button type="button" class="btn btn-secondary topbarbtn"
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/finsberg/pulse/issues/new?title=Issue%20on%20page%20%2FDEMO.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/finsberg/ldrb/issues/new?title=Issue%20on%20page%20%2FDEMO.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -207,6 +190,36 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Demo
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#lv">
+     LV
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#biv">
+     BiV
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#patient">
+   Patient
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -217,10 +230,36 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="demo">
 <h1>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h1>
+<p>Here you will find the demos for generating fibers using the LDRB algorithm. All demos should work in serial and parallel using <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>. This means that you can run the demos either using e.g</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">demo_lv</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>or using <code class="docutils literal notranslate"><span class="pre">mpirun</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">4</span> <span class="n">python</span> <span class="n">demo_lv</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>which will run the demo using 4 processors.</p>
+<p>There are currently three demos that you can find below</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="lv_demo.html"><span class="doc std std-doc">Simple LV</span></a></p></li>
-<li><p><a class="reference internal" href="biv_demo.html"><span class="doc std std-doc">Simple BiV</span></a></p></li>
+<li><p><a class="reference internal" href="demo_lv.html"><span class="doc std std-doc">Simple LV</span></a></p></li>
+<li><p><a class="reference internal" href="demo_biv.html"><span class="doc std std-doc">Simple BiV</span></a></p></li>
+<li><p><a class="reference internal" href="demo_patient_lv.html"><span class="doc std std-doc">Patient specific LV</span></a></p></li>
 </ul>
+<p>Below we also show some example plots of the fiber orientations</p>
+<div class="section" id="lv">
+<h2>LV<a class="headerlink" href="#lv" title="Permalink to this headline">¶</a></h2>
+<p><img alt="LV Fiber" src="_images/lv_fiber.png" /></p>
+<p><img alt="LV Sheet" src="_images/lv_sheet.png" /></p>
+<p><img alt="LV Sheet-normal" src="_images/lv_sheet_normal.png" /></p>
+</div>
+<div class="section" id="biv">
+<h2>BiV<a class="headerlink" href="#biv" title="Permalink to this headline">¶</a></h2>
+<p><img alt="BiV Fiber" src="_images/biv_fiber.png" /></p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="patient">
+<h1>Patient<a class="headerlink" href="#patient" title="Permalink to this headline">¶</a></h1>
+<p><img alt="Patient Fiber" src="_images/patient_fiber_lv.png" /></p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -229,7 +268,7 @@
     {
         requestKernel: true,
         binderOptions: {
-            repo: "finsberg/pulse",
+            repo: "finsberg/ldrb",
             ref: "master",
         },
         codeMirrorConfig: {
@@ -257,10 +296,10 @@
             <p class="prev-next-title">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="lv_demo.html" title="next page">
+    <a class='right-next' id="next-link" href="demo_lv.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">LV Geometry</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
