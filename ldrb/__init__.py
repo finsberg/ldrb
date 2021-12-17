@@ -1,3 +1,4 @@
+from . import calculus
 from . import ldrb
 from . import save
 from . import utils
@@ -25,4 +26,5 @@ __all__ = [
     "create_biv_mesh",
     "create_lv_mesh",
     "space_from_string",
+    "calculus",
 ]

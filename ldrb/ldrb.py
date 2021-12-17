@@ -7,77 +7,10 @@ import dolfin as df
 import numpy as np
 import quaternion
 from dolfin.mesh.meshfunction import MeshFunction
-from scipy import optimize
 
 from . import utils
 
 FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
-
-
-def normalize(u: np.ndarray) -> np.ndarray:
-    """
-    Normalize vector
-    """
-    return u / np.linalg.norm(u)
-
-
-def axis(u: np.ndarray, v: np.ndarray) -> np.ndarray:
-    r"""
-    Construct the fiber orientation coordinate system.
-
-    Given two vectors :math:`u` and :math:`v` in the apicobasal
-    and transmural direction respectively return a matrix that
-    represents an orthonormal basis in the circumferential (first),
-    apicobasal (second) and transmural (third) direction.
-    """
-
-    e1 = normalize(u)
-
-    # Create an initial guess for e0
-    e2 = normalize(v)
-    e2 -= e1.dot(e2) * e1
-    e2 = normalize(e2)
-
-    e0 = np.cross(e1, e2)
-    e0 = normalize(e0)
-
-    def f(e0):
-        e2 = normalize(v - e0.dot(v) * e0)
-        return e0 - np.cross(e1, e2)
-
-    sol = optimize.root(f, e0)
-    e0 = sol.x
-    e2 = normalize(v - e0.dot(v) * e0)
-
-    Q = np.zeros((3, 3))
-    Q[:, 0] = e0
-    Q[:, 1] = e1
-    Q[:, 2] = e2
-
-    return Q
-
-
-def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
-    r"""
-    Define the orthotropic fiber orientations.
-
-    Given a coordinate system :math:`Q`, in the canonical
-    basis, rotate it in order to align with the fiber, sheet
-    and sheet-normal axis determine by the angles :math:`\alpha`
-    (fiber) and :math:`\beta` (sheets).
-    """
-    A = np.zeros((3, 3))
-    A[0, :] = [np.cos(np.radians(alpha)), -np.sin(np.radians(alpha)), 0]
-    A[1, :] = [np.sin(np.radians(alpha)), np.cos(np.radians(alpha)), 0]
-    A[2, :] = [0, 0, 1]
-
-    B = np.zeros((3, 3))
-    B[0, :] = [1, 0, 0]
-    B[1, :] = [0, np.cos(np.radians(beta)), np.sin(np.radians(beta))]
-    B[2, :] = [0, -np.sin(np.radians(beta)), np.cos(np.radians(beta))]
-
-    C = np.dot(Q.real, A).dot(B)
-    return C
 
 
 def laplace(
@@ -167,85 +100,6 @@ def standard_dofs(n: int) -> np.ndarray:
     return np.stack([x_dofs, y_dofs, z_dofs, scalar_dofs], -1)
 
 
-def system_at_dof(
-    lv: float,
-    rv: float,
-    epi: float,
-    grad_lv: np.ndarray,
-    grad_rv: np.ndarray,
-    grad_epi: np.ndarray,
-    grad_ab: np.ndarray,
-    alpha_endo: float,
-    alpha_epi: float,
-    beta_endo: float,
-    beta_epi: float,
-    tol: float = 1e-7,
-) -> Optional[np.ndarray]:
-    """
-    Compte the fiber, sheet and sheet normal at a
-    single degre of freedom
-
-    Arguments
-    ---------
-    lv : float
-        Value of the Laplace solution for the LV at the dof.
-    rv : float
-        Value of the Laplace solution for the RV at the dof.
-    epi : float
-        Value of the Laplace solution for the EPI at the dof.
-    grad_lv : np.ndarray
-        Gradient of the Laplace solution for the LV at the dof.
-    grad_rv : np.ndarray
-        Gradient of the Laplace solution for the RV at the dof.
-    grad_epi : np.ndarray
-        Gradient of the Laplace solution for the EPI at the dof.
-    grad_epi : np.ndarray
-        Gradient of the Laplace solution for the apex to base.
-        at the dof
-    alpha_endo : scalar
-        Fiber angle at the endocardium.
-    alpha_epi : scalar
-        Fiber angle at the epicardium.
-    beta_endo : scalar
-        Sheet angle at the endocardium.
-    beta_epi : scalar
-        Sheet angle at the epicardium.
-    tol : scalar
-        Tolerance for whether to consider the scalar values.
-        Default: 1e-7
-    """
-
-    if lv + rv < tol:
-        depth = 0.5
-    else:
-        depth = rv / (lv + rv)
-
-    alpha_s = alpha_endo * (1 - depth) - alpha_endo * depth
-    alpha_w = alpha_endo * (1 - epi) + alpha_epi * epi
-    beta_s = beta_endo * (1 - depth) - beta_endo * depth
-    beta_w = beta_endo * (1 - epi) + beta_epi * epi
-
-    Q_lv = None
-    if lv > tol:
-        Q_lv = axis(grad_ab, -1 * grad_lv)
-        Q_lv = orient(Q_lv, alpha_s, beta_s)
-
-    Q_rv = None
-    if rv > tol:
-        Q_rv = axis(grad_ab, grad_rv)
-        Q_rv = orient(Q_rv, alpha_s, beta_s)
-
-    Q_endo = bislerp(Q_lv, Q_rv, depth)
-
-    Q_epi = None
-    if epi > tol:
-        Q_epi = axis(grad_ab, grad_epi)
-        Q_epi = orient(Q_epi, alpha_w, beta_w)
-
-    Q_fiber = bislerp(Q_endo, Q_epi, epi)
-    return Q_fiber
-
-
 def compute_fiber_sheet_system(
     lv_scalar: np.ndarray,
     lv_gradient: np.ndarray,
@@ -267,7 +121,6 @@ def compute_fiber_sheet_system(
     beta_epi_rv: Optional[float] = None,
     beta_endo_sept: Optional[float] = None,
     beta_epi_sept: Optional[float] = None,
-    use_numba: bool = False,
 ) -> FiberSheetSystem:
     """
     Compute the fiber-sheets system on all degrees of freedom.
@@ -336,12 +189,9 @@ def compute_fiber_sheet_system(
 
     tol = 1e-3
 
-    if use_numba:
-        from ._numba import _compute_fiber_sheet_system as func
-    else:
-        func = _compute_fiber_sheet_system
+    from .calculus import _compute_fiber_sheet_system
 
-    func(
+    _compute_fiber_sheet_system(
         f0,
         s0,
         n0,
@@ -372,93 +222,6 @@ def compute_fiber_sheet_system(
     )
 
     return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
-
-
-def _compute_fiber_sheet_system(
-    f0,
-    s0,
-    n0,
-    xdofs,
-    ydofs,
-    zdofs,
-    sdofs,
-    lv_scalar,
-    rv_scalar,
-    epi_scalar,
-    lv_gradient,
-    rv_gradient,
-    epi_gradient,
-    apex_gradient,
-    alpha_endo_lv,
-    alpha_epi_lv,
-    alpha_endo_rv,
-    alpha_epi_rv,
-    alpha_endo_sept,
-    alpha_epi_sept,
-    beta_endo_lv,
-    beta_epi_lv,
-    beta_endo_rv,
-    beta_epi_rv,
-    beta_endo_sept,
-    beta_epi_sept,
-    tol,
-):
-    for i in range(len(xdofs)):
-
-        dof = np.array([xdofs[i], ydofs[i], zdofs[i]])
-
-        lv = lv_scalar[sdofs[i]]
-        rv = rv_scalar[sdofs[i]]
-        epi = epi_scalar[sdofs[i]]
-        grad_lv = lv_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
-        grad_rv = rv_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
-        grad_epi = epi_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
-        grad_ab = apex_gradient[[xdofs[i], ydofs[i], zdofs[i]]]
-
-        if lv > tol and rv < tol:
-            # We are in the LV region
-            alpha_endo = alpha_endo_lv
-            beta_endo = beta_endo_lv
-            alpha_epi = alpha_epi_lv
-            beta_epi = beta_epi_lv
-        elif lv < tol and rv > tol:
-            # We are in the RV region
-            alpha_endo = alpha_endo_rv
-            beta_endo = beta_endo_rv
-            alpha_epi = alpha_epi_rv
-            beta_epi = beta_epi_rv
-        elif lv > tol and rv > tol:
-            # We are in the septum
-            alpha_endo = alpha_endo_sept
-            beta_endo = beta_endo_sept
-            alpha_epi = alpha_epi_sept
-            beta_epi = beta_epi_sept
-        else:
-            alpha_endo = alpha_endo_lv
-            beta_endo = beta_endo_lv
-            alpha_epi = alpha_epi_lv
-            beta_epi = beta_epi_lv
-
-        Q_fiber = system_at_dof(
-            lv=lv,
-            rv=rv,
-            epi=epi,
-            grad_lv=grad_lv,
-            grad_rv=grad_rv,
-            grad_epi=grad_epi,
-            grad_ab=grad_ab,
-            alpha_endo=alpha_endo,
-            alpha_epi=alpha_epi,
-            beta_endo=beta_endo,
-            beta_epi=beta_epi,
-            tol=tol,
-        )
-        if Q_fiber is None:
-            df.info(f"Invalid system at dof {dof}")
-            continue
-        f0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[0]
-        s0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[1]
-        n0[[xdofs[i], ydofs[i], zdofs[i]]] = Q_fiber.T[2]
 
 
 def dofs_from_function_space(mesh: df.Mesh, fiber_space: str) -> np.ndarray:
@@ -492,7 +255,6 @@ def dolfin_ldrb(
     ffun: Optional[df.MeshFunction] = None,
     markers: Optional[Dict[str, int]] = None,
     log_level: int = logging.INFO,
-    use_numba: bool = False,
     **angles: Optional[float],
 ):
     r"""
@@ -522,9 +284,6 @@ def dolfin_ldrb(
     log_level : int
         How much to print. DEBUG=10, INFO=20, WARNING=30.
         Default: INFO
-    use_numba : bool
-        If True, use numba to compute the fiber-sheet system at each
-        dof. This will speed up the computations.
     angles : kwargs
         Keyword arguments with the fiber and sheet angles.
         It is possible to set different angles on the LV,
@@ -583,9 +342,7 @@ def dolfin_ldrb(
 
     dofs = dofs_from_function_space(mesh, fiber_space)
 
-    system = compute_fiber_sheet_system(
-        dofs=dofs, **data, **angles, use_numba=use_numba  # type:ignore
-    )
+    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)  # type:ignore
 
     df.set_log_level(log_level)
     return fiber_system_to_dolfin(system, mesh, fiber_space)
