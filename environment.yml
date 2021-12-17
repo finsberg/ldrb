@@ -6,6 +6,4 @@ dependencies:
   - fenics
   - mshr
   - numba
-  - quaternion
   - h5py
-  - scipy
