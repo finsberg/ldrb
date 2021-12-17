@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = "2021.0.2"
+VERSION = "2022.0.0"
 
 # Where the magic happens:
 setup(
