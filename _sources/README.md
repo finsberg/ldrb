@@ -44,7 +44,7 @@ ldrb.fiber_to_xdmf(fiber, "fiber")
 # And visualize it in Paraview
 ```
 
-![](_static/figures/biv_fiber.png)
+![](docs/_static/figures/biv_fiber.png)
 
 # Installation
 
@@ -74,15 +74,7 @@ which will also install FEniCS through `conda`.
 Documentation is hosted at http://finsberg.github.io/ldrb
 
 # Getting started
-Check out the [demos](demos) and the [documentation](https://ldrb.readthedocs.io)
-
-# Known issues
-
-If you encounter the following error:
-```
-ImportError: numpy.core.multiarray failed to import
-```
-see https://github.com/moble/quaternion/issues/72 for how to troubleshoot.
+Check out the [demos](demos)
 
 # License
 `ldrb` is licensed under the GNU LGPL, version 3 or (at your option) any later version.

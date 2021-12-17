@@ -42,6 +42,8 @@
     <script src="_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe,.cell"
@@ -200,22 +202,27 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ldrb-ldrb-module">
+  <a class="reference internal nav-link" href="#module-ldrb.calculus">
+   ldrb.calculus module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-ldrb.ldrb">
    ldrb.ldrb module
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ldrb-save-module">
+  <a class="reference internal nav-link" href="#module-ldrb.save">
    ldrb.save module
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ldrb-utils-module">
+  <a class="reference internal nav-link" href="#module-ldrb.utils">
    ldrb.utils module
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#module-contents">
+  <a class="reference internal nav-link" href="#module-ldrb">
    Module contents
   </a>
  </li>
@@ -235,17 +242,670 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="ldrb-ldrb-module">
-<h2>ldrb.ldrb module<a class="headerlink" href="#ldrb-ldrb-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ldrb.calculus">
+<span id="ldrb-calculus-module"></span><h2>ldrb.calculus module<a class="headerlink" href="#module-ldrb.calculus" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.as_rotation_matrix">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">as_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.as_rotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert quaternion to a rotatoin matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>q</strong> (<em>np.ndarray</em>) – The quaternion</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The rotation matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.axis">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the fiber orientation coordinate system.</p>
+<p>Given two vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> in the apicobasal
+and transmural direction respectively return a matrix that
+represents an orthonormal basis in the circumferential (first),
+apicobasal (second) and transmural (third) direction.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.bislerp">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">bislerp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Qa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.bislerp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear interpolation of two orthogonal matrices.
+Assiume that <span class="math notranslate nohighlight">\(Q_a\)</span> and <span class="math notranslate nohighlight">\(Q_b\)</span> refers to
+timepoint <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span> respectively.
+Using spherical linear interpolation (slerp) find the
+orthogonal matrix at timepoint <span class="math notranslate nohighlight">\(t\)</span>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.from_rotation_matrix">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">from_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.from_rotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert rotation matrix to a quaternion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rot</strong> (<em>np.ndarray</em>) – The rotation matrix</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The quaternion</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.normalize">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize vector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.orient">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">orient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.orient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the orthotropic fiber orientations.</p>
+<p>Given a coordinate system <span class="math notranslate nohighlight">\(Q\)</span>, in the canonical
+basis, rotate it in order to align with the fiber, sheet
+and sheet-normal axis determine by the angles <span class="math notranslate nohighlight">\(\alpha\)</span>
+(fiber) and <span class="math notranslate nohighlight">\(\beta\)</span> (sheets).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.quat_multiply">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">quat_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.quat_multiply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaterion multiplication</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q1</strong> (<em>np.ndarray</em>) – First quaternion</p></li>
+<li><p><strong>q2</strong> (<em>np.ndarray</em>) – Second quaternion</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The product of q1 and q2</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.slerp">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">slerp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.slerp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sperical linear interpolation between two quaternions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Quaternion corresponding to t=0</p></li>
+<li><p><strong>p1</strong> (<em>np.ndarray</em>) – Quaternions corresponding to t=1</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Interpolation factor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Quaternion corresponding to t=t</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.calculus.system_at_dof">
+<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">system_at_dof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_ab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.system_at_dof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compte the fiber, sheet and sheet normal at a
+single degre of freedom</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lv</strong> (<em>float</em>) – Value of the Laplace solution for the LV at the dof.</p></li>
+<li><p><strong>rv</strong> (<em>float</em>) – Value of the Laplace solution for the RV at the dof.</p></li>
+<li><p><strong>epi</strong> (<em>float</em>) – Value of the Laplace solution for the EPI at the dof.</p></li>
+<li><p><strong>grad_lv</strong> (<em>np.ndarray</em>) – Gradient of the Laplace solution for the LV at the dof.</p></li>
+<li><p><strong>grad_rv</strong> (<em>np.ndarray</em>) – Gradient of the Laplace solution for the RV at the dof.</p></li>
+<li><p><strong>grad_epi</strong> (<em>np.ndarray</em>) – Gradient of the Laplace solution for the EPI at the dof.</p></li>
+<li><p><strong>grad_epi</strong> – Gradient of the Laplace solution for the apex to base.
+at the dof</p></li>
+<li><p><strong>alpha_endo</strong> (<em>scalar</em>) – Fiber angle at the endocardium.</p></li>
+<li><p><strong>alpha_epi</strong> (<em>scalar</em>) – Fiber angle at the epicardium.</p></li>
+<li><p><strong>beta_endo</strong> (<em>scalar</em>) – Sheet angle at the endocardium.</p></li>
+<li><p><strong>beta_epi</strong> (<em>scalar</em>) – Sheet angle at the epicardium.</p></li>
+<li><p><strong>tol</strong> (<em>scalar</em>) – Tolerance for whether to consider the scalar values.
+Default: 1e-7</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="ldrb-save-module">
-<h2>ldrb.save module<a class="headerlink" href="#ldrb-save-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ldrb.ldrb">
+<span id="ldrb-ldrb-module"></span><h2>ldrb.ldrb module<a class="headerlink" href="#module-ldrb.ldrb" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ldrb.ldrb.FiberSheetSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">FiberSheetSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fiber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_normal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.ldrb.FiberSheetSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.ldrb.FiberSheetSystem.fiber">
+<span class="sig-name descname"><span class="pre">fiber</span></span><a class="headerlink" href="#ldrb.ldrb.FiberSheetSystem.fiber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.ldrb.FiberSheetSystem.sheet">
+<span class="sig-name descname"><span class="pre">sheet</span></span><a class="headerlink" href="#ldrb.ldrb.FiberSheetSystem.sheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.ldrb.FiberSheetSystem.sheet_normal">
+<span class="sig-name descname"><span class="pre">sheet_normal</span></span><a class="headerlink" href="#ldrb.ldrb.FiberSheetSystem.sheet_normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.apex_to_base">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">apex_to_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_marker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.ldrb.apex_to_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the apex coordinate and compute the laplace
+equation to find the apex to base solution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>base_marker</strong> (<em>int</em>) – The marker value for the basal facets</p></li>
+<li><p><strong>ffun</strong> (<em>dolfin.MeshFunctionSizet</em><em> (</em><em>optional</em><em>)</em>) – A facet function containing markers for the boundaries.
+If not provided, the markers stored within the mesh will
+be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.compute_fiber_sheet_system">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">compute_fiber_sheet_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lv_scalar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lv_gradient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epi_scalar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epi_gradient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apex_gradient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dofs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rv_scalar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rv_gradient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_endo_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_epi_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">65</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_endo_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_epi_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.ldrb.FiberSheetSystem" title="ldrb.ldrb.FiberSheetSystem"><span class="pre">ldrb.ldrb.FiberSheetSystem</span></a></span></span><a class="headerlink" href="#ldrb.ldrb.compute_fiber_sheet_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the fiber-sheets system on all degrees of freedom.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.dofs_from_function_space">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">dofs_from_function_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.ldrb.dofs_from_function_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dofs from a function spaces define in the
+fiber_space string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.dolfin_ldrb">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">dolfin_ldrb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CG_1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.ldrb.dolfin_ldrb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create fiber, cross fibers and sheet directions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.
+If not provdied, then a first order Lagrange space will be used,
+i.e Lagrange_1.</p></li>
+<li><p><strong>ffun</strong> (<em>dolfin.MeshFunctionSizet</em><em> (</em><em>optional</em><em>)</em>) – A facet function containing markers for the boundaries.
+If not provided, the markers stored within the mesh will
+be used.</p></li>
+<li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
+different bondaries defined in the facet function
+or within the mesh itself.
+The follwing markers must be provided:
+‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
+If the markers are not provided the following default
+vales will be used: base = 10, rv = 20, lv = 30, epi = 40</p></li>
+<li><p><strong>log_level</strong> (<em>int</em>) – How much to print. DEBUG=10, INFO=20, WARNING=30.
+Default: INFO</p></li>
+<li><p><strong>angles</strong> (<em>kwargs</em>) – <p>Keyword arguments with the fiber and sheet angles.
+It is possible to set different angles on the LV,
+RV and septum, however it either the RV or septum
+angles are not provided, then the angles on the LV
+will be used. The default values are taken from the
+original paper, namely</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\alpha_{\text{endo}} &amp;= 40 \\
+\alpha_{\text{epi}} &amp;= -50 \\
+\beta_{\text{endo}} &amp;= -65 \\
+\beta_{\text{epi}} &amp;= 25\end{split}\]</div>
+<p>The following keyword arguments are possible:</p>
+<dl class="simple">
+<dt>alpha_endo_lv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the LV endocardium.</p>
+</dd>
+<dt>alpha_epi_lv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the LV epicardium.</p>
+</dd>
+<dt>beta_endo_lv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the LV endocardium.</p>
+</dd>
+<dt>beta_epi_lv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the LV epicardium.</p>
+</dd>
+<dt>alpha_endo_rv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the RV endocardium.</p>
+</dd>
+<dt>alpha_epi_rv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the RV epicardium.</p>
+</dd>
+<dt>beta_endo_rv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the RV endocardium.</p>
+</dd>
+<dt>beta_epi_rv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the RV epicardium.</p>
+</dd>
+<dt>alpha_endo_sept<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the septum endocardium.</p>
+</dd>
+<dt>alpha_epi_sept<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the septum epicardium.</p>
+</dd>
+<dt>beta_endo_sept<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the septum endocardium.</p>
+</dd>
+<dt>beta_epi_sept<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the septum epicardium.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.fiber_system_to_dolfin">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">fiber_system_to_dolfin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ldrb.ldrb.FiberSheetSystem" title="ldrb.ldrb.FiberSheetSystem"><span class="pre">ldrb.ldrb.FiberSheetSystem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.ldrb.FiberSheetSystem" title="ldrb.ldrb.FiberSheetSystem"><span class="pre">ldrb.ldrb.FiberSheetSystem</span></a></span></span><a class="headerlink" href="#ldrb.ldrb.fiber_system_to_dolfin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert fiber-sheet system of numpy arrays to dolfin
+functions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.laplace">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">laplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.ldrb.laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve the laplace equation and project the gradients
+of the solutions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.project_gradients">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">project_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalar_solutions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dolfin.function.function.Function</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.ldrb.project_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the gradients using projections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.</p></li>
+<li><p><strong>scalar_solutions</strong> (<em>dict</em>) – A dictionary with the scalar solutions that you
+want to compute the gradients of.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.scalar_laplacians">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">scalar_laplacians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dolfin.function.function.Function</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.ldrb.scalar_laplacians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the laplacians</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – A dolfin mesh</p></li>
+<li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
+different bondaries defined in the facet function
+or within the mesh itself.
+The follwing markers must be provided:
+‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
+If the markers are not provided the following default
+vales will be used: base = 10, rv = 20, lv = 30, epi = 40.</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.ldrb.standard_dofs">
+<span class="sig-prename descclassname"><span class="pre">ldrb.ldrb.</span></span><span class="sig-name descname"><span class="pre">standard_dofs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.ldrb.standard_dofs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the standard list of dofs for a given length</p>
+</dd></dl>
+
 </div>
-<div class="section" id="ldrb-utils-module">
-<h2>ldrb.utils module<a class="headerlink" href="#ldrb-utils-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ldrb.save">
+<span id="ldrb-save-module"></span><h2>ldrb.save module<a class="headerlink" href="#module-ldrb.save" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.dolfin_to_hd5">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">dolfin_to_hd5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm=&lt;mpi4py.MPI.Intracomm</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.dolfin_to_hd5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save object to and HDF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>dolfin.Mesh</em><em> or </em><em>dolfin.Function</em>) – The object you want to save</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>h5group</strong> (<em>str</em>) – The folder you want to save the object
+withing the HDF file. Default: ‘’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.fiber_to_xdmf">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">fiber_to_xdmf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm=&lt;mpi4py.MPI.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.fiber_to_xdmf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.fun_to_xdmf">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">fun_to_xdmf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'function'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.fun_to_xdmf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.load_dict_from_h5">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">load_dict_from_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5group=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm=&lt;mpi4py.MPI.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.load_dict_from_h5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the given h5file into
+a dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.save_scalar_function">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">save_scalar_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.save_scalar_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.save.save_vector_function">
+<span class="sig-prename descclassname"><span class="pre">ldrb.save.</span></span><span class="sig-name descname"><span class="pre">save_vector_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.save.save_vector_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ldrb.utils">
+<span id="ldrb-utils-module"></span><h2>ldrb.utils module<a class="headerlink" href="#module-ldrb.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ldrb.utils.Geometry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.Geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.utils.Geometry.ffun">
+<span class="sig-name descname"><span class="pre">ffun</span></span><a class="headerlink" href="#ldrb.utils.Geometry.ffun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.utils.Geometry.markers">
+<span class="sig-name descname"><span class="pre">markers</span></span><a class="headerlink" href="#ldrb.utils.Geometry.markers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ldrb.utils.Geometry.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#ldrb.utils.Geometry.mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.assign_to_vector">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">assign_to_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.assign_to_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign the value of the array a to the dolfin vector v</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.broadcast">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">broadcast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_process</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.broadcast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast array to all processes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.create_biv_mesh">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">create_biv_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.5,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.utils.Geometry" title="ldrb.utils.Geometry"><span class="pre">ldrb.utils.Geometry</span></a></span></span><a class="headerlink" href="#ldrb.utils.create_biv_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an biv-ellipsoidal mesh.</p>
+<p>An ellipsoid is given by the equation</p>
+<div class="math notranslate nohighlight">
+\[\frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1\]</div>
+<p>We create three ellipsoids, one for the LV and RV endocardium
+and one for the epicardium and subtract them and then cut the base.
+For simplicity we assume that the longitudinal axis is in
+in <span class="math notranslate nohighlight">\(x\)</span>-direction and as default the base is located
+at the <span class="math notranslate nohighlight">\(x=0\)</span> plane.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.create_lv_mesh">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">create_lv_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.utils.Geometry" title="ldrb.utils.Geometry"><span class="pre">ldrb.utils.Geometry</span></a></span></span><a class="headerlink" href="#ldrb.utils.create_lv_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an lv-ellipsoidal mesh.</p>
+<p>An ellipsoid is given by the equation</p>
+<div class="math notranslate nohighlight">
+\[\frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1\]</div>
+<p>We create two ellipsoids, one for the endocardium and one
+for the epicardium and subtract them and then cut the base.
+For simplicity we assume that the longitudinal axis is in
+in <span class="math notranslate nohighlight">\(x\)</span>-direction and as default the base is located
+at the <span class="math notranslate nohighlight">\(x=0\)</span> plane.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.default_markers">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">default_markers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.utils.default_markers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default markers for the mesh boundaries</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.distribution">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get distribution of number on all processes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.gather">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.gather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather array from all processes on a single process</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.gather_broadcast">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">gather_broadcast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.gather_broadcast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.mark_biv_mesh">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">mark_biv_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'lv':</span> <span class="pre">0,</span> <span class="pre">'rv':</span> <span class="pre">2,</span> <span class="pre">'septum':</span> <span class="pre">1}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span></span></span><a class="headerlink" href="#ldrb.utils.mark_biv_mesh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.mark_facets">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">mark_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.mark_facets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark mesh according to facet function</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.mpi_comm_world">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">mpi_comm_world</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.utils.mpi_comm_world" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.space_from_string">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">space_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dolfin.function.functionspace.FunctionSpace</span></span></span><a class="headerlink" href="#ldrb.utils.space_from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructed a finite elements space from a string
+representation of the space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines the space. Example ‘Lagrange_1’.</p></li>
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – 1 for scalar space, 3 for vector space.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.utils.value_size">
+<span class="sig-prename descclassname"><span class="pre">ldrb.utils.</span></span><span class="sig-name descname"><span class="pre">value_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ufl.coefficient.Coefficient</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.utils.value_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ldrb">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ldrb" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.create_biv_mesh">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">create_biv_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.5,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.utils.Geometry" title="ldrb.utils.Geometry"><span class="pre">ldrb.utils.Geometry</span></a></span></span><a class="headerlink" href="#ldrb.create_biv_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an biv-ellipsoidal mesh.</p>
+<p>An ellipsoid is given by the equation</p>
+<div class="math notranslate nohighlight">
+\[\frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1\]</div>
+<p>We create three ellipsoids, one for the LV and RV endocardium
+and one for the epicardium and subtract them and then cut the base.
+For simplicity we assume that the longitudinal axis is in
+in <span class="math notranslate nohighlight">\(x\)</span>-direction and as default the base is located
+at the <span class="math notranslate nohighlight">\(x=0\)</span> plane.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.create_lv_mesh">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">create_lv_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ldrb.utils.Geometry" title="ldrb.utils.Geometry"><span class="pre">ldrb.utils.Geometry</span></a></span></span><a class="headerlink" href="#ldrb.create_lv_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an lv-ellipsoidal mesh.</p>
+<p>An ellipsoid is given by the equation</p>
+<div class="math notranslate nohighlight">
+\[\frac{x^2}{a} + \frac{y^2}{b} + \frac{z^2}{c} = 1\]</div>
+<p>We create two ellipsoids, one for the endocardium and one
+for the epicardium and subtract them and then cut the base.
+For simplicity we assume that the longitudinal axis is in
+in <span class="math notranslate nohighlight">\(x\)</span>-direction and as default the base is located
+at the <span class="math notranslate nohighlight">\(x=0\)</span> plane.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.dolfin_ldrb">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">dolfin_ldrb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CG_1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.dolfin_ldrb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create fiber, cross fibers and sheet directions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.
+If not provdied, then a first order Lagrange space will be used,
+i.e Lagrange_1.</p></li>
+<li><p><strong>ffun</strong> (<em>dolfin.MeshFunctionSizet</em><em> (</em><em>optional</em><em>)</em>) – A facet function containing markers for the boundaries.
+If not provided, the markers stored within the mesh will
+be used.</p></li>
+<li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
+different bondaries defined in the facet function
+or within the mesh itself.
+The follwing markers must be provided:
+‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
+If the markers are not provided the following default
+vales will be used: base = 10, rv = 20, lv = 30, epi = 40</p></li>
+<li><p><strong>log_level</strong> (<em>int</em>) – How much to print. DEBUG=10, INFO=20, WARNING=30.
+Default: INFO</p></li>
+<li><p><strong>angles</strong> (<em>kwargs</em>) – <p>Keyword arguments with the fiber and sheet angles.
+It is possible to set different angles on the LV,
+RV and septum, however it either the RV or septum
+angles are not provided, then the angles on the LV
+will be used. The default values are taken from the
+original paper, namely</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\alpha_{\text{endo}} &amp;= 40 \\
+\alpha_{\text{epi}} &amp;= -50 \\
+\beta_{\text{endo}} &amp;= -65 \\
+\beta_{\text{epi}} &amp;= 25\end{split}\]</div>
+<p>The following keyword arguments are possible:</p>
+<dl class="simple">
+<dt>alpha_endo_lv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the LV endocardium.</p>
+</dd>
+<dt>alpha_epi_lv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the LV epicardium.</p>
+</dd>
+<dt>beta_endo_lv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the LV endocardium.</p>
+</dd>
+<dt>beta_epi_lv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the LV epicardium.</p>
+</dd>
+<dt>alpha_endo_rv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the RV endocardium.</p>
+</dd>
+<dt>alpha_epi_rv<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the RV epicardium.</p>
+</dd>
+<dt>beta_endo_rv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the RV endocardium.</p>
+</dd>
+<dt>beta_epi_rv<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the RV epicardium.</p>
+</dd>
+<dt>alpha_endo_sept<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the septum endocardium.</p>
+</dd>
+<dt>alpha_epi_sept<span class="classifier">scalar</span></dt><dd><p>Fiber angle at the septum epicardium.</p>
+</dd>
+<dt>beta_endo_sept<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the septum endocardium.</p>
+</dd>
+<dt>beta_epi_sept<span class="classifier">scalar</span></dt><dd><p>Sheet angle at the septum epicardium.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.fiber_to_xdmf">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">fiber_to_xdmf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm=&lt;mpi4py.MPI.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.fiber_to_xdmf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.fun_to_xdmf">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">fun_to_xdmf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'function'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ldrb.fun_to_xdmf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.project_gradients">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">project_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fiber_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalar_solutions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dolfin.function.function.Function</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.project_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the gradients using projections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.</p></li>
+<li><p><strong>scalar_solutions</strong> (<em>dict</em>) – A dictionary with the scalar solutions that you
+want to compute the gradients of.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.scalar_laplacians">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">scalar_laplacians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dolfin.mesh.meshfunction.MeshFunction</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dolfin.function.function.Function</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ldrb.scalar_laplacians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the laplacians</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – A dolfin mesh</p></li>
+<li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
+different bondaries defined in the facet function
+or within the mesh itself.
+The follwing markers must be provided:
+‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
+If the markers are not provided the following default
+vales will be used: base = 10, rv = 20, lv = 30, epi = 40.</p></li>
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines for what space the fibers should be calculated for.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ldrb.space_from_string">
+<span class="sig-prename descclassname"><span class="pre">ldrb.</span></span><span class="sig-name descname"><span class="pre">space_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dolfin.cpp.mesh.Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dolfin.function.functionspace.FunctionSpace</span></span></span><a class="headerlink" href="#ldrb.space_from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructed a finite elements space from a string
+representation of the space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+determines the space. Example ‘Lagrange_1’.</p></li>
+<li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – 1 for scalar space, 3 for vector space.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 

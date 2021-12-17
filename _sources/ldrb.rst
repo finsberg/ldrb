@@ -4,6 +4,14 @@ ldrb package
 Submodules
 ----------
 
+ldrb.calculus module
+--------------------
+
+.. automodule:: ldrb.calculus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ldrb.ldrb module
 ----------------
 
