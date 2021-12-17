@@ -5,7 +5,6 @@ from typing import Optional
 
 import dolfin as df
 import numpy as np
-import quaternion
 from dolfin.mesh.meshfunction import MeshFunction
 
 from . import utils
@@ -33,59 +32,6 @@ def laplace(
     data = project_gradients(mesh, fiber_space, scalar_solutions)
 
     return data
-
-
-def bislerp(
-    Qa: Optional[np.ndarray],
-    Qb: Optional[np.ndarray],
-    t: float,
-) -> Optional[np.ndarray]:
-    r"""
-    Linear interpolation of two orthogonal matrices.
-    Assiume that :math:`Q_a` and :math:`Q_b` refers to
-    timepoint :math:`0` and :math:`1` respectively.
-    Using spherical linear interpolation (slerp) find the
-    orthogonal matrix at timepoint :math:`t`.
-    """
-
-    if Qa is None and Qb is None:
-        return None
-    if Qa is None:
-        return Qb
-    if Qb is None:
-        return Qa
-
-    tol = 1e-12
-    qa = quaternion.from_rotation_matrix(Qa)
-    qb = quaternion.from_rotation_matrix(Qb)
-
-    quat_i = quaternion.quaternion(0, 1, 0, 0)
-    quat_j = quaternion.quaternion(0, 0, 1, 0)
-    quat_k = quaternion.quaternion(0, 0, 0, 1)
-
-    quat_array = [
-        qa,
-        -qa,
-        qa * quat_i,
-        -qa * quat_i,
-        qa * quat_j,
-        -qa * quat_j,
-        qa * quat_k,
-        -qa * quat_k,
-    ]
-
-    dot_arr = [abs((qi.components * qb.components).sum()) for qi in quat_array]
-    max_idx = int(np.argmax(dot_arr))
-    max_dot = dot_arr[max_idx]
-    qm = quat_array[max_idx]
-
-    if max_dot > 1 - tol:
-        return Qb
-
-    qm_slerp = quaternion.slerp(qm, qb, 0, 1, t)
-    qm_norm = qm_slerp.normalized()
-    Qab = quaternion.as_rotation_matrix(qm_norm)
-    return Qab
 
 
 def standard_dofs(n: int) -> np.ndarray:

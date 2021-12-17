@@ -3,7 +3,19 @@ import numpy as np
 
 
 @numba.njit
-def from_rotation_matrix(rot):
+def from_rotation_matrix(rot: np.ndarray) -> np.ndarray:
+    """Convert rotation matrix to a quaternion
+
+    Parameters
+    ----------
+    rot : np.ndarray
+        The rotation matrix
+
+    Returns
+    -------
+    np.ndarray
+        The quaternion
+    """
     diagonals = np.empty(4)
     diagonals[0] = rot[0, 0]
     diagonals[1] = rot[1, 1]
@@ -43,7 +55,19 @@ def from_rotation_matrix(rot):
 
 
 @numba.njit
-def as_rotation_matrix(q):
+def as_rotation_matrix(q: np.ndarray) -> np.ndarray:
+    """Convert quaternion to a rotatoin matrix
+
+    Parameters
+    ----------
+    q : np.ndarray
+        The quaternion
+
+    Returns
+    -------
+    np.ndarray
+        The rotation matrix
+    """
     n = np.linalg.norm(q)
     if abs(n - 1.0) < 1e-14:  # Input q is basically normalized
         return np.array(
@@ -88,7 +112,21 @@ def as_rotation_matrix(q):
 
 
 @numba.njit
-def quat_multiply(q1, q2):
+def quat_multiply(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
+    """Quaterion multiplication
+
+    Parameters
+    ----------
+    q1 : np.ndarray
+        First quaternion
+    q2 : np.ndarray
+        Second quaternion
+
+    Returns
+    -------
+    np.ndarray
+        The product of q1 and q2
+    """
     q = np.zeros(4)
     q[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3]
     q[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2]
@@ -98,7 +136,24 @@ def quat_multiply(q1, q2):
 
 
 @numba.njit
-def slerp(p0, p1, t):
+def slerp(p0: np.ndarray, p1: np.ndarray, t: float) -> np.ndarray:
+    """Sperical linear interpolation between two quaternions
+
+    Parameters
+    ----------
+    p0 : np.ndarray
+        Quaternion corresponding to t=0
+    p1 : np.ndarray
+        Quaternions corresponding to t=1
+    t : float
+        Interpolation factor
+
+    Returns
+    -------
+    np.ndarray
+        Quaternion corresponding to t=t
+    """
+
     omega = np.arccos(np.dot(p0 / np.linalg.norm(p0), p1 / np.linalg.norm(p1)))
     so = np.sin(omega)
     return np.sin((1.0 - t) * omega) / so * p0 + np.sin(t * omega) / so * p1
