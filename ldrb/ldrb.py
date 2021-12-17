@@ -522,6 +522,9 @@ def dolfin_ldrb(
     log_level : int
         How much to print. DEBUG=10, INFO=20, WARNING=30.
         Default: INFO
+    use_numba : bool
+        If True, use numba to compute the fiber-sheet system at each
+        dof. This will speed up the computations.
     angles : kwargs
         Keyword arguments with the fiber and sheet angles.
         It is possible to set different angles on the LV,
