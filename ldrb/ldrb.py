@@ -613,7 +613,8 @@ def scalar_laplacians(
 
         sol += solutions[case].vector()
 
-    assert np.all(sol > 0.999), "Sum not 1..."
+    if not np.all(sol > 0.999):
+        print('Warning: solution does not always sum to one', file=sys.stderr)
 
     # Return the solutions
     return solutions
