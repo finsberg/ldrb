@@ -1,4 +1,5 @@
 import logging
+import sys
 from collections import namedtuple
 from typing import Dict
 from typing import Optional
@@ -357,18 +358,35 @@ def apex_to_base(
 
     base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
 
-    def solve(solver_parameters):
-        df.solve(a == L, apex, base_bc, solver_parameters=solver_parameters)
+    # Solver options
+    ksp_type = "cg"
+    ksp_norm_type = "unpreconditioned"
+    ksp_rtol = 1e-9
+    ksp_atol = 1e-15
+    ksp_max_it = 10000
+    ksp_error_if_not_converged = False
+    ksp_monitor = True
+    ksp_view = True
+    pc_type = "hypre"
+    pc_hypre_type = "boomeramg"
+    pc_view = True
+    solver = df.PETScKrylovSolver()
+    df.PETScOptions.set("ksp_type", ksp_type)
+    df.PETScOptions.set("ksp_norm_type", ksp_norm_type)
+    df.PETScOptions.set("ksp_rtol", ksp_rtol)
+    df.PETScOptions.set("ksp_atol", ksp_atol)
+    df.PETScOptions.set("ksp_max_it", ksp_max_it)
+    df.PETScOptions.set("ksp_error_if_not_converged", ksp_error_if_not_converged)
+    if ksp_monitor: df.PETScOptions.set("ksp_monitor")
+    if ksp_view: df.PETScOptions.set("ksp_view")
+    df.PETScOptions.set("pc_type", "hypre")
+    df.PETScOptions.set("pc_hypre_type", pc_hypre_type)
+    if pc_view: df.PETScOptions.set("pc_view")
+    solver.set_from_options()
 
-    solver_parameters = {"linear_solver": "cg", "preconditioner": "amg"}
-    pcs = (pc for pc in ["petsc_amg", "default"])
-    while 1:
-        try:
-            solve(solver_parameters)
-        except RuntimeError:
-            solver_parameters["preconditioner"] = next(pcs)
-        else:
-            break
+    A, b = df.assemble_system(a, L, base_bc)
+    solver.set_operator(A)
+    solver.solve(apex.vector(), b)
 
     if utils.DOLFIN_VERSION_MAJOR < 2018:
         dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
@@ -400,12 +418,9 @@ def apex_to_base(
     apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
     # Solve the poisson equation
-    df.solve(
-        a == L,
-        apex,
-        [base_bc, apex_bc],
-        solver_parameters={"linear_solver": "gmres"},
-    )
+    A, b = df.assemble_system(a, L, [base_bc, apex_bc])
+    solver.set_operator(A)
+    solver.solve(apex.vector(), b)
 
     return apex
 
@@ -543,27 +558,6 @@ def scalar_laplacians(
     df.info("  Num coords: {0}".format(mesh.num_vertices()))
     df.info("  Num cells: {0}".format(mesh.num_cells()))
 
-    # solver_param = dict(
-    #     solver_parameters=dict(
-    #         preconditioner="ml_amg"
-    #         if df.has_krylov_solver_preconditioner("ml_amg")
-    #         else "default",
-    #         linear_solver="gmres",
-    #     )
-    # )
-    if "superlu_dist" in df.linear_solver_methods():
-        solver_param = dict(
-            solver_parameters=dict(
-                linear_solver="superlu_dist",
-            ),
-        )
-    else:
-        solver_param = dict(
-            solver_parameters=dict(
-                linear_solver="mumps",
-            ),
-        )
-
     from mpi4py import MPI
 
     comm = utils.mpi_comm_world()
@@ -601,7 +595,36 @@ def scalar_laplacians(
             )
             for what in cases
         ]
-        df.solve(a == L, solutions[case], bcs, **solver_param)
+
+        # Solver options
+        ksp_type = "cg"
+        ksp_norm_type = "unpreconditioned"
+        ksp_rtol = 1e-9
+        ksp_atol = 1e-15
+        ksp_max_it = 10000
+        ksp_error_if_not_converged = False
+        ksp_monitor = True
+        ksp_view = True
+        pc_type = "hypre"
+        pc_hypre_type = "boomeramg"
+        pc_view = True
+        solver = df.PETScKrylovSolver()
+        df.PETScOptions.set("ksp_type", ksp_type)
+        df.PETScOptions.set("ksp_norm_type", ksp_norm_type)
+        df.PETScOptions.set("ksp_rtol", ksp_rtol)
+        df.PETScOptions.set("ksp_atol", ksp_atol)
+        df.PETScOptions.set("ksp_max_it", ksp_max_it)
+        df.PETScOptions.set("ksp_error_if_not_converged", ksp_error_if_not_converged)
+        if ksp_monitor: df.PETScOptions.set("ksp_monitor")
+        if ksp_view: df.PETScOptions.set("ksp_view")
+        df.PETScOptions.set("pc_type", "hypre")
+        df.PETScOptions.set("pc_hypre_type", pc_hypre_type)
+        if pc_view: df.PETScOptions.set("pc_view")
+        solver.set_from_options()
+
+        A, b = df.assemble_system(a, L, bcs)
+        solver.set_operator(A)
+        solver.solve(solutions[case].vector(), b)
 
         # Enforce bound on solution:
         solutions[case].vector()[
