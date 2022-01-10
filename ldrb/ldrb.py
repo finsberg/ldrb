@@ -14,11 +14,12 @@ FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
 
 def laplace(
     mesh: df.Mesh,
-    fiber_space: str,
     markers: Optional[Dict[str, int]],
+    fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
     use_krylov_solver: bool = False,
     verbose: bool = False,
+    strict: bool = False,
 ) -> Dict[str, np.ndarray]:
     """
     Solve the laplace equation and project the gradients
@@ -28,16 +29,21 @@ def laplace(
     # Create scalar laplacian solutions
     df.info("Calculating scalar fields")
     scalar_solutions = scalar_laplacians(
-        mesh,
-        markers,
+        mesh=mesh,
+        markers=markers,
         ffun=ffun,
         use_krylov_solver=use_krylov_solver,
         verbose=verbose,
+        strict=strict,
     )
 
     # Create gradients
     df.info("\nCalculating gradients")
-    data = project_gradients(mesh, fiber_space, scalar_solutions)
+    data = project_gradients(
+        mesh=mesh,
+        fiber_space=fiber_space,
+        scalar_solutions=scalar_solutions,
+    )
 
     return data
 
@@ -210,6 +216,7 @@ def dolfin_ldrb(
     markers: Optional[Dict[str, int]] = None,
     log_level: int = logging.INFO,
     use_krylov_solver: bool = False,
+    strict: bool = False,
     **angles: Optional[float],
 ):
     r"""
@@ -241,6 +248,8 @@ def dolfin_ldrb(
         Default: INFO
     use_krylov_solver: bool
         If True use Krylov solver, by default False
+    strict: bool
+        If true raise RuntimeError if solutions does not sum to 1.0
     angles : kwargs
         Keyword arguments with the fiber and sheet angles.
         It is possible to set different angles on the LV,
@@ -290,17 +299,18 @@ def dolfin_ldrb(
     if not isinstance(mesh, df.Mesh):
         raise TypeError("Expected a dolfin.Mesh as the mesh argument.")
 
-    if ffun is not None:
-        utils.mark_facets(mesh, ffun)
-
+    if ffun is None:
+        ffun = df.MeshFunction("size_t", mesh, 2, mesh.domains())
     # Solve the Laplace-Dirichlet problem
     verbose = log_level < logging.INFO
     data = laplace(
-        mesh,
-        fiber_space,
-        markers,
+        mesh=mesh,
+        fiber_space=fiber_space,
+        markers=markers,
+        ffun=ffun,
         use_krylov_solver=use_krylov_solver,
         verbose=verbose,
+        strict=strict,
     )
 
     dofs = dofs_from_function_space(mesh, fiber_space)
@@ -343,7 +353,7 @@ def fiber_system_to_dolfin(
 def apex_to_base(
     mesh: df.Mesh,
     base_marker: int,
-    ffun: Optional[df.MeshFunction] = None,
+    ffun: df.MeshFunction,
     use_krylov_solver: bool = False,
     verbose: bool = False,
 ):
@@ -443,8 +453,8 @@ def apex_to_base(
 
 def project_gradients(
     mesh: df.Mesh,
-    fiber_space: str,
     scalar_solutions: Dict[str, df.Function],
+    fiber_space: str = "CG_1",
 ) -> Dict[str, np.ndarray]:
     """
     Calculate the gradients using projections
@@ -487,6 +497,7 @@ def scalar_laplacians(
     ffun: Optional[MeshFunction] = None,
     use_krylov_solver: bool = False,
     verbose: bool = False,
+    strict: bool = False,
 ) -> Dict[str, df.Function]:
     """
     Calculate the laplacians
@@ -510,6 +521,8 @@ def scalar_laplacians(
         If True use Krylov solver, by default False
     verbose: bool
         If true, print more info, by default False
+    strict: bool
+        If true raise RuntimeError if solutions does not sum to 1.0
     """
 
     if not isinstance(mesh, df.Mesh):
@@ -649,7 +662,10 @@ def scalar_laplacians(
         sol += solutions[case].vector()
 
     if not np.all(sol[:] > 0.999):
-        logging.warning("Solution does not always sum to one.")
+        msg = "Solution does not always sum to one."
+        if strict:
+            raise RuntimeError(msg)
+        logging.warning(msg)
 
     # Return the solutions
     return solutions

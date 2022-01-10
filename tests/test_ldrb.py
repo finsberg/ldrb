@@ -22,24 +22,18 @@ def test_axis():
     assert np.dot(e0, e2) == 0
 
 
-def test_markers(lv_mesh):
-
-    markers = dict(base=10, lv=30, epi=40)
-    ldrb.dolfin_ldrb(lv_mesh, "Lagrange_1", markers=markers)
-
-
 def test_orient():
     pass
 
 
-@pytest.fixture
-def biv_mesh():
-    return ldrb.create_biv_mesh().mesh
+@pytest.fixture(scope="session")
+def biv_geometry():
+    return ldrb.create_biv_mesh()
 
 
-@pytest.fixture
-def lv_mesh():
-    return ldrb.create_lv_mesh().mesh
+@pytest.fixture(scope="session")
+def lv_geometry():
+    return ldrb.create_lv_mesh()
 
 
 def test_lv_angles_alpha():
@@ -196,14 +190,54 @@ def test_lv_angles_beta():
         assert norm(fib.sheet_normal[6:] - np.cross(fib.fiber[6:], fib.sheet[6:])) < tol
 
 
-@pytest.mark.parametrize("use_krylov_solver", [True, False])
-def test_biv_regression(biv_mesh, use_krylov_solver):
-    ldrb.dolfin_ldrb(biv_mesh, use_krylov_solver=use_krylov_solver)
+def test_ldrb_without_correct_markers_raises_RuntimeError(lv_geometry):
+    with pytest.raises(RuntimeError):
+        ldrb.dolfin_ldrb(mesh=lv_geometry.mesh)
 
 
 @pytest.mark.parametrize("use_krylov_solver", [True, False])
-def test_lv_regression(lv_mesh, use_krylov_solver):
-    ldrb.dolfin_ldrb(lv_mesh, use_krylov_solver=use_krylov_solver)
+def test_biv_regression(biv_geometry, use_krylov_solver):
+    ldrb.dolfin_ldrb(
+        mesh=biv_geometry.mesh,
+        ffun=biv_geometry.ffun,
+        markers=biv_geometry.markers,
+        use_krylov_solver=use_krylov_solver,
+    )
+
+
+@pytest.mark.parametrize("use_krylov_solver", [True, False])
+def test_lv_regression(lv_geometry, use_krylov_solver):
+    ldrb.dolfin_ldrb(
+        mesh=lv_geometry.mesh,
+        ffun=lv_geometry.ffun,
+        markers=lv_geometry.markers,
+        use_krylov_solver=use_krylov_solver,
+    )
+
+
+@pytest.mark.xfail(
+    raises=RuntimeError,
+    strict=True,
+    reason="Krylov solvers are not accrate enough?",
+)
+def test_krylov_laplace(lv_geometry):
+    ldrb.ldrb.laplace(
+        mesh=lv_geometry.mesh,
+        ffun=lv_geometry.ffun,
+        markers=lv_geometry.markers,
+        use_krylov_solver=True,
+        strict=True,
+    )
+
+
+def test_regular_laplace(lv_geometry):
+    ldrb.ldrb.laplace(
+        mesh=lv_geometry.mesh,
+        ffun=lv_geometry.ffun,
+        markers=lv_geometry.markers,
+        use_krylov_solver=False,
+        strict=True,
+    )
 
 
 if __name__ == "__main__":
@@ -211,6 +245,6 @@ if __name__ == "__main__":
     # test_lv_angles()
     # test_biv_regression()
     # test_lv_regression()
-    # m = lv_mesh()
+    # m = lv_geometry()
     # test_markers(m)
     pass

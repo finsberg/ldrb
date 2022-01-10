@@ -185,7 +185,6 @@ def create_lv_mesh(
     epi = Epi()
     epi.mark(ffun, markers["epi"])
 
-    mark_facets(mesh, ffun)
     return Geometry(mesh=mesh, ffun=ffun, markers=markers)
 
 
@@ -318,7 +317,6 @@ def create_biv_mesh(
     epi = Epi()
     epi.mark(ffun, markers["epi"])
 
-    mark_facets(mesh, ffun)
     return Geometry(mesh=mesh, ffun=ffun, markers=markers)
 
 
