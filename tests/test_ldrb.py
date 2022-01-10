@@ -3,9 +3,6 @@ import pytest
 
 import ldrb
 
-# fiber_spaces = ('Quadrature_2', 'Quadrature_4', 'CG_1', 'CG_2', 'DG_1')
-fiber_spaces = ["CG_1"]
-
 
 def norm(v):
     return np.linalg.norm(v)
@@ -199,14 +196,14 @@ def test_lv_angles_beta():
         assert norm(fib.sheet_normal[6:] - np.cross(fib.fiber[6:], fib.sheet[6:])) < tol
 
 
-@pytest.mark.parametrize("fiber_space", fiber_spaces)
-def test_biv_regression(biv_mesh, fiber_space):
-    ldrb.dolfin_ldrb(biv_mesh, fiber_space)
+@pytest.mark.parametrize("use_krylov_solver", [True, False])
+def test_biv_regression(biv_mesh, use_krylov_solver):
+    ldrb.dolfin_ldrb(biv_mesh, use_krylov_solver=use_krylov_solver)
 
 
-@pytest.mark.parametrize("fiber_space", fiber_spaces)
-def test_lv_regression(lv_mesh, fiber_space):
-    ldrb.dolfin_ldrb(lv_mesh, fiber_space)
+@pytest.mark.parametrize("use_krylov_solver", [True, False])
+def test_lv_regression(lv_mesh, use_krylov_solver):
+    ldrb.dolfin_ldrb(lv_mesh, use_krylov_solver=use_krylov_solver)
 
 
 if __name__ == "__main__":
