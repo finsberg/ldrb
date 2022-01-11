@@ -215,11 +215,6 @@ def test_lv_regression(lv_geometry, use_krylov_solver):
     )
 
 
-@pytest.mark.xfail(
-    raises=RuntimeError,
-    strict=True,
-    reason="Krylov solvers are not accrate enough?",
-)
 def test_krylov_laplace(lv_geometry):
     ldrb.ldrb.laplace(
         mesh=lv_geometry.mesh,

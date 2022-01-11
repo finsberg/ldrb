@@ -681,7 +681,7 @@ def solve_krylov(
     # Solver options
     ksp_type = "cg"
     ksp_norm_type = "unpreconditioned"
-    ksp_rtol = 1e-9
+    ksp_rtol = 1e-10
     ksp_atol = 1e-15
     ksp_max_it = 10000
     ksp_error_if_not_converged = False
