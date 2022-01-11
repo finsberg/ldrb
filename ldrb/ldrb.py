@@ -677,18 +677,19 @@ def solve_krylov(
     bcs,
     u: df.Function,
     verbose: bool = False,
+    ksp_type="cg",
+    ksp_norm_type="unpreconditioned",
+    ksp_rtol=1e-10,
+    ksp_atol=1e-15,
+    ksp_max_it=10000,
+    ksp_error_if_not_converged=False,
+    pc_type="hypre",
 ) -> df.PETScKrylovSolver:
-    # Solver options
-    ksp_type = "cg"
-    ksp_norm_type = "unpreconditioned"
-    ksp_rtol = 1e-10
-    ksp_atol = 1e-15
-    ksp_max_it = 10000
-    ksp_error_if_not_converged = False
+
+    pc_hypre_type = "boomeramg"
     ksp_monitor = verbose
     ksp_view = verbose
-    pc_type = "hypre"
-    pc_hypre_type = "boomeramg"
+
     pc_view = verbose
     solver = df.PETScKrylovSolver()
     df.PETScOptions.set("ksp_type", ksp_type)
