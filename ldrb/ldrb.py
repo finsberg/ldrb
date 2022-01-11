@@ -14,9 +14,12 @@ FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
 
 def laplace(
     mesh: df.Mesh,
-    fiber_space: str,
     markers: Optional[Dict[str, int]],
+    fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
+    use_krylov_solver: bool = False,
+    verbose: bool = False,
+    strict: bool = False,
 ) -> Dict[str, np.ndarray]:
     """
     Solve the laplace equation and project the gradients
@@ -25,11 +28,22 @@ def laplace(
 
     # Create scalar laplacian solutions
     df.info("Calculating scalar fields")
-    scalar_solutions = scalar_laplacians(mesh, markers, ffun=ffun)
+    scalar_solutions = scalar_laplacians(
+        mesh=mesh,
+        markers=markers,
+        ffun=ffun,
+        use_krylov_solver=use_krylov_solver,
+        verbose=verbose,
+        strict=strict,
+    )
 
     # Create gradients
     df.info("\nCalculating gradients")
-    data = project_gradients(mesh, fiber_space, scalar_solutions)
+    data = project_gradients(
+        mesh=mesh,
+        fiber_space=fiber_space,
+        scalar_solutions=scalar_solutions,
+    )
 
     return data
 
@@ -201,6 +215,8 @@ def dolfin_ldrb(
     ffun: Optional[df.MeshFunction] = None,
     markers: Optional[Dict[str, int]] = None,
     log_level: int = logging.INFO,
+    use_krylov_solver: bool = False,
+    strict: bool = False,
     **angles: Optional[float],
 ):
     r"""
@@ -230,6 +246,10 @@ def dolfin_ldrb(
     log_level : int
         How much to print. DEBUG=10, INFO=20, WARNING=30.
         Default: INFO
+    use_krylov_solver: bool
+        If True use Krylov solver, by default False
+    strict: bool
+        If true raise RuntimeError if solutions does not sum to 1.0
     angles : kwargs
         Keyword arguments with the fiber and sheet angles.
         It is possible to set different angles on the LV,
@@ -274,17 +294,24 @@ def dolfin_ldrb(
 
 
     """
-    log_level = df.get_log_level()
-    df.set_log_level(logging.INFO)
+    df.set_log_level(log_level)
 
     if not isinstance(mesh, df.Mesh):
         raise TypeError("Expected a dolfin.Mesh as the mesh argument.")
 
-    if ffun is not None:
-        utils.mark_facets(mesh, ffun)
-
+    if ffun is None:
+        ffun = df.MeshFunction("size_t", mesh, 2, mesh.domains())
     # Solve the Laplace-Dirichlet problem
-    data = laplace(mesh, fiber_space, markers)
+    verbose = log_level < logging.INFO
+    data = laplace(
+        mesh=mesh,
+        fiber_space=fiber_space,
+        markers=markers,
+        ffun=ffun,
+        use_krylov_solver=use_krylov_solver,
+        verbose=verbose,
+        strict=strict,
+    )
 
     dofs = dofs_from_function_space(mesh, fiber_space)
 
@@ -326,7 +353,9 @@ def fiber_system_to_dolfin(
 def apex_to_base(
     mesh: df.Mesh,
     base_marker: int,
-    ffun: Optional[df.MeshFunction] = None,
+    ffun: df.MeshFunction,
+    use_krylov_solver: bool = False,
+    verbose: bool = False,
 ):
     """
     Find the apex coordinate and compute the laplace
@@ -342,6 +371,10 @@ def apex_to_base(
         A facet function containing markers for the boundaries.
         If not provided, the markers stored within the mesh will
         be used.
+    use_krylov_solver: bool
+        If True use Krylov solver, by default False
+    verbose: bool
+        If true, print more info, by default False
     """
     # Find apex by solving a laplacian with base solution = 0
     # Create Base variational problem
@@ -357,18 +390,16 @@ def apex_to_base(
 
     base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
 
-    def solve(solver_parameters):
-        df.solve(a == L, apex, base_bc, solver_parameters=solver_parameters)
-
-    solver_parameters = {"linear_solver": "cg", "preconditioner": "amg"}
-    pcs = (pc for pc in ["petsc_amg", "default"])
-    while 1:
-        try:
-            solve(solver_parameters)
-        except RuntimeError:
-            solver_parameters["preconditioner"] = next(pcs)
-        else:
-            break
+    # Solver options
+    solver = solve_system(
+        a,
+        L,
+        base_bc,
+        apex,
+        solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
+        use_krylov_solver=use_krylov_solver,
+        verbose=verbose,
+    )
 
     if utils.DOLFIN_VERSION_MAJOR < 2018:
         dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
@@ -400,20 +431,30 @@ def apex_to_base(
     apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
     # Solve the poisson equation
-    df.solve(
-        a == L,
-        apex,
-        [base_bc, apex_bc],
-        solver_parameters={"linear_solver": "gmres"},
-    )
+    bcs = [base_bc, apex_bc]
+    if solver is not None:
+        # Reuse existing solver
+        A, b = df.assemble_system(a, L, bcs)
+        solver.set_operator(A)
+        solver.solve(apex.vector(), b)
+    else:
+        solve_system(
+            a,
+            L,
+            bcs,
+            apex,
+            use_krylov_solver=use_krylov_solver,
+            solver_parameters={"linear_solver": "gmres"},
+            verbose=verbose,
+        )
 
     return apex
 
 
 def project_gradients(
     mesh: df.Mesh,
-    fiber_space: str,
     scalar_solutions: Dict[str, df.Function],
+    fiber_space: str = "CG_1",
 ) -> Dict[str, np.ndarray]:
     """
     Calculate the gradients using projections
@@ -454,6 +495,9 @@ def scalar_laplacians(
     mesh: df.Mesh,
     markers: Optional[Dict[str, int]] = None,
     ffun: Optional[MeshFunction] = None,
+    use_krylov_solver: bool = False,
+    verbose: bool = False,
+    strict: bool = False,
 ) -> Dict[str, df.Function]:
     """
     Calculate the laplacians
@@ -473,6 +517,12 @@ def scalar_laplacians(
     fiber_space : str
         A string on the form {familiy}_{degree} which
         determines for what space the fibers should be calculated for.
+    use_krylov_solver: bool
+        If True use Krylov solver, by default False
+    verbose: bool
+        If true, print more info, by default False
+    strict: bool
+        If true raise RuntimeError if solutions does not sum to 1.0
     """
 
     if not isinstance(mesh, df.Mesh):
@@ -528,7 +578,13 @@ def scalar_laplacians(
         )
 
     # Compte the apex to base solutons
-    apex = apex_to_base(mesh, markers["base"], ffun)
+    apex = apex_to_base(
+        mesh,
+        markers["base"],
+        ffun,
+        use_krylov_solver=use_krylov_solver,
+        verbose=verbose,
+    )
 
     # Find the rest of the laplace soltions
     V = apex.function_space()
@@ -542,27 +598,6 @@ def scalar_laplacians(
 
     df.info("  Num coords: {0}".format(mesh.num_vertices()))
     df.info("  Num cells: {0}".format(mesh.num_cells()))
-
-    # solver_param = dict(
-    #     solver_parameters=dict(
-    #         preconditioner="ml_amg"
-    #         if df.has_krylov_solver_preconditioner("ml_amg")
-    #         else "default",
-    #         linear_solver="gmres",
-    #     )
-    # )
-    if "superlu_dist" in df.linear_solver_methods():
-        solver_param = dict(
-            solver_parameters=dict(
-                linear_solver="superlu_dist",
-            ),
-        )
-    else:
-        solver_param = dict(
-            solver_parameters=dict(
-                linear_solver="mumps",
-            ),
-        )
 
     from mpi4py import MPI
 
@@ -601,7 +636,20 @@ def scalar_laplacians(
             )
             for what in cases
         ]
-        df.solve(a == L, solutions[case], bcs, **solver_param)
+
+        solver_parameters = {"linear_solver": "mumps"}
+        if "superlu_dist" in df.linear_solver_methods():
+            solver_parameters = {"linear_solver": "superlu_dist"}
+
+        solve_system(
+            a,
+            L,
+            bcs,
+            solutions[case],
+            solver_parameters=solver_parameters,
+            use_krylov_solver=use_krylov_solver,
+            verbose=verbose,
+        )
 
         # Enforce bound on solution:
         solutions[case].vector()[
@@ -613,7 +661,81 @@ def scalar_laplacians(
 
         sol += solutions[case].vector()
 
-    assert np.all(sol > 0.999), "Sum not 1..."
+    if not np.all(sol[:] > 0.999):
+        msg = "Solution does not always sum to one."
+        if strict:
+            raise RuntimeError(msg)
+        logging.warning(msg)
 
     # Return the solutions
     return solutions
+
+
+def solve_krylov(
+    a,
+    L,
+    bcs,
+    u: df.Function,
+    verbose: bool = False,
+    ksp_type="cg",
+    ksp_norm_type="unpreconditioned",
+    ksp_rtol=1e-10,
+    ksp_atol=1e-15,
+    ksp_max_it=10000,
+    ksp_error_if_not_converged=False,
+    pc_type="hypre",
+) -> df.PETScKrylovSolver:
+
+    pc_hypre_type = "boomeramg"
+    ksp_monitor = verbose
+    ksp_view = verbose
+
+    pc_view = verbose
+    solver = df.PETScKrylovSolver()
+    df.PETScOptions.set("ksp_type", ksp_type)
+    df.PETScOptions.set("ksp_norm_type", ksp_norm_type)
+    df.PETScOptions.set("ksp_rtol", ksp_rtol)
+    df.PETScOptions.set("ksp_atol", ksp_atol)
+    df.PETScOptions.set("ksp_max_it", ksp_max_it)
+    df.PETScOptions.set("ksp_error_if_not_converged", ksp_error_if_not_converged)
+    if ksp_monitor:
+        df.PETScOptions.set("ksp_monitor")
+    if ksp_view:
+        df.PETScOptions.set("ksp_view")
+    df.PETScOptions.set("pc_type", pc_type)
+    df.PETScOptions.set("pc_hypre_type", pc_hypre_type)
+    if pc_view:
+        df.PETScOptions.set("pc_view")
+    solver.set_from_options()
+
+    A, b = df.assemble_system(a, L, bcs)
+    solver.set_operator(A)
+    solver.solve(u.vector(), b)
+    df.info("Sucessfully solved using Krylov solver")
+    return solver
+
+
+def solve_regular(a, L, bcs, u, solver_parameters):
+    if solver_parameters is None:
+        solver_parameters = {"linear_solver": "gmres"}
+    df.solve(a == L, u, bcs, solver_parameters=solver_parameters)
+
+
+def solve_system(
+    a,
+    L,
+    bcs,
+    u: df.Function,
+    solver_parameters: Optional[Dict[str, str]] = None,
+    use_krylov_solver: bool = False,
+    verbose: bool = False,
+) -> Optional[df.PETScKrylovSolver]:
+    if use_krylov_solver:
+        try:
+            return solve_krylov(a, L, bcs, u, verbose)
+        except Exception:
+            df.info("Failed to solve using Krylov solver. Try a regular solve...")
+            solve_regular(a, L, bcs, u, solver_parameters)
+            return None
+    solve_regular(a, L, bcs, u, solver_parameters)
+    return None
