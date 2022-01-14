@@ -10,6 +10,7 @@ parts:
       - file: demo_biv
       - file: demo_patient_lv
       - file: demo_lifex_strocchi_LV
+      - file: demo_lifex_idealized_LV
   - caption: API documentation
     chapters:
       - file: ldrb

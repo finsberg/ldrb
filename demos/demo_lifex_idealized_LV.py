@@ -1,4 +1,4 @@
-# # Life X - 01_strocchi_LV
+# # Life X - idealized_LV
 #
 # Life X recently published their own implementation of the LDRB algorithm and with that they also publushed a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at https://zenodo.org/record/5810269#.YeEjWi8w1B0, which also contains a DOI: https://doi.org/10.5281/zenodo.5810269.
 #
@@ -11,33 +11,19 @@ import dolfin
 
 import ldrb
 
-# Load the mesh and markers. This is a large mesh that you probably want to run in parallel, but you need to first convert the mesh to a fenics mesh and that has to be done in serial. You can make sure that the mesh is saved by setting `unlink = False`
+# Load the mesh and markers.
 
-# Last argument here is the markers, but these are not used
-mesh, ffun, _ = ldrb.gmsh2dolfin(
-    "lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh",
-    unlink=False,
+mesh, ffun, markers = ldrb.gmsh2dolfin(
+    "lifex_fiber_generation_examples/mesh/idealized_LV.msh",
 )
-# Run this first in serial and exit here
-# exit()
 
-# To run the in paralell you can do
-# ```
-# mpirun -n 4 python demo_lifex_strocchi_LV.py
-# ```
+# Here the markers are actually parsed with meshio, but they have the wrong name so we just rename them
 
-# These are the actualy markers (but we only supprt one base at the moment)
-
-original_markers = {"epi": 10, "endo": 20, "aortic_valve": 50, "mitral_valve": 60}
-
-# So we just use these markers instead
-
-markers = {"epi": 10, "lv": 20, "base": 40}
-
-# And update the markers accordingly
-
-ffun.array()[ffun.array() == original_markers["aortic_valve"]] = markers["base"]
-ffun.array()[ffun.array() == original_markers["mitral_valve"]] = markers["base"]
+ldrb_markers = {
+    "epi": markers["Epicardium"][0],
+    "lv": markers["Endocardium"][0],
+    "base": markers["Basal plane"][0],
+}
 
 # Select linear langange elements
 
@@ -50,7 +36,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
     mesh=mesh,
     fiber_space=fiber_space,
     ffun=ffun,
-    markers=markers,
+    markers=ldrb_markers,
     alpha_endo_lv=60,  # Fiber angle on the endocardium
     alpha_epi_lv=-60,  # Fiber angle on the epicardium
     beta_endo_lv=0,  # Sheet angle on the endocardium
@@ -59,9 +45,8 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
 
 # And save the results
 
-with dolfin.XDMFFile(mesh.mpi_comm(), "01_strocchi_LV_fiber.xdmf") as xdmf:
+with dolfin.XDMFFile(mesh.mpi_comm(), "idealized_LV_fiber.xdmf") as xdmf:
     xdmf.write(fiber)
 
 
-# ![_](_static/figures/01_strocchi_LV_fiber_1.png)
-# ![_](_static/figures/01_strocchi_LV_fiber_2.png)
+# ![_](_static/figures/idealized_LV_fiber.png)
