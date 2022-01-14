@@ -3,10 +3,14 @@
 
 format: jb-book
 root: README
-chapters:
-  - file: DEMO
-    sections:
+parts:
+  - caption: Demo
+    chapters:
       - file: demo_lv
       - file: demo_biv
       - file: demo_patient_lv
-  - file: ldrb
+      - file: demo_lifex_strocchi_LV
+  - caption: API documentation
+    chapters:
+      - file: ldrb
+      - file: modules

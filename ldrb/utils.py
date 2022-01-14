@@ -1,4 +1,5 @@
 from collections import namedtuple
+from pathlib import Path
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -12,7 +13,16 @@ import ufl
 try:
     import mshr
 except ImportError:
-    df.warning("mshr is not installed")
+    df.debug("mshr is not installed")
+
+
+def has_meshio() -> bool:
+    try:
+        import meshio  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
 
 Geometry = namedtuple("Geometry", "mesh, ffun, markers")
 
@@ -24,6 +34,87 @@ else:
         DOLFIN_VERSION_MAJOR = float(".".join(df.__version__.split(".")[:2]))
     except Exception:
         DOLFIN_VERSION_MAJOR = 1.6
+
+
+def create_mesh(mesh, cell_type):
+    if not has_meshio():
+        raise ImportError("Please install 'meshio' - python3 -m pip install meshio")
+    import meshio
+
+    # From http://jsdokken.com/converted_files/tutorial_pygmsh.html
+    cells = mesh.get_cells_type(cell_type)
+    cell_data = mesh.get_cell_data("gmsh:physical", cell_type)
+    out_mesh = meshio.Mesh(
+        points=mesh.points,
+        cells={cell_type: cells},
+        cell_data={"name_to_read": [cell_data]},
+    )
+    return out_mesh
+
+
+def read_meshfunction(fname, obj):
+    with df.XDMFFile(Path(fname).as_posix()) as f:
+        f.read(obj, "name_to_read")
+
+
+# Next we define a function for converting the gmsh file into an xdmf file. This function returns the mesh, as well as the facet function (which contains the markers for all the facets) as well as a dictionary containing the available markers.
+
+
+def convert_msh_to_xdmf(msh_file, triangle_mesh_name, tetra_mesh_name):
+    if mpi_comm_world().size > 1:
+        msg = (
+            "Cannot convert from gmsh to xdmf in parallel. "
+            "Please run the conversion in serial and then run the "
+            "ldrb algorithm in parallell afterwards. "
+        )
+        raise RuntimeError(msg)
+    if not has_meshio():
+        raise ImportError("Please install 'meshio' - python3 -m pip install meshio")
+    import meshio
+
+    # Convert to dolfin
+    msh = meshio.gmsh.read(msh_file)
+    triangle_mesh = create_mesh(msh, "triangle")
+    tetra_mesh = create_mesh(msh, "tetra")
+    meshio.write(triangle_mesh_name, triangle_mesh)
+    meshio.write(
+        tetra_mesh_name,
+        tetra_mesh,
+    )
+    markers = msh.field_data
+    return markers
+
+
+def gmsh2dolfin(msh_file, unlink: bool = True):
+
+    name = Path(msh_file).stem
+
+    triangle_mesh_name = Path(f"triangle_mesh_{name}.xdmf")
+    tetra_mesh_name = Path(f"mesh_{name}.xdmf")
+
+    markers = {}
+    if not (triangle_mesh_name.is_file() and tetra_mesh_name.is_file()):
+        markers = convert_msh_to_xdmf(msh_file, triangle_mesh_name, tetra_mesh_name)
+
+    mesh = df.Mesh()
+
+    with df.XDMFFile(tetra_mesh_name.as_posix()) as infile:
+        infile.read(mesh)
+
+    cfun = df.MeshFunction("size_t", mesh, 3)
+    read_meshfunction(tetra_mesh_name, cfun)
+
+    ffun_val = df.MeshValueCollection("size_t", mesh, 2)
+    read_meshfunction(triangle_mesh_name, ffun_val)
+    ffun = df.MeshFunction("size_t", mesh, ffun_val)
+
+    if unlink:
+        triangle_mesh_name.unlink()
+        triangle_mesh_name.with_suffix(".h5").unlink()
+        tetra_mesh_name.unlink()
+        tetra_mesh_name.with_suffix(".h5").unlink()
+
+    return mesh, ffun, markers
 
 
 def mpi_comm_world():
