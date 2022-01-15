@@ -9,6 +9,7 @@ from .save import fiber_to_xdmf
 from .save import fun_to_xdmf
 from .utils import create_biv_mesh
 from .utils import create_lv_mesh
+from .utils import gmsh2dolfin
 from .utils import space_from_string
 
 __version__ = "2022.0.0"
@@ -27,4 +28,5 @@ __all__ = [
     "create_lv_mesh",
     "space_from_string",
     "calculus",
+    "gmsh2dolfin",
 ]

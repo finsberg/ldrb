@@ -62,6 +62,8 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	jupytext demos/demo_patient_lv.py -o docs/demo_patient_lv.md
 	jupytext demos/demo_lv.py -o docs/demo_lv.md
 	jupytext demos/demo_biv.py -o docs/demo_biv.md
+	jupytext demos/demo_lifex_strocchi_LV.py -o docs/demo_lifex_strocchi_LV.md
+	jupytext demos/demo_lifex_idealized_LV.py -o docs/demo_lifex_idealized_LV.md
 	cp README.md docs/.
 	sed -i.bak 's+docs/source/_static/figures/biv_fiber.png+_static/figures/biv_fiber.png+g' docs/README.md && rm -f docs/README.md.bak
 	sphinx-apidoc -o docs ldrb

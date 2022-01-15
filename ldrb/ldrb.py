@@ -1,7 +1,9 @@
 import logging
 from collections import namedtuple
 from typing import Dict
+from typing import List
 from typing import Optional
+from typing import Tuple
 
 import dolfin as df
 import numpy as np
@@ -534,25 +536,7 @@ def scalar_laplacians(
         ffun = df.MeshFunction("size_t", mesh, 2, mesh.domains())
 
     # Boundary markers, solutions and cases
-    if markers is None:
-        markers = utils.default_markers()
-    else:
-
-        keys = ["base", "lv", "epi"]
-        msg = (
-            "Key {key} not found in markers. Make sure to provide a"
-            "key-value pair for {keys}"
-        )
-        for key in keys:
-            assert key in markers, msg.format(key=key, keys=keys)
-        if "rv" not in markers:
-            df.info("No marker for the RV found. Asssume this is an LV geometry")
-            rv_value = 20
-            # Just make sure that this value is not used for any of the other boundaries.
-            while rv_value in markers.values():
-                rv_value += 1
-            markers["rv"] = rv_value
-
+    cases, boundaries, markers = find_cases_and_boundaries(ffun, markers)
     markers_str = "\n".join(["{}: {}".format(k, v) for k, v in markers.items()])
     df.info(
         ("Compute scalar laplacian solutions with the markers: \n" "{}").format(
@@ -560,16 +544,72 @@ def scalar_laplacians(
         ),
     )
 
-    cases = ["rv", "lv", "epi"]
-    boundaries = cases + ["base"]
+    check_boundaries_are_marked(
+        mesh=mesh,
+        ffun=ffun,
+        markers=markers,
+        boundaries=boundaries,
+    )
 
+    # Compte the apex to base solutons
+    df.info("  Num coords: {0}".format(mesh.num_vertices()))
+    df.info("  Num cells: {0}".format(mesh.num_cells()))
+
+    if "mv" in cases and "av" in cases:
+        # Use Doste approach
+        pass
+
+    # Else use the Bayer approach
+    return bayer(
+        cases=cases,
+        mesh=mesh,
+        markers=markers,
+        ffun=ffun,
+        verbose=verbose,
+        use_krylov_solver=use_krylov_solver,
+        strict=strict,
+    )
+
+
+def find_cases_and_boundaries(
+    ffun: df.MeshFunction,
+    markers: Optional[Dict[str, int]],
+) -> Tuple[List[str], List[str], Dict[str, int]]:
+
+    if markers is None:
+        markers = utils.default_markers()
+
+    potential_cases = {"rv", "lv", "epi"}
+    potential_boundaries = potential_cases | {"base", "mv", "av"}
+
+    cases = []
+    boundaries = []
+
+    for marker in markers:
+        msg = f"Unknown marker {marker}. Expected one of {potential_boundaries}"
+        if marker not in potential_boundaries:
+            logging.warning(msg)
+        if marker in potential_boundaries:
+            boundaries.append(marker)
+        if marker in potential_cases:
+            cases.append(marker)
+
+    return cases, boundaries, markers
+
+
+def check_boundaries_are_marked(
+    mesh: df.Mesh,
+    ffun: df.MeshFunction,
+    markers: Dict[str, int],
+    boundaries: List[str],
+) -> None:
     # Check that all boundary faces are marked
     num_boundary_facets = df.BoundaryMesh(mesh, "exterior").num_cells()
     if num_boundary_facets != sum(
         [np.sum(ffun.array() == markers[boundary]) for boundary in boundaries],
     ):
 
-        df.error(
+        raise RuntimeError(
             (
                 "Not all boundary faces are marked correctly. Make sure all "
                 "boundary facets are marked as: {}"
@@ -577,7 +617,17 @@ def scalar_laplacians(
             ).format(", ".join(["{} = {}".format(k, v) for k, v in markers.items()])),
         )
 
-    # Compte the apex to base solutons
+
+def bayer(
+    cases,
+    mesh,
+    markers,
+    ffun,
+    verbose: bool,
+    use_krylov_solver: bool,
+    strict: bool,
+) -> Dict[str, df.Function]:
+
     apex = apex_to_base(
         mesh,
         markers["base"],
@@ -593,27 +643,11 @@ def scalar_laplacians(
 
     a = df.dot(df.grad(u), df.grad(v)) * df.dx
     L = v * df.Constant(0) * df.dx
+
     solutions = dict((what, df.Function(V)) for what in cases)
     solutions["apex"] = apex
-
-    df.info("  Num coords: {0}".format(mesh.num_vertices()))
-    df.info("  Num cells: {0}".format(mesh.num_cells()))
-
-    from mpi4py import MPI
-
-    comm = utils.mpi_comm_world()
-
-    # Check that solution of the three last cases all sum to 1.
     sol = solutions["apex"].vector().copy()
     sol[:] = 0.0
-    has_rv = comm.allreduce(
-        sendobj=len(ffun.array()[ffun.array() == markers["rv"]]),
-        op=MPI.MAX,
-    )
-
-    if not has_rv:
-        # Remove the RV
-        cases.pop(next(i for i, c in enumerate(cases) if c == "rv"))
 
     # Iterate over the three different cases
     df.info("Solving Laplace equation")

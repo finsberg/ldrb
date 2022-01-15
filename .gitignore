@@ -6,17 +6,15 @@
 *.pvd
 *.xml
 
-demos/demo_lv.md
-demos/demo_patient_lv.md
+demos/demo*.md
 demos/endo_lv_0.ply
 demos/environment.yml
 demos/epi_lv_0.ply
 demos/lisa/
 demos/mesh.geo
 docs/README.md
-docs/demo_biv.md
+docs/demo*.md
 docs/demo_lv.md
-docs/demo_patient_lv.md
 docs/ldrb.rst
 docs/modules.rst
 
