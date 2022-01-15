@@ -53,7 +53,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Creating fibers on a simple BiV ellipsoid" href="demo_biv.html" />
-    <link rel="prev" title="Demo" href="DEMO.html" />
+    <link rel="prev" title="Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations" href="README.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -97,16 +97,65 @@
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Demo
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="DEMO.html">
-   Demo
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Creating fibers on a simple LV ellipsoid
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_biv.html">
+   Creating fibers on a simple BiV ellipsoid
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_patient_lv.html">
+   Generating fibers for patient specific geometries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_strocchi_LV.html">
+   Life X - 01_strocchi_LV
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_idealized_LV.html">
+   Life X - idealized_LV
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="ldrb.html">
    ldrb package
   </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="modules.html">
+   ldrb
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="ldrb.html">
+     ldrb package
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -208,16 +257,20 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we just create a lv mesh. Here you can use yor own mesh instead.</span>
-<span class="n">geometry</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">create_lv_mesh</span><span class="p">()</span>
+<p>Here we just create a lv mesh. Here you can use yor own mesh instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geometry</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">create_lv_mesh</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The mesh</span>
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">mesh</span>
+<p>The mesh</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">mesh</span>
 <span class="c1"># The facet function (function with marking for the boundaries)</span>
-<span class="n">ffun</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">ffun</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">ffun</span>
 <span class="c1"># A dictionary with keys and values for the markers</span>
-<span class="n">markers</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Also if you want to to this demo in parallell you should create the mesh</span>
@@ -286,16 +339,17 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
 serial in stead. In that case you can read the the functions from the xml
 Using the following code</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">space_from_string</span><span class="p">(</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-
-<span class="n">fiber</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
 <span class="n">sheet</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
 <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;lv.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;lv.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
     <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;/fiber&quot;</span><span class="p">)</span>
     <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">&quot;/sheet&quot;</span><span class="p">)</span>
     <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;/sheet_normal&quot;</span><span class="p">)</span>
-
 </pre></div>
 </div>
 <p>You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don’t work (yet) using mpirun</p>
@@ -305,6 +359,10 @@ Using the following code</p>
 <span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;lv_sheet_normal&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><img alt="_" src="_images/lv_fiber.png" />
+<img alt="_" src="_images/lv_sheet.png" />
+<img alt="_" src="_images/lv_sheet_normal.png" />
+<a class="reference external" href="https://github.com/finsberg/ldrb/blob/master/demos/demo_lv.py">Link to source code</a></p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -332,11 +390,11 @@ Using the following code</p>
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="DEMO.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="README.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Demo</p>
+            <p class="prev-next-title">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="demo_biv.html" title="next page">
@@ -356,7 +414,7 @@ Using the following code</p>
         
           By Henrik Finsberg<br/>
         
-            &copy; Copyright 2021.<br/>
+            &copy; Copyright 2022.<br/>
       </p>
     </div>
   </footer>

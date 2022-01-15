@@ -52,7 +52,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ldrb package" href="ldrb.html" />
+    <link rel="next" title="Life X - 01_strocchi_LV" href="demo_lifex_strocchi_LV.html" />
     <link rel="prev" title="Creating fibers on a simple BiV ellipsoid" href="demo_biv.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -97,16 +97,65 @@
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Demo
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="DEMO.html">
-   Demo
+  <a class="reference internal" href="demo_lv.html">
+   Creating fibers on a simple LV ellipsoid
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_biv.html">
+   Creating fibers on a simple BiV ellipsoid
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Generating fibers for patient specific geometries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_strocchi_LV.html">
+   Life X - 01_strocchi_LV
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_idealized_LV.html">
+   Life X - idealized_LV
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="ldrb.html">
    ldrb package
   </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="modules.html">
+   ldrb
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="ldrb.html">
+     ldrb package
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -203,109 +252,48 @@
 <p>In this demo we will show how to generate fiber orientations from a patient specific geometry. We will use a mesh of an LV that is constructed using gmsh (<a class="reference external" href="https://gmsh.info">https://gmsh.info</a>), see <a class="reference external" href="https://github.com/finsberg/ldrb/blob/master/demos/mesh.msh">https://github.com/finsberg/ldrb/blob/master/demos/mesh.msh</a></p>
 <p>It is important that the mesh contains physical surfaces of the endocardium (lv and rv if present), the base and the epicardium. You can find an example of how to generate such a geometry using the python API for gmsh here: <a class="reference external" href="https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160">https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160</a></p>
 <p>First we import the necessary packages. Note that we also import <code class="docutils literal notranslate"><span class="pre">meshio</span></code> which is used for converted from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span>
-<span class="kn">import</span> <span class="nn">meshio</span>
-</pre></div>
-</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
 </pre></div>
 </div>
-<p>Next we define some helper functions for reading the mesh from gmsh. The mesh consists of different cell-types. In this demo we only work with tetrahedral (volume) and triangle (surface) cell-types, but there are also lower dimensional cell types, see e.g <a class="reference external" href="https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L61">https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L61</a></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">):</span>
-    <span class="c1"># From http://jsdokken.com/converted_files/tutorial_pygmsh.html</span>
-    <span class="n">cells</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_cells_type</span><span class="p">(</span><span class="n">cell_type</span><span class="p">)</span>
-    <span class="n">cell_data</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_cell_data</span><span class="p">(</span><span class="s2">&quot;gmsh:physical&quot;</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">)</span>
-    <span class="n">out_mesh</span> <span class="o">=</span> <span class="n">meshio</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span>
-        <span class="n">points</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">points</span><span class="p">,</span>
-        <span class="n">cells</span><span class="o">=</span><span class="p">{</span><span class="n">cell_type</span><span class="p">:</span> <span class="n">cells</span><span class="p">},</span>
-        <span class="n">cell_data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name_to_read&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">cell_data</span><span class="p">]},</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">out_mesh</span>
+<p>Convert from gmsh mesh to fenics</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_meshfunction</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;name_to_read&quot;</span><span class="p">)</span>
+<p>Update the markers wihch are stored within the mesh</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>Next we define a function for converting the gmsh file into an xdmf file. This function returns the mesh, as well as the facet function (which contains the markers for all the facets) as well as a dictionary containing the available markers.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gmsh2dolfin</span><span class="p">(</span><span class="n">msh_file</span><span class="p">):</span>
-
-    <span class="n">msh</span> <span class="o">=</span> <span class="n">meshio</span><span class="o">.</span><span class="n">gmsh</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">msh_file</span><span class="p">)</span>
-
-    <span class="n">triangle_mesh</span> <span class="o">=</span> <span class="n">create_mesh</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="s2">&quot;triangle&quot;</span><span class="p">)</span>
-    <span class="n">tetra_mesh</span> <span class="o">=</span> <span class="n">create_mesh</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="s2">&quot;tetra&quot;</span><span class="p">)</span>
-
-    <span class="n">triangle_mesh_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;triangle_mesh.xdmf&quot;</span><span class="p">)</span>
-    <span class="n">meshio</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">triangle_mesh_name</span><span class="p">,</span> <span class="n">triangle_mesh</span><span class="p">)</span>
-
-    <span class="n">tetra_mesh_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span>
-    <span class="n">meshio</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-        <span class="n">tetra_mesh_name</span><span class="p">,</span>
-        <span class="n">tetra_mesh</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
-
-    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">tetra_mesh_name</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
-        <span class="n">infile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-    <span class="n">cfun</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">read_meshfunction</span><span class="p">(</span><span class="n">tetra_mesh_name</span><span class="p">,</span> <span class="n">cfun</span><span class="p">)</span>
-    <span class="n">tetra_mesh_name</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-    <span class="n">tetra_mesh_name</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.h5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-
-    <span class="n">ffun_val</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshValueCollection</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">read_meshfunction</span><span class="p">(</span><span class="n">triangle_mesh_name</span><span class="p">,</span> <span class="n">ffun_val</span><span class="p">)</span>
-    <span class="n">ffun</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">ffun_val</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ffun_val</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">domains</span><span class="p">()</span><span class="o">.</span><span class="n">set_marker</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">())]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">triangle_mesh_name</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-    <span class="n">triangle_mesh_name</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.h5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-
-    <span class="n">markers</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">field_data</span>
-
-    <span class="k">return</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span>
+<p>Select a space for the fibers (here linear lagrange element)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
 </pre></div>
 </div>
-<p>In the final function we simply generate the fibers by first converting the mesh and then generating the fibers</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
-
-    <span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-        <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-        <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="p">}</span>
-
-    <span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_1&quot;</span>
-
-    <span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the endocardium</span>
-        <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the epicardium</span>
-        <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the endocardium</span>
-        <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
-        <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">ldrb_markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Save to xdmf</span>
-    <span class="c1"># with dolfin.XDMFFile(mesh.mpi_comm(), &quot;patient_fiber.xdmf&quot;) as xdmf:</span>
-    <span class="c1">#     xdmf.write(fiber)</span>
-
-    <span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;patient_fiber&quot;</span><span class="p">)</span>
+<p>Create a dictionary of fiber angles</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the endocardium</span>
+    <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the epicardium</span>
+    <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the endocardium</span>
+    <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<p>Run the LDRB algorithm</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">ldrb_markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
+<span class="p">)</span>
 </pre></div>
 </div>
+<p>Save to xdmf
+with dolfin.XDMFFile(mesh.mpi_comm(), “patient_fiber.xdmf”) as xdmf:
+xdmf.write(fiber)</p>
+<p>Use this function to save fibrer with angles as scalars</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;patient_fiber&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="_" src="_images/patient_fiber.png" /></p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -340,10 +328,10 @@
             <p class="prev-next-title">Creating fibers on a simple BiV ellipsoid</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="ldrb.html" title="next page">
+    <a class='right-next' id="next-link" href="demo_lifex_strocchi_LV.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ldrb package</p>
+        <p class="prev-next-title">Life X - 01_strocchi_LV</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -357,7 +345,7 @@
         
           By Henrik Finsberg<br/>
         
-            &copy; Copyright 2021.<br/>
+            &copy; Copyright 2022.<br/>
       </p>
     </div>
   </footer>

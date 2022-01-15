@@ -13,17 +13,25 @@ import dolfin as df
 import ldrb
 ```
 
+Here we just create a lv mesh. Here you can use yor own mesh instead.
+
 ```python
-# Here we just create a lv mesh. Here you can use yor own mesh instead.
 geometry = ldrb.create_lv_mesh()
 ```
 
+The mesh
+
 ```python
-# The mesh
 mesh = geometry.mesh
 # The facet function (function with marking for the boundaries)
+```
+
+```python
 ffun = geometry.ffun
 # A dictionary with keys and values for the markers
+```
+
+```python
 markers = geometry.markers
 ```
 
@@ -101,19 +109,24 @@ If you run in parallel you should skip the visualisation step and do that in
 serial in stead. In that case you can read the the functions from the xml
 Using the following code
 
+
 ```python
 V = ldrb.space_from_string(fiber_space, mesh, dim=3)
+```
 
+```python
 fiber = df.Function(V)
 sheet = df.Function(V)
 sheet_normal = df.Function(V)
+```
 
+```python
 with df.HDF5File(mesh.mpi_comm(), "lv.h5", "r") as h5file:
     h5file.read(fiber, "/fiber")
     h5file.read(sheet, "/sheet")
     h5file.read(sheet_normal, "/sheet_normal")
-
 ```
+
 
 You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don't work (yet) using mpirun
 
@@ -123,3 +136,9 @@ ldrb.fiber_to_xdmf(fiber, "lv_fiber")
 ldrb.fiber_to_xdmf(sheet, "lv_sheet")
 ldrb.fiber_to_xdmf(sheet_normal, "lv_sheet_normal")
 ```
+
+
+![_](_static/figures/lv_fiber.png)
+![_](_static/figures/lv_sheet.png)
+![_](_static/figures/lv_sheet_normal.png)
+[Link to source code](https://github.com/finsberg/ldrb/blob/master/demos/demo_lv.py)

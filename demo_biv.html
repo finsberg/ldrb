@@ -97,16 +97,65 @@
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Demo
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="DEMO.html">
-   Demo
+  <a class="reference internal" href="demo_lv.html">
+   Creating fibers on a simple LV ellipsoid
   </a>
  </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Creating fibers on a simple BiV ellipsoid
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_patient_lv.html">
+   Generating fibers for patient specific geometries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_strocchi_LV.html">
+   Life X - 01_strocchi_LV
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_idealized_LV.html">
+   Life X - idealized_LV
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="ldrb.html">
    ldrb package
   </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="modules.html">
+   ldrb
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="ldrb.html">
+     ldrb package
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -309,10 +358,12 @@ Using the following code</p>
 <p>You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don’t work (yet) using mpirun</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (These function are not tested in parallel)</span>
 <span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;biv_fiber&quot;</span><span class="p">)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">&quot;biv_sheet&quot;</span><span class="p">)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;biv_sheet_normal&quot;</span><span class="p">)</span>
+<span class="c1"># ldrb.fiber_to_xdmf(sheet, &quot;biv_sheet&quot;)</span>
+<span class="c1"># ldrb.fiber_to_xdmf(sheet_normal, &quot;biv_sheet_normal&quot;)</span>
 </pre></div>
 </div>
+<p><img alt="_" src="_images/biv_fiber.png" />
+<a class="reference external" href="https://github.com/finsberg/ldrb/blob/master/demos/demo_biv.py">Link to source code</a></p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -364,7 +415,7 @@ Using the following code</p>
         
           By Henrik Finsberg<br/>
         
-            &copy; Copyright 2021.<br/>
+            &copy; Copyright 2022.<br/>
       </p>
     </div>
   </footer>

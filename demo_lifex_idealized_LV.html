@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo &#8212; ldrb</title>
+    <title>Life X - idealized_LV &#8212; ldrb</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,8 +52,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Creating fibers on a simple LV ellipsoid" href="demo_lv.html" />
-    <link rel="prev" title="Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations" href="README.html" />
+    <link rel="next" title="ldrb package" href="ldrb.html" />
+    <link rel="prev" title="Life X - 01_strocchi_LV" href="demo_lifex_strocchi_LV.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -97,16 +97,65 @@
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Demo
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Demo
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lv.html">
+   Creating fibers on a simple LV ellipsoid
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_biv.html">
+   Creating fibers on a simple BiV ellipsoid
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_patient_lv.html">
+   Generating fibers for patient specific geometries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="demo_lifex_strocchi_LV.html">
+   Life X - 01_strocchi_LV
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Life X - idealized_LV
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="ldrb.html">
    ldrb package
   </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="modules.html">
+   ldrb
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="ldrb.html">
+     ldrb package
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -149,7 +198,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/DEMO.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/demo_lifex_idealized_LV.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -169,7 +218,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/finsberg/ldrb/issues/new?title=Issue%20on%20page%20%2FDEMO.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/finsberg/ldrb/issues/new?title=Issue%20on%20page%20%2Fdemo_lifex_idealized_LV.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -190,36 +239,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Demo
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#lv">
-     LV
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#biv">
-     BiV
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#patient">
-   Patient
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -228,40 +247,54 @@
         
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="demo">
-<h1>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h1>
-<p>Here you will find the demos for generating fibers using the LDRB algorithm. All demos should work in serial and parallel using <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>. This means that you can run the demos either using e.g</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">demo_lv</span><span class="o">.</span><span class="n">py</span>
+  <div class="tex2jax_ignore mathjax_ignore section" id="life-x-idealized-lv">
+<h1>Life X - idealized_LV<a class="headerlink" href="#life-x-idealized-lv" title="Permalink to this headline">¶</a></h1>
+<p>Life X recently published their own implementation of the LDRB algorithm and with that they also publushed a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
+<p>This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called <code class="docutils literal notranslate"><span class="pre">lifex_fiber_generation_examples/mesh</span></code>.</p>
+<p>First we import the necessary packages. Note that we also import <code class="docutils literal notranslate"><span class="pre">meshio</span></code> which is used for converted from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span>
 </pre></div>
 </div>
-<p>or using <code class="docutils literal notranslate"><span class="pre">mpirun</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">4</span> <span class="n">python</span> <span class="n">demo_lv</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
 </pre></div>
 </div>
-<p>which will run the demo using 4 processors.</p>
-<p>There are currently three demos that you can find below</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="demo_lv.html"><span class="doc std std-doc">Simple LV</span></a></p></li>
-<li><p><a class="reference internal" href="demo_biv.html"><span class="doc std std-doc">Simple BiV</span></a></p></li>
-<li><p><a class="reference internal" href="demo_patient_lv.html"><span class="doc std std-doc">Patient specific LV</span></a></p></li>
-</ul>
-<p>Below we also show some example plots of the fiber orientations</p>
-<div class="section" id="lv">
-<h2>LV<a class="headerlink" href="#lv" title="Permalink to this headline">¶</a></h2>
-<p><img alt="LV Fiber" src="_images/lv_fiber.png" /></p>
-<p><img alt="LV Sheet" src="_images/lv_sheet.png" /></p>
-<p><img alt="LV Sheet-normal" src="_images/lv_sheet_normal.png" /></p>
+<p>Load the mesh and markers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span>
+    <span class="s2">&quot;lifex_fiber_generation_examples/mesh/idealized_LV.msh&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="biv">
-<h2>BiV<a class="headerlink" href="#biv" title="Permalink to this headline">¶</a></h2>
-<p><img alt="BiV Fiber" src="_images/biv_fiber.png" /></p>
+<p>Here the markers are actually parsed with meshio, but they have the wrong name so we just rename them</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Epicardium&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Endocardium&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Basal plane&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
 </div>
+<p>Select linear langange elements</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_1&quot;</span>
+</pre></div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="patient">
-<h1>Patient<a class="headerlink" href="#patient" title="Permalink to this headline">¶</a></h1>
-<p><img alt="Patient Fiber" src="_images/patient_fiber_lv.png" /></p>
-<div class="toctree-wrapper compound">
+<p>Compute the fiber-sheet system</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+    <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span>
+    <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span>
+    <span class="n">markers</span><span class="o">=</span><span class="n">ldrb_markers</span><span class="p">,</span>
+    <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the endocardium</span>
+    <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the epicardium</span>
+    <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the endocardium</span>
+    <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the epicardium</span>
+<span class="p">)</span>
+</pre></div>
 </div>
+<p>And save the results</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;idealized_LV_fiber.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+    <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fiber</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="_" src="_images/idealized_LV_fiber.png" /></p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -289,17 +322,17 @@
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="README.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="demo_lifex_strocchi_LV.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</p>
+            <p class="prev-next-title">Life X - 01_strocchi_LV</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="demo_lv.html" title="next page">
+    <a class='right-next' id="next-link" href="ldrb.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Creating fibers on a simple LV ellipsoid</p>
+        <p class="prev-next-title">ldrb package</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -313,7 +346,7 @@
         
           By Henrik Finsberg<br/>
         
-            &copy; Copyright 2021.<br/>
+            &copy; Copyright 2022.<br/>
       </p>
     </div>
   </footer>
