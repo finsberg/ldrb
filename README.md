@@ -32,7 +32,7 @@ angles = dict(
 
 # Choose space for the fiber fields
 # This is a string on the form {family}_{degree}
-fiber_space = "Quadrature_2"
+fiber_space = "P_2"
 
 # Compute the microstructure
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
@@ -44,7 +44,7 @@ ldrb.fiber_to_xdmf(fiber, "fiber")
 # And visualize it in Paraview
 ```
 
-![](docs/_static/figures/biv_fiber.png)
+![_](https://github.com/finsberg/ldrb/raw/master/docs/_static/figures/biv_fiber.png)
 
 # Installation
 
@@ -74,7 +74,7 @@ which will also install FEniCS through `conda`.
 Documentation is hosted at http://finsberg.github.io/ldrb
 
 # Getting started
-Check out the [demos](demos)
+Check out the [demos](https://henrikfinsberg.com/ldrb/demo_lv.html)
 
 # License
 `ldrb` is licensed under the GNU LGPL, version 3 or (at your option) any later version.

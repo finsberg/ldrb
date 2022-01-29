@@ -9,6 +9,7 @@ parts:
       - file: demo_lv
       - file: demo_biv
       - file: demo_patient_lv
+      - file: basis_functions
       - file: demo_lifex_strocchi_LV
       - file: demo_lifex_idealized_LV
   - caption: API documentation

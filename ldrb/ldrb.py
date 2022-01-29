@@ -71,6 +71,8 @@ def compute_fiber_sheet_system(
     dofs: Optional[np.ndarray] = None,
     rv_scalar: Optional[np.ndarray] = None,
     rv_gradient: Optional[np.ndarray] = None,
+    lv_rv_scalar: Optional[np.ndarray] = None,
+    marker_scalar: Optional[np.ndarray] = None,
     alpha_endo_lv: float = 40,
     alpha_epi_lv: float = -50,
     alpha_endo_rv: Optional[float] = None,
@@ -91,6 +93,8 @@ def compute_fiber_sheet_system(
         dofs = standard_dofs(len(lv_scalar))
     if rv_scalar is None:
         rv_scalar = np.zeros_like(lv_scalar)
+    if lv_rv_scalar is None:
+        lv_rv_scalar = np.zeros_like(lv_scalar)
     if rv_gradient is None:
         rv_gradient = np.zeros_like(lv_gradient)
 
@@ -101,7 +105,7 @@ def compute_fiber_sheet_system(
 
     beta_endo_rv = beta_endo_rv or beta_endo_lv
     beta_epi_rv = beta_epi_rv or beta_epi_lv
-    beta_endo_sept = beta_endo_sept or beta_epi_lv
+    beta_endo_sept = beta_endo_sept or beta_endo_lv
     beta_epi_sept = beta_epi_sept or beta_epi_lv
 
     df.info("Compute fiber-sheet system")
@@ -148,8 +152,10 @@ def compute_fiber_sheet_system(
     f0 = np.zeros_like(lv_gradient)
     s0 = np.zeros_like(lv_gradient)
     n0 = np.zeros_like(lv_gradient)
+    if marker_scalar is None:
+        marker_scalar = np.zeros_like(lv_scalar)
 
-    tol = 1e-3
+    tol = 0.1
 
     from .calculus import _compute_fiber_sheet_system
 
@@ -164,10 +170,12 @@ def compute_fiber_sheet_system(
         lv_scalar,
         rv_scalar,
         epi_scalar,
+        lv_rv_scalar,
         lv_gradient,
         rv_gradient,
         epi_gradient,
         apex_gradient,
+        marker_scalar,
         alpha_endo_lv,
         alpha_epi_lv,
         alpha_endo_rv,
@@ -219,7 +227,19 @@ def dolfin_ldrb(
     log_level: int = logging.INFO,
     use_krylov_solver: bool = False,
     strict: bool = False,
-    **angles: Optional[float],
+    save_markers: bool = False,
+    alpha_endo_lv: float = 40,
+    alpha_epi_lv: float = -50,
+    alpha_endo_rv: Optional[float] = None,
+    alpha_epi_rv: Optional[float] = None,
+    alpha_endo_sept: Optional[float] = None,
+    alpha_epi_sept: Optional[float] = None,
+    beta_endo_lv: float = -65,
+    beta_epi_lv: float = 25,
+    beta_endo_rv: Optional[float] = None,
+    beta_epi_rv: Optional[float] = None,
+    beta_endo_sept: Optional[float] = None,
+    beta_epi_sept: Optional[float] = None,
 ):
     r"""
     Create fiber, cross fibers and sheet directions
@@ -252,6 +272,9 @@ def dolfin_ldrb(
         If True use Krylov solver, by default False
     strict: bool
         If true raise RuntimeError if solutions does not sum to 1.0
+    save_markers: bool
+        If true save markings of the geometry. This is nice if you
+        want to see that the LV, RV and Septum are marked correctly.
     angles : kwargs
         Keyword arguments with the fiber and sheet angles.
         It is possible to set different angles on the LV,
@@ -316,8 +339,31 @@ def dolfin_ldrb(
     )
 
     dofs = dofs_from_function_space(mesh, fiber_space)
+    marker_scalar = np.zeros_like(data["lv_scalar"])
+    system = compute_fiber_sheet_system(
+        dofs=dofs,
+        marker_scalar=marker_scalar,
+        alpha_endo_lv=alpha_endo_lv,
+        alpha_epi_lv=alpha_epi_lv,
+        alpha_endo_rv=alpha_endo_rv,
+        alpha_epi_rv=alpha_epi_rv,
+        alpha_endo_sept=alpha_endo_sept,
+        alpha_epi_sept=alpha_epi_sept,
+        beta_endo_lv=beta_endo_lv,
+        beta_epi_lv=beta_epi_lv,
+        beta_endo_rv=beta_endo_rv,
+        beta_epi_rv=beta_epi_rv,
+        beta_endo_sept=beta_endo_sept,
+        beta_epi_sept=beta_epi_sept,
+        **data,
+    )  # type:ignore
 
-    system = compute_fiber_sheet_system(dofs=dofs, **data, **angles)  # type:ignore
+    if save_markers:
+        Vv = utils.space_from_string(fiber_space, mesh, dim=1)
+        markers_fun = df.Function(Vv)
+        markers_fun.vector().set_local(marker_scalar)
+        markers_fun.vector().apply("insert")
+        df.File("markers.pvd") << markers_fun
 
     df.set_log_level(log_level)
     return fiber_system_to_dolfin(system, mesh, fiber_space)
@@ -479,15 +525,18 @@ def project_gradients(
     V_cg = df.FunctionSpace(mesh, df.VectorElement("Lagrange", mesh.ufl_cell(), 1))
     for case, scalar_solution in scalar_solutions.items():
 
-        gradient_cg = df.project(df.grad(scalar_solution), V_cg, solver_type="cg")
-        gradient = df.interpolate(gradient_cg, Vv)
-        scalar_solution = df.interpolate(scalar_solution, V)
+        scalar_solution_int = df.interpolate(scalar_solution, V)
+
+        if case != "lv_rv":
+            gradient_cg = df.project(df.grad(scalar_solution), V_cg, solver_type="cg")
+            gradient = df.interpolate(gradient_cg, Vv)
+
+            # Add gradient data
+            data[case + "_gradient"] = gradient.vector().get_local()
 
         # Add scalar data
         if case != "apex":
-            data[case + "_scalar"] = scalar_solution.vector().get_local()
-        # Add gradient data
-        data[case + "_gradient"] = gradient.vector().get_local()
+            data[case + "_scalar"] = scalar_solution_int.vector().get_local()
 
     # Return data
     return data
@@ -651,6 +700,9 @@ def bayer(
 
     # Iterate over the three different cases
     df.info("Solving Laplace equation")
+    solver_parameters = {"linear_solver": "mumps"}
+    if "superlu_dist" in df.linear_solver_methods():
+        solver_parameters = {"linear_solver": "superlu_dist"}
 
     for case in cases:
         df.info(
@@ -671,10 +723,6 @@ def bayer(
             for what in cases
         ]
 
-        solver_parameters = {"linear_solver": "mumps"}
-        if "superlu_dist" in df.linear_solver_methods():
-            solver_parameters = {"linear_solver": "superlu_dist"}
-
         solve_system(
             a,
             L,
@@ -685,15 +733,38 @@ def bayer(
             verbose=verbose,
         )
 
-        # Enforce bound on solution:
-        solutions[case].vector()[
-            solutions[case].vector() < df.DOLFIN_EPS
-        ] = df.DOLFIN_EPS
-        solutions[case].vector()[solutions[case].vector() > 1.0 - df.DOLFIN_EPS] = (
-            1.0 - df.DOLFIN_EPS
-        )
-
         sol += solutions[case].vector()
+
+    if "rv" in cases:
+        # Solve one extra equation that is 1 on LV and
+        # 0 on the RV
+        solutions["lv_rv"] = df.Function(V)
+        bcs = [
+            df.DirichletBC(
+                V,
+                1,
+                ffun,
+                markers["lv"],
+                "topological",
+            ),
+            df.DirichletBC(
+                V,
+                0,
+                ffun,
+                markers["rv"],
+                "topological",
+            ),
+        ]
+
+        solve_system(
+            a,
+            L,
+            bcs,
+            solutions["lv_rv"],
+            solver_parameters=solver_parameters,
+            use_krylov_solver=use_krylov_solver,
+            verbose=verbose,
+        )
 
     if not np.all(sol[:] > 0.999):
         msg = "Solution does not always sum to one."
