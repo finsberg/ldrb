@@ -119,6 +119,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="basis_functions.html">
+   Local basis functions
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="demo_lifex_strocchi_LV.html">
    Life X - 01_strocchi_LV
   </a>
@@ -304,8 +309,17 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
     <span class="n">xdmf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ffun</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decide on the angles you want to use</span>
-<span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose space for the fiber fields</span>
+<span class="c1"># This is a string on the form {family}_{degree}</span>
+<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;Lagrange_2&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the microstructure</span>
+<span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+    <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span>
+    <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span>
+    <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span>
     <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV endocardium</span>
     <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV epicardium</span>
     <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV endocardium</span>
@@ -318,17 +332,6 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
     <span class="n">alpha_epi_rv</span><span class="o">=-</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV epicardium</span>
     <span class="n">beta_endo_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV endocardium</span>
     <span class="n">beta_epi_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose space for the fiber fields</span>
-<span class="c1"># This is a string on the form {family}_{degree}</span>
-<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;Lagrange_1&quot;</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the microstructure</span>
-<span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
-    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
 <span class="p">)</span>
 </pre></div>
 </div>

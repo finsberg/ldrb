@@ -66,9 +66,20 @@ with df.XDMFFile("ffun.xdmf") as xdmf:
     xdmf.read(ffun)
 ```
 
+
 ```python
-# Decide on the angles you want to use
-angles = dict(
+# Choose space for the fiber fields
+# This is a string on the form {family}_{degree}
+fiber_space = "Lagrange_2"
+```
+
+```python
+# Compute the microstructure
+fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=ffun,
+    markers=markers,
     alpha_endo_lv=30,  # Fiber angle on the LV endocardium
     alpha_epi_lv=-30,  # Fiber angle on the LV epicardium
     beta_endo_lv=0,  # Sheet angle on the LV endocardium
@@ -81,19 +92,6 @@ angles = dict(
     alpha_epi_rv=-80,  # Fiber angle on the RV epicardium
     beta_endo_rv=0,  # Sheet angle on the RV endocardium
     beta_epi_rv=0,
-)
-```
-
-```python
-# Choose space for the fiber fields
-# This is a string on the form {family}_{degree}
-fiber_space = "Lagrange_1"
-```
-
-```python
-# Compute the microstructure
-fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=markers, **angles
 )
 ```
 
