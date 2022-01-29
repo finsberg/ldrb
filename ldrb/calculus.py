@@ -364,10 +364,12 @@ def _compute_fiber_sheet_system(
     lv_scalar,
     rv_scalar,
     epi_scalar,
+    lv_rv_scalar,
     lv_gradient,
     rv_gradient,
     epi_gradient,
     apex_gradient,
+    marker_scalar,
     alpha_endo_lv,
     alpha_epi_lv,
     alpha_endo_rv,
@@ -392,6 +394,7 @@ def _compute_fiber_sheet_system(
         lv = lv_scalar[sdofs[i]]
         rv = rv_scalar[sdofs[i]]
         epi = epi_scalar[sdofs[i]]
+        lv_rv = lv_rv_scalar[sdofs[i]]
 
         grad_lv[0] = lv_gradient[xdofs[i]]
         grad_lv[1] = lv_gradient[ydofs[i]]
@@ -409,29 +412,43 @@ def _compute_fiber_sheet_system(
         grad_ab[1] = apex_gradient[ydofs[i]]
         grad_ab[2] = apex_gradient[zdofs[i]]
 
-        if lv > tol and rv < tol:
-            # We are in the LV region
-            alpha_endo = alpha_endo_lv
-            beta_endo = beta_endo_lv
-            alpha_epi = alpha_epi_lv
-            beta_epi = beta_epi_lv
-        elif lv < tol and rv > tol:
-            # We are in the RV region
-            alpha_endo = alpha_endo_rv
-            beta_endo = beta_endo_rv
-            alpha_epi = alpha_epi_rv
-            beta_epi = beta_epi_rv
-        elif lv > tol and rv > tol:
-            # We are in the septum
-            alpha_endo = alpha_endo_sept
-            beta_endo = beta_endo_sept
-            alpha_epi = alpha_epi_sept
-            beta_epi = beta_epi_sept
+        if epi > 0.5:
+            if lv_rv >= 0.5:
+                # We are in the LV region
+                marker_scalar[sdofs[i]] = 1
+                alpha_endo = alpha_endo_lv
+                beta_endo = beta_endo_lv
+                alpha_epi = alpha_epi_lv
+                beta_epi = beta_epi_lv
+            else:
+                # We are in the RV region
+                marker_scalar[sdofs[i]] = 2
+                alpha_endo = alpha_endo_rv
+                beta_endo = beta_endo_rv
+                alpha_epi = alpha_epi_rv
+                beta_epi = beta_epi_rv
         else:
-            alpha_endo = alpha_endo_lv
-            beta_endo = beta_endo_lv
-            alpha_epi = alpha_epi_lv
-            beta_epi = beta_epi_lv
+            if lv_rv >= 1 - tol:
+                # We are in the LV region
+                marker_scalar[sdofs[i]] = 1
+                alpha_endo = alpha_endo_lv
+                beta_endo = beta_endo_lv
+                alpha_epi = alpha_epi_lv
+                beta_epi = beta_epi_lv
+            elif lv_rv <= tol:
+                # We are in the RV region
+                marker_scalar[sdofs[i]] = 2
+                alpha_endo = alpha_endo_rv
+                beta_endo = beta_endo_rv
+                alpha_epi = alpha_epi_rv
+                beta_epi = beta_epi_rv
+            else:
+                # We are in the septum
+                marker_scalar[sdofs[i]] = 3
+                alpha_endo = alpha_endo_sept
+                beta_endo = beta_endo_sept
+                alpha_epi = alpha_epi_sept
+                beta_epi = beta_epi_sept
 
         Q_fiber = system_at_dof(
             lv=lv,

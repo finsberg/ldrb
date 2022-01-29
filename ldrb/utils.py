@@ -224,6 +224,7 @@ def create_lv_mesh(
     # Markers
     if markers is None:
         markers = default_markers()
+        markers.pop("rv", None)
 
     class Endo(df.SubDomain):
         def inside(self, x, on_boundary):

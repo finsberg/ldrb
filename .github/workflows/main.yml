@@ -24,9 +24,9 @@ jobs:
             ~/.cache/instant
             ~/.cache/dijitso
             ~/.cache/pip
-          key: ${{ matrix.container }}-cache_v1
+          key: ${{ matrix.container }}-cache_v2
           restore-keys: |
-            ${{ matrix.container }}-cache_v1
+            ${{ matrix.container }}-cache_v2
 
       - name: Install dependencies
         run: |
