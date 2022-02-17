@@ -39,3 +39,4 @@ repos:
     rev: v0.931
     hooks:
       - id: mypy
+        exclude: ^demos/
