@@ -658,8 +658,13 @@ def scalar_laplacians(
     )
 
     # Compte the apex to base solutons
-    df.info("  Num coords: {0}".format(mesh.num_vertices()))
-    df.info("  Num cells: {0}".format(mesh.num_cells()))
+    num_vertices = mesh.num_vertices()
+    num_cells = mesh.num_cells()
+    if mesh.mpi_comm().size > 1:
+        num_vertices = mesh.mpi_comm().allreduce(num_vertices)
+        num_cells = mesh.mpi_comm().allreduce(num_cells)
+    df.info("  Num vertices: {0}".format(num_vertices))
+    df.info("  Num cells: {0}".format(num_cells))
 
     if "mv" in cases and "av" in cases:
         # Use Doste approach
