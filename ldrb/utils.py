@@ -176,7 +176,7 @@ def mark_facets(mesh: df.Mesh, ffun: df.MeshFunction):
     """
     for facet in df.facets(mesh):
 
-        if ffun[facet] == 2 ** 64 - 1:
+        if ffun[facet] == 2**64 - 1:
             ffun[facet] = 0
 
         mesh.domains().set_marker((facet.index(), ffun[facet]), 2)
@@ -228,11 +228,11 @@ def create_lv_mesh(
 
     class Endo(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (x[0] - center.x()) ** 2 / a_endo ** 2 + (
+            return (x[0] - center.x()) ** 2 / a_endo**2 + (
                 x[1] - center.y()
-            ) ** 2 / b_endo ** 2 + (
+            ) ** 2 / b_endo**2 + (
                 x[2] - center.z()
-            ) ** 2 / c_endo ** 2 - 1.1 < df.DOLFIN_EPS and on_boundary
+            ) ** 2 / c_endo**2 - 1.1 < df.DOLFIN_EPS and on_boundary
 
     class Base(df.SubDomain):
         def inside(self, x, on_boundary):
@@ -240,11 +240,11 @@ def create_lv_mesh(
 
     class Epi(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (x[0] - center.x()) ** 2 / a_epi ** 2 + (
+            return (x[0] - center.x()) ** 2 / a_epi**2 + (
                 x[1] - center.y()
-            ) ** 2 / b_epi ** 2 + (
+            ) ** 2 / b_epi**2 + (
                 x[2] - center.z()
-            ) ** 2 / c_epi ** 2 - 0.9 > df.DOLFIN_EPS and on_boundary
+            ) ** 2 / c_epi**2 - 0.9 > df.DOLFIN_EPS and on_boundary
 
     # The plane cutting the base
     diam = -2 * a_epi
@@ -328,11 +328,11 @@ def create_biv_mesh(
 
     class EndoLV(df.SubDomain):
         def inside(self, x, on_boundary):
-            return (x[0] - center_lv.x()) ** 2 / a_endo_lv ** 2 + (
+            return (x[0] - center_lv.x()) ** 2 / a_endo_lv**2 + (
                 x[1] - center_lv.y()
-            ) ** 2 / b_endo_lv ** 2 + (
+            ) ** 2 / b_endo_lv**2 + (
                 x[2] - center_lv.z()
-            ) ** 2 / c_endo_lv ** 2 - 1 < df.DOLFIN_EPS and on_boundary
+            ) ** 2 / c_endo_lv**2 - 1 < df.DOLFIN_EPS and on_boundary
 
     class Base(df.SubDomain):
         def inside(self, x, on_boundary):
@@ -341,14 +341,14 @@ def create_biv_mesh(
     class EndoRV(df.SubDomain):
         def inside(self, x, on_boundary):
             return (
-                (x[0] - center_rv.x()) ** 2 / a_endo_rv ** 2
-                + (x[1] - center_rv.y()) ** 2 / b_endo_rv ** 2
-                + (x[2] - center_rv.z()) ** 2 / c_endo_rv ** 2
+                (x[0] - center_rv.x()) ** 2 / a_endo_rv**2
+                + (x[1] - center_rv.y()) ** 2 / b_endo_rv**2
+                + (x[2] - center_rv.z()) ** 2 / c_endo_rv**2
                 - 1
                 < df.DOLFIN_EPS
-                and (x[0] - center_lv.x()) ** 2 / a_epi_lv ** 2
-                + (x[1] - center_lv.y()) ** 2 / b_epi_lv ** 2
-                + (x[2] - center_lv.z()) ** 2 / c_epi_lv ** 2
+                and (x[0] - center_lv.x()) ** 2 / a_epi_lv**2
+                + (x[1] - center_lv.y()) ** 2 / b_epi_lv**2
+                + (x[2] - center_lv.z()) ** 2 / c_epi_lv**2
                 - 0.9
                 > df.DOLFIN_EPS
             ) and on_boundary
@@ -356,14 +356,14 @@ def create_biv_mesh(
     class Epi(df.SubDomain):
         def inside(self, x, on_boundary):
             return (
-                (x[0] - center_rv.x()) ** 2 / a_epi_rv ** 2
-                + (x[1] - center_rv.y()) ** 2 / b_epi_rv ** 2
-                + (x[2] - center_rv.z()) ** 2 / c_epi_rv ** 2
+                (x[0] - center_rv.x()) ** 2 / a_epi_rv**2
+                + (x[1] - center_rv.y()) ** 2 / b_epi_rv**2
+                + (x[2] - center_rv.z()) ** 2 / c_epi_rv**2
                 - 0.9
                 > df.DOLFIN_EPS
-                and (x[0] - center_lv.x()) ** 2 / a_epi_lv ** 2
-                + (x[1] - center_lv.y()) ** 2 / b_epi_lv ** 2
-                + (x[2] - center_lv.z()) ** 2 / c_epi_lv ** 2
+                and (x[0] - center_lv.x()) ** 2 / a_epi_lv**2
+                + (x[1] - center_lv.y()) ** 2 / b_epi_lv**2
+                + (x[2] - center_lv.z()) ** 2 / c_epi_lv**2
                 - 0.9
                 > df.DOLFIN_EPS
                 and on_boundary
