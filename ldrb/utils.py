@@ -13,7 +13,7 @@ import ufl
 try:
     import mshr
 except ImportError:
-    df.debug("mshr is not installed")
+    df.warning("mshr is not installed")
 
 
 def has_meshio() -> bool:
