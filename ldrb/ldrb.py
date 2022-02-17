@@ -20,6 +20,9 @@ def laplace(
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
     use_krylov_solver: bool = False,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
 ) -> Dict[str, np.ndarray]:
@@ -35,6 +38,9 @@ def laplace(
         markers=markers,
         ffun=ffun,
         use_krylov_solver=use_krylov_solver,
+        krylov_solver_atol=krylov_solver_atol,
+        krylov_solver_rtol=krylov_solver_rtol,
+        krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
     )
@@ -226,6 +232,9 @@ def dolfin_ldrb(
     markers: Optional[Dict[str, int]] = None,
     log_level: int = logging.INFO,
     use_krylov_solver: bool = False,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
     strict: bool = False,
     save_markers: bool = False,
     alpha_endo_lv: float = 40,
@@ -270,6 +279,17 @@ def dolfin_ldrb(
         Default: INFO
     use_krylov_solver: bool
         If True use Krylov solver, by default False
+    krylov_solver_atol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the absolute
+        residual. Default: 1e-15.
+    krylov_solver_rtol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the relative
+        residual. Default: 1e-10.
+    krylov_solver_max_its: int (optional)
+        If a Krylov solver is used, this option specifies the
+        maximum number of iterations to perform. Default: 10000.
     strict: bool
         If true raise RuntimeError if solutions does not sum to 1.0
     save_markers: bool
@@ -334,6 +354,9 @@ def dolfin_ldrb(
         markers=markers,
         ffun=ffun,
         use_krylov_solver=use_krylov_solver,
+        krylov_solver_atol=krylov_solver_atol,
+        krylov_solver_rtol=krylov_solver_rtol,
+        krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
     )
@@ -403,6 +426,9 @@ def apex_to_base(
     base_marker: int,
     ffun: df.MeshFunction,
     use_krylov_solver: bool = False,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
 ):
     """
@@ -421,6 +447,17 @@ def apex_to_base(
         be used.
     use_krylov_solver: bool
         If True use Krylov solver, by default False
+    krylov_solver_atol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the absolute
+        residual. Default: 1e-15.
+    krylov_solver_rtol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the relative
+        residual. Default: 1e-10.
+    krylov_solver_max_its: int (optional)
+        If a Krylov solver is used, this option specifies the
+        maximum number of iterations to perform. Default: 10000.
     verbose: bool
         If true, print more info, by default False
     """
@@ -446,6 +483,9 @@ def apex_to_base(
         apex,
         solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
         use_krylov_solver=use_krylov_solver,
+        krylov_solver_atol=krylov_solver_atol,
+        krylov_solver_rtol=krylov_solver_rtol,
+        krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
     )
 
@@ -492,6 +532,9 @@ def apex_to_base(
             bcs,
             apex,
             use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
             solver_parameters={"linear_solver": "gmres"},
             verbose=verbose,
         )
@@ -547,6 +590,9 @@ def scalar_laplacians(
     markers: Optional[Dict[str, int]] = None,
     ffun: Optional[MeshFunction] = None,
     use_krylov_solver: bool = False,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
 ) -> Dict[str, df.Function]:
@@ -570,6 +616,17 @@ def scalar_laplacians(
         determines for what space the fibers should be calculated for.
     use_krylov_solver: bool
         If True use Krylov solver, by default False
+    krylov_solver_atol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the absolute
+        residual. Default: 1e-15.
+    krylov_solver_rtol: float (optional)
+        If a Krylov solver is used, this option specifies a
+        convergence criterion in terms of the relative
+        residual. Default: 1e-10.
+    krylov_solver_max_its: int (optional)
+        If a Krylov solver is used, this option specifies the
+        maximum number of iterations to perform. Default: 10000.
     verbose: bool
         If true, print more info, by default False
     strict: bool
@@ -617,6 +674,9 @@ def scalar_laplacians(
         verbose=verbose,
         use_krylov_solver=use_krylov_solver,
         strict=strict,
+        krylov_solver_atol=krylov_solver_atol,
+        krylov_solver_rtol=krylov_solver_rtol,
+        krylov_solver_max_its=krylov_solver_max_its,
     )
 
 
@@ -675,6 +735,9 @@ def bayer(
     verbose: bool,
     use_krylov_solver: bool,
     strict: bool,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
 ) -> Dict[str, df.Function]:
 
     apex = apex_to_base(
@@ -682,6 +745,9 @@ def bayer(
         markers["base"],
         ffun,
         use_krylov_solver=use_krylov_solver,
+        krylov_solver_atol=krylov_solver_atol,
+        krylov_solver_rtol=krylov_solver_rtol,
+        krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
     )
 
@@ -730,6 +796,9 @@ def bayer(
             solutions[case],
             solver_parameters=solver_parameters,
             use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
             verbose=verbose,
         )
 
@@ -763,6 +832,9 @@ def bayer(
             solutions["lv_rv"],
             solver_parameters=solver_parameters,
             use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
             verbose=verbose,
         )
 
@@ -784,8 +856,8 @@ def solve_krylov(
     verbose: bool = False,
     ksp_type="cg",
     ksp_norm_type="unpreconditioned",
-    ksp_rtol=1e-10,
     ksp_atol=1e-15,
+    ksp_rtol=1e-10,
     ksp_max_it=10000,
     ksp_error_if_not_converged=False,
     pc_type="hypre",
@@ -799,8 +871,8 @@ def solve_krylov(
     solver = df.PETScKrylovSolver()
     df.PETScOptions.set("ksp_type", ksp_type)
     df.PETScOptions.set("ksp_norm_type", ksp_norm_type)
-    df.PETScOptions.set("ksp_rtol", ksp_rtol)
     df.PETScOptions.set("ksp_atol", ksp_atol)
+    df.PETScOptions.set("ksp_rtol", ksp_rtol)
     df.PETScOptions.set("ksp_max_it", ksp_max_it)
     df.PETScOptions.set("ksp_error_if_not_converged", ksp_error_if_not_converged)
     if ksp_monitor:
@@ -833,11 +905,19 @@ def solve_system(
     u: df.Function,
     solver_parameters: Optional[Dict[str, str]] = None,
     use_krylov_solver: bool = False,
+    krylov_solver_atol: Optional[float] = None,
+    krylov_solver_rtol: Optional[float] = None,
+    krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
 ) -> Optional[df.PETScKrylovSolver]:
     if use_krylov_solver:
         try:
-            return solve_krylov(a, L, bcs, u, verbose)
+            return solve_krylov(
+                a, L, bcs, u,
+                ksp_atol=krylov_solver_atol,
+                ksp_rtol=krylov_solver_rtol,
+                ksp_max_it=krylov_solver_max_its,
+                verbose=verbose)
         except Exception:
             df.info("Failed to solve using Krylov solver. Try a regular solve...")
             solve_regular(a, L, bcs, u, solver_parameters)
