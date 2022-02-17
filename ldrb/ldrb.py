@@ -918,11 +918,15 @@ def solve_system(
     if use_krylov_solver:
         try:
             return solve_krylov(
-                a, L, bcs, u,
+                a,
+                L,
+                bcs,
+                u,
                 ksp_atol=krylov_solver_atol,
                 ksp_rtol=krylov_solver_rtol,
                 ksp_max_it=krylov_solver_max_its,
-                verbose=verbose)
+                verbose=verbose,
+            )
         except Exception:
             df.info("Failed to solve using Krylov solver. Try a regular solve...")
             solve_regular(a, L, bcs, u, solver_parameters)
