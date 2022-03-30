@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container: ["finsberg/fenics-extra", "quay.io/dolfinadjoint/pyadjoint:latest"]
+        container: ["finsberg/fenics-extra", "finsberg/pyadjoint-extra"]
 
     container:
       image: ${{ matrix.container }}
