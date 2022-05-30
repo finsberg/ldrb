@@ -1,165 +1,8 @@
 import numba
 import numpy as np
+import quaternion
 
 
-@numba.njit
-def from_rotation_matrix(rot: np.ndarray) -> np.ndarray:
-    """Convert rotation matrix to a quaternion
-
-    Parameters
-    ----------
-    rot : np.ndarray
-        The rotation matrix
-
-    Returns
-    -------
-    np.ndarray
-        The quaternion
-    """
-    diagonals = np.empty(4)
-    diagonals[0] = rot[0, 0]
-    diagonals[1] = rot[1, 1]
-    diagonals[2] = rot[2, 2]
-    diagonals[3] = rot[0, 0] + rot[1, 1] + rot[2, 2]
-    indices = np.argmax(diagonals)
-
-    q = diagonals  # reuse storage space
-
-    if indices == 0:
-
-        q[0] = rot[2, 1] - rot[1, 2]
-        q[1] = 1 + rot[0, 0] - rot[1, 1] - rot[2, 2]
-        q[2] = rot[0, 1] + rot[1, 0]
-        q[3] = rot[0, 2] + rot[2, 0]
-
-    if indices == 1:
-        q[0] = rot[0, 2] - rot[2, 0]
-        q[1] = rot[1, 0] + rot[0, 1]
-        q[2] = 1 - rot[0, 0] + rot[1, 1] - rot[2, 2]
-        q[3] = rot[1, 2] + rot[2, 1]
-
-    if indices == 2:
-        q[0] = rot[1, 0] - rot[0, 1]
-        q[1] = rot[2, 0] + rot[0, 2]
-        q[2] = rot[2, 1] + rot[1, 2]
-        q[3] = 1 - rot[0, 0] - rot[1, 1] + rot[2, 2]
-
-    if indices == 3:
-        q[0] = 1 + rot[0, 0] + rot[1, 1] + rot[2, 2]
-        q[1] = rot[2, 1] - rot[1, 2]
-        q[2] = rot[0, 2] - rot[2, 0]
-        q[3] = rot[1, 0] - rot[0, 1]
-
-    q /= np.linalg.norm(q)
-    return q
-
-
-@numba.njit
-def as_rotation_matrix(q: np.ndarray) -> np.ndarray:
-    """Convert quaternion to a rotatoin matrix
-
-    Parameters
-    ----------
-    q : np.ndarray
-        The quaternion
-
-    Returns
-    -------
-    np.ndarray
-        The rotation matrix
-    """
-    n = np.linalg.norm(q)
-    if abs(n - 1.0) < 1e-14:  # Input q is basically normalized
-        return np.array(
-            [
-                [
-                    1 - 2 * (q[2] ** 2 + q[3] ** 2),
-                    2 * (q[1] * q[2] - q[3] * q[0]),
-                    2 * (q[1] * q[3] + q[2] * q[0]),
-                ],
-                [
-                    2 * (q[1] * q[2] + q[3] * q[0]),
-                    1 - 2 * (q[1] ** 2 + q[3] ** 2),
-                    2 * (q[2] * q[3] - q[1] * q[0]),
-                ],
-                [
-                    2 * (q[1] * q[3] - q[2] * q[0]),
-                    2 * (q[2] * q[3] + q[1] * q[0]),
-                    1 - 2 * (q[1] ** 2 + q[2] ** 2),
-                ],
-            ],
-        )
-    else:  # Input q is not normalized
-        return np.array(
-            [
-                [
-                    1 - 2 * (q[2] ** 2 + q[3] ** 2) / n,
-                    2 * (q[1] * q[2] - q[3] * q[0]) / n,
-                    2 * (q[1] * q[3] + q[2] * q[0]) / n,
-                ],
-                [
-                    2 * (q[1] * q[2] + q[3] * q[0]) / n,
-                    1 - 2 * (q[1] ** 2 + q[3] ** 2) / n,
-                    2 * (q[2] * q[3] - q[1] * q[0]) / n,
-                ],
-                [
-                    2 * (q[1] * q[3] - q[2] * q[0]) / n,
-                    2 * (q[2] * q[3] + q[1] * q[0]) / n,
-                    1 - 2 * (q[1] ** 2 + q[2] ** 2) / n,
-                ],
-            ],
-        )
-
-
-@numba.njit
-def quat_multiply(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
-    """Quaterion multiplication
-
-    Parameters
-    ----------
-    q1 : np.ndarray
-        First quaternion
-    q2 : np.ndarray
-        Second quaternion
-
-    Returns
-    -------
-    np.ndarray
-        The product of q1 and q2
-    """
-    q = np.zeros(4)
-    q[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3]
-    q[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2]
-    q[2] = q1[0] * q2[2] - q1[1] * q2[3] + q1[2] * q2[0] + q1[3] * q2[1]
-    q[3] = q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1] + q1[3] * q2[0]
-    return q
-
-
-@numba.njit
-def slerp(p0: np.ndarray, p1: np.ndarray, t: float) -> np.ndarray:
-    """Sperical linear interpolation between two quaternions
-
-    Parameters
-    ----------
-    p0 : np.ndarray
-        Quaternion corresponding to t=0
-    p1 : np.ndarray
-        Quaternions corresponding to t=1
-    t : float
-        Interpolation factor
-
-    Returns
-    -------
-    np.ndarray
-        Quaternion corresponding to t=t
-    """
-
-    omega = np.arccos(np.dot(p0 / np.linalg.norm(p0), p1 / np.linalg.norm(p1)))
-    so = np.sin(omega)
-    return np.sin((1.0 - t) * omega) / so * p0 + np.sin(t * omega) / so * p1
-
-
-@numba.njit
 def bislerp(
     Qa: np.ndarray,
     Qb: np.ndarray,
@@ -181,24 +24,25 @@ def bislerp(
         return Qa
 
     tol = 1e-12
-    qa = from_rotation_matrix(Qa)
-    qb = from_rotation_matrix(Qb)
+    qa = quaternion.from_rotation_matrix(Qa)
+    qb = quaternion.from_rotation_matrix(Qb)
 
-    quat_i = np.array([0, 1, 0, 0])
-    quat_j = np.array([0, 0, 1, 0])
-    quat_k = np.array([0, 0, 0, 1])
+    quat_i = quaternion.quaternion(0, 1, 0, 0)
+    quat_j = quaternion.quaternion(0, 0, 1, 0)
+    quat_k = quaternion.quaternion(0, 0, 0, 1)
 
     quat_array = [
         qa,
         -qa,
-        quat_multiply(qa, quat_i),
-        -quat_multiply(qa, quat_i),
-        quat_multiply(qa, quat_j),
-        -quat_multiply(qa, quat_j),
-        quat_multiply(qa, quat_k),
-        -quat_multiply(qa, quat_k),
+        qa * quat_i,
+        -qa * quat_i,
+        qa * quat_j,
+        -qa * quat_j,
+        qa * quat_k,
+        -qa * quat_k,
     ]
-    dot_arr = np.array([np.abs((qi * qb).sum()) for qi in quat_array])
+
+    dot_arr = [abs((qi.components * qb.components).sum()) for qi in quat_array]
     max_idx = int(np.argmax(dot_arr))
     max_dot = dot_arr[max_idx]
     qm = quat_array[max_idx]
@@ -206,12 +50,12 @@ def bislerp(
     if max_dot > 1 - tol:
         return Qb
 
-    qm_norm = slerp(qm, qb, t)
+    qm_slerp = quaternion.slerp(qm, qb, 0, 1, t)
+    qm_norm = qm_slerp.normalized()
+    Qab = quaternion.as_rotation_matrix(qm_norm)
+    return Qab
 
-    return as_rotation_matrix(qm_norm)
 
-
-@numba.njit
 def system_at_dof(
     lv: float,
     rv: float,
@@ -352,7 +196,6 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
     return C
 
 
-@numba.njit
 def _compute_fiber_sheet_system(
     f0,
     s0,

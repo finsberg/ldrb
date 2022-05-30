@@ -22,6 +22,7 @@ requirements:
     - mshr
     - numba
     - numpy
+    - quaternion
   run:
     - python
     - fenics
@@ -29,6 +30,7 @@ requirements:
     - h5py
     - numba
     - numpy
+    - quaternion
 test:
   imports:
     - ldrb
