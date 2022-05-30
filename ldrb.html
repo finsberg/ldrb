@@ -350,23 +350,6 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="section" id="module-ldrb.calculus">
 <span id="ldrb-calculus-module"></span><h2>ldrb.calculus module<a class="headerlink" href="#module-ldrb.calculus" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="ldrb.calculus.as_rotation_matrix">
-<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">as_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.as_rotation_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert quaternion to a rotatoin matrix</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>q</strong> (<em>np.ndarray</em>) – The quaternion</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The rotation matrix</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="ldrb.calculus.axis">
 <span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the fiber orientation coordinate system.</p>
@@ -387,23 +370,6 @@ orthogonal matrix at timepoint <span class="math notranslate nohighlight">\(t\)<
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ldrb.calculus.from_rotation_matrix">
-<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">from_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.from_rotation_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert rotation matrix to a quaternion</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>rot</strong> (<em>np.ndarray</em>) – The rotation matrix</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The quaternion</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="ldrb.calculus.normalize">
 <span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize vector</p>
@@ -417,47 +383,6 @@ orthogonal matrix at timepoint <span class="math notranslate nohighlight">\(t\)<
 basis, rotate it in order to align with the fiber, sheet
 and sheet-normal axis determine by the angles <span class="math notranslate nohighlight">\(\alpha\)</span>
 (fiber) and <span class="math notranslate nohighlight">\(\beta\)</span> (sheets).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ldrb.calculus.quat_multiply">
-<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">quat_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.quat_multiply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quaterion multiplication</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>q1</strong> (<em>np.ndarray</em>) – First quaternion</p></li>
-<li><p><strong>q2</strong> (<em>np.ndarray</em>) – Second quaternion</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The product of q1 and q2</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ldrb.calculus.slerp">
-<span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">slerp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.slerp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sperical linear interpolation between two quaternions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>p0</strong> (<em>np.ndarray</em>) – Quaternion corresponding to t=0</p></li>
-<li><p><strong>p1</strong> (<em>np.ndarray</em>) – Quaternions corresponding to t=1</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Interpolation factor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Quaternion corresponding to t=t</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
