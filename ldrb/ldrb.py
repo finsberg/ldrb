@@ -25,6 +25,7 @@ def laplace(
     krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
+    check_all_boundaries_are_marked: bool = True
 ) -> Dict[str, np.ndarray]:
     """
     Solve the laplace equation and project the gradients
@@ -43,6 +44,7 @@ def laplace(
         krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
+        check_all_boundaries_are_marked=check_all_boundaries_are_marked
     )
 
     # Create gradients
@@ -236,6 +238,7 @@ def dolfin_ldrb(
     krylov_solver_rtol: Optional[float] = None,
     krylov_solver_max_its: Optional[int] = None,
     strict: bool = False,
+    check_all_boundaries_are_marked: bool = True,
     save_markers: bool = False,
     alpha_endo_lv: float = 40,
     alpha_epi_lv: float = -50,
@@ -292,6 +295,9 @@ def dolfin_ldrb(
         maximum number of iterations to perform. Default: 10000.
     strict: bool
         If true raise RuntimeError if solutions does not sum to 1.0
+    check_all_boundaries_are_marked: bool
+        If true check that all boundary faces are marked. This should
+        be set to False in the case of a slab mesh. 
     save_markers: bool
         If true save markings of the geometry. This is nice if you
         want to see that the LV, RV and Septum are marked correctly.
@@ -359,6 +365,7 @@ def dolfin_ldrb(
         krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
+        check_all_boundaries_are_marked=check_all_boundaries_are_marked
     )
 
     dofs = dofs_from_function_space(mesh, fiber_space)
@@ -423,8 +430,9 @@ def fiber_system_to_dolfin(
 
 def apex_to_base(
     mesh: df.Mesh,
-    base_marker: int,
     ffun: df.MeshFunction,
+    base_marker: int,
+    apex_marker: int = None,
     use_krylov_solver: bool = False,
     krylov_solver_atol: Optional[float] = None,
     krylov_solver_rtol: Optional[float] = None,
@@ -439,12 +447,14 @@ def apex_to_base(
     ---------
     mesh : dolfin.Mesh
         The mesh
-    base_marker : int
-        The marker value for the basal facets
     ffun : dolfin.MeshFunctionSizet (optional)
         A facet function containing markers for the boundaries.
         If not provided, the markers stored within the mesh will
         be used.
+    base_marker : int
+        The marker value for the basal facets
+    apex_marker: int
+        The marker value for the apex facets, by default None.
     use_krylov_solver: bool
         If True use Krylov solver, by default False
     krylov_solver_atol: float (optional)
@@ -469,62 +479,83 @@ def apex_to_base(
     v = df.TestFunction(V)
 
     a = df.dot(df.grad(u), df.grad(v)) * df.dx
-    L = v * df.Constant(1) * df.dx
 
     apex = df.Function(V)
 
     base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
 
     # Solver options
-    solver = solve_system(
-        a,
-        L,
-        base_bc,
-        apex,
-        solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
-        use_krylov_solver=use_krylov_solver,
-        krylov_solver_atol=krylov_solver_atol,
-        krylov_solver_rtol=krylov_solver_rtol,
-        krylov_solver_max_its=krylov_solver_max_its,
-        verbose=verbose,
-    )
+    if apex_marker is None:
+        # Obtain coordinates of apex
+        L = v * df.Constant(1) * df.dx
 
-    if utils.DOLFIN_VERSION_MAJOR < 2018:
-        dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
-        apex_values = utils.gather_broadcast(apex.vector().get_local())
-        ind = apex_values.argmax()
-        apex_coord = dof_x[ind]
-    else:
-        dof_x = V.tabulate_dof_coordinates()
-        apex_values = apex.vector().get_local()
-        local_max_val = apex_values.max()
-
-        local_apex_coord = dof_x[apex_values.argmax()]
-        comm = utils.mpi_comm_world()
-
-        from mpi4py import MPI
-
-        global_max, apex_coord = comm.allreduce(
-            sendobj=(local_max_val, local_apex_coord),
-            op=MPI.MAXLOC,
+        solver = solve_system(
+            a,
+            L,
+            base_bc,
+            apex,
+            solver_parameters={"linear_solver": "cg", "preconditioner": "amg"},
+            use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
+            verbose=verbose,
         )
 
-    df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
+        if utils.DOLFIN_VERSION_MAJOR < 2018:
+            dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
+            apex_values = utils.gather_broadcast(apex.vector().get_local())
+            ind = apex_values.argmax()
+            apex_coord = dof_x[ind]
+        else:
+            dof_x = V.tabulate_dof_coordinates()
+            apex_values = apex.vector().get_local()
+            local_max_val = apex_values.max()
+
+            local_apex_coord = dof_x[apex_values.argmax()]
+            comm = utils.mpi_comm_world()
+
+            from mpi4py import MPI
+
+            global_max, apex_coord = comm.allreduce(
+                sendobj=(local_max_val, local_apex_coord),
+                op=MPI.MAXLOC,
+            )
+
+        df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
+
+    
+        apex_domain = df.CompiledSubDomain(
+            "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord),
+        )
+        apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
+    else:
+        apex_bc = df.DirichletBC(V, 0, ffun, apex_marker, "topological")
 
     # Update rhs
     L = v * df.Constant(0) * df.dx
-    apex_domain = df.CompiledSubDomain(
-        "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord),
-    )
-    apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
     # Solve the poisson equation
     bcs = [base_bc, apex_bc]
-    if solver is not None:
-        # Reuse existing solver
-        A, b = df.assemble_system(a, L, bcs)
-        solver.set_operator(A)
-        solver.solve(apex.vector(), b)
+    if apex_marker is None:
+        if solver is not None:
+            # Reuse existing solver
+            A, b = df.assemble_system(a, L, bcs)
+            solver.set_operator(A)
+            solver.solve(apex.vector(), b)
+        else:
+            solve_system(
+                a,
+                L,
+                bcs,
+                apex,
+                use_krylov_solver=use_krylov_solver,
+                krylov_solver_atol=krylov_solver_atol,
+                krylov_solver_rtol=krylov_solver_rtol,
+                krylov_solver_max_its=krylov_solver_max_its,
+                solver_parameters={"linear_solver": "gmres"},
+                verbose=verbose,
+            )
     else:
         solve_system(
             a,
@@ -595,6 +626,7 @@ def scalar_laplacians(
     krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
+    check_all_boundaries_are_marked: bool = True
 ) -> Dict[str, df.Function]:
     """
     Calculate the laplacians
@@ -631,6 +663,9 @@ def scalar_laplacians(
         If true, print more info, by default False
     strict: bool
         If true raise RuntimeError if solutions does not sum to 1.0
+    check_all_boundaries_are_marked: bool
+        If true check that all boundary faces are marked. This should
+        be set to False in the case of a slab mesh.
     """
 
     if not isinstance(mesh, df.Mesh):
@@ -650,12 +685,13 @@ def scalar_laplacians(
         ),
     )
 
-    check_boundaries_are_marked(
-        mesh=mesh,
-        ffun=ffun,
-        markers=markers,
-        boundaries=boundaries,
-    )
+    if check_all_boundaries_are_marked:
+        check_boundaries_are_marked(
+            mesh=mesh,
+            ffun=ffun,
+            markers=markers,
+            boundaries=boundaries,
+        )
 
     # Compte the apex to base solutons
     num_vertices = mesh.num_vertices()
@@ -694,7 +730,7 @@ def find_cases_and_boundaries(
         markers = utils.default_markers()
 
     potential_cases = {"rv", "lv", "epi"}
-    potential_boundaries = potential_cases | {"base", "mv", "av"}
+    potential_boundaries = potential_cases | {"base", "mv", "av", "apex"}
 
     cases = []
     boundaries = []
@@ -745,16 +781,29 @@ def bayer(
     krylov_solver_max_its: Optional[int] = None,
 ) -> Dict[str, df.Function]:
 
-    apex = apex_to_base(
-        mesh,
-        markers["base"],
-        ffun,
-        use_krylov_solver=use_krylov_solver,
-        krylov_solver_atol=krylov_solver_atol,
-        krylov_solver_rtol=krylov_solver_rtol,
-        krylov_solver_max_its=krylov_solver_max_its,
-        verbose=verbose,
-    )
+    if not "apex" in markers.keys():
+        apex = apex_to_base(
+            mesh,
+            markers["base"],
+            ffun,
+            use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
+            verbose=verbose,
+        )
+    else:
+        apex = apex_to_base(
+            mesh,
+            ffun,
+            markers["base"],
+            markers["apex"],
+            use_krylov_solver=use_krylov_solver,
+            krylov_solver_atol=krylov_solver_atol,
+            krylov_solver_rtol=krylov_solver_rtol,
+            krylov_solver_max_its=krylov_solver_max_its,
+            verbose=verbose,
+        )
 
     # Find the rest of the laplace soltions
     V = apex.function_space()
