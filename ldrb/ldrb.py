@@ -25,7 +25,7 @@ def laplace(
     krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
-    check_all_boundaries_are_marked: bool = True
+    check_all_boundaries_are_marked: bool = True,
 ) -> Dict[str, np.ndarray]:
     """
     Solve the laplace equation and project the gradients
@@ -44,7 +44,7 @@ def laplace(
         krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
-        check_all_boundaries_are_marked=check_all_boundaries_are_marked
+        check_all_boundaries_are_marked=check_all_boundaries_are_marked,
     )
 
     # Create gradients
@@ -297,7 +297,7 @@ def dolfin_ldrb(
         If true raise RuntimeError if solutions does not sum to 1.0
     check_all_boundaries_are_marked: bool
         If true check that all boundary faces are marked. This should
-        be set to False in the case of a slab mesh. 
+        be set to False in the case of a slab mesh.
     save_markers: bool
         If true save markings of the geometry. This is nice if you
         want to see that the LV, RV and Septum are marked correctly.
@@ -365,7 +365,7 @@ def dolfin_ldrb(
         krylov_solver_max_its=krylov_solver_max_its,
         verbose=verbose,
         strict=strict,
-        check_all_boundaries_are_marked=check_all_boundaries_are_marked
+        check_all_boundaries_are_marked=check_all_boundaries_are_marked,
     )
 
     dofs = dofs_from_function_space(mesh, fiber_space)
@@ -503,7 +503,9 @@ def apex_to_base(
         )
 
         if utils.DOLFIN_VERSION_MAJOR < 2018:
-            dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape((-1, 3))
+            dof_x = utils.gather_broadcast(V.tabulate_dof_coordinates()).reshape(
+                (-1, 3),
+            )
             apex_values = utils.gather_broadcast(apex.vector().get_local())
             ind = apex_values.argmax()
             apex_coord = dof_x[ind]
@@ -524,7 +526,6 @@ def apex_to_base(
 
         df.info("  Apex coord: ({0:.2f}, {1:.2f}, {2:.2f})".format(*apex_coord))
 
-    
         apex_domain = df.CompiledSubDomain(
             "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord),
         )
@@ -626,7 +627,7 @@ def scalar_laplacians(
     krylov_solver_max_its: Optional[int] = None,
     verbose: bool = False,
     strict: bool = False,
-    check_all_boundaries_are_marked: bool = True
+    check_all_boundaries_are_marked: bool = True,
 ) -> Dict[str, df.Function]:
     """
     Calculate the laplacians
