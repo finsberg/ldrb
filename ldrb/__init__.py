@@ -12,7 +12,7 @@ from .utils import create_lv_mesh
 from .utils import gmsh2dolfin
 from .utils import space_from_string
 
-__version__ = "2022.2.1"
+__version__ = "2022.3.0"
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 __all__ = [
