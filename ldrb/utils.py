@@ -10,10 +10,13 @@ import dolfin as df
 import numpy as np
 import ufl
 
-try:
-    import mshr
-except ImportError:
-    df.warning("mshr is not installed")
+
+def has_mshr():
+    try:
+        import mshr  # noqa: F401
+    except ImportError:
+        return False
+    return True
 
 
 def has_meshio() -> bool:
@@ -216,6 +219,11 @@ def create_lv_mesh(
     in :math:`x`-direction and as default the base is located
     at the :math:`x=0` plane.
     """
+    if not has_mshr():
+        raise RuntimeError("Cannot create mesh with mshr. It is not installed")
+
+    import mshr
+
     df.info("Creating LV mesh. This could take some time...")
     # LV
     # The center of the LV ellipsoid
@@ -315,6 +323,11 @@ def create_biv_mesh(
     at the :math:`x=0` plane.
 
     """
+    if not has_mshr():
+        raise RuntimeError("Cannot create mesh with mshr. It is not installed")
+
+    import mshr
+
     df.info("Creating BiV mesh. This could take some time...")
 
     # The center of the LV ellipsoid
