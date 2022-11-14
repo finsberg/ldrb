@@ -34,12 +34,12 @@ def bislerp(
     quat_array = [
         qa,
         -qa,
-        qa * quat_i,
-        -qa * quat_i,
-        qa * quat_j,
-        -qa * quat_j,
-        qa * quat_k,
-        -qa * quat_k,
+        quat_i * qa,
+        -quat_i * qa,
+        quat_j * qa,
+        -quat_j * qa,
+        quat_k * qa,
+        -quat_k * qa,
     ]
 
     dot_arr = [abs((qi.components * qb.components).sum()) for qi in quat_array]
