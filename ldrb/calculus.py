@@ -42,7 +42,7 @@ def bislerp(
         -quat_k * qa,
     ]
 
-    dot_arr = [abs((qi.components * qb.components).sum()) for qi in quat_array]
+    dot_arr = [np.linalg.norm((qm * qb).components) for qm in quat_array]
     max_idx = int(np.argmax(dot_arr))
     max_dot = dot_arr[max_idx]
     qm = quat_array[max_idx]
