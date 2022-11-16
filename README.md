@@ -1,4 +1,3 @@
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/ldrb/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
 [![CI](https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/main.yml)
 [![github pages](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml)
 [![codecov](https://codecov.io/gh/finsberg/ldrb/branch/master/graph/badge.svg?token=J69bEFdomc)](https://codecov.io/gh/finsberg/ldrb)
@@ -61,14 +60,6 @@ or if you need the most recent version you can install the source
 ```
 python -m pip install git+https://github.com/finsberg/ldrb.git
 ```
-
-## Install with conda
-Alternatively you can install with conda
-
-```shell
-conda install -c conda-forge ldrb
-```
-which will also install FEniCS through `conda`.
 
 # Documetation
 Documentation is hosted at http://finsberg.github.io/ldrb
