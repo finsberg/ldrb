@@ -49,9 +49,9 @@ def test_bislerp():
     Qab = ldrb.calculus.bislerp(Qa, Qb, t)
     expected = np.array(
         [
-            [-0.09101291, -0.98859992, -0.11994519],
-            [-0.50676733, -0.05770626, 0.86014932],
-            [-0.85726514, 0.139069, -0.49573813],
+            [-0.04821969, -0.68803995, 0.72406898],
+            [-0.5103059, 0.64013349, 0.57429697],
+            [-0.85864006, -0.34180425, -0.38197788],
         ],
     )
     assert np.isclose(Qab, expected).all()
@@ -82,10 +82,7 @@ def test_lv_angles_alpha():
     data["apex_gradient"] = np.zeros_like(data["lv_gradient"])
     data["apex_gradient"][1::3] = 1.0
 
-    sheet_normal = np.zeros(9)
-    sheet_normal[::3] = -1
-
-    fib = ldrb.ldrb.compute_fiber_sheet_system(
+    fib1 = ldrb.ldrb.compute_fiber_sheet_system(
         alpha_endo_lv=90,
         alpha_epi_lv=-90,
         beta_endo_lv=0,
@@ -93,24 +90,28 @@ def test_lv_angles_alpha():
         **data,
     )
 
-    assert norm(fib.fiber[:3] - np.array([0, 1, 0])) < tol
-    assert norm(fib.fiber[3:6] - np.array([0, 1 / np.sqrt(2), 1 / np.sqrt(2)])) < tol
-    assert norm(fib.fiber[6:] - np.array([0, -1, 0])) < tol
-    assert norm(fib.sheet_normal - sheet_normal) < tol
+    fiber = np.array([0, 1, 0, 0, 0, 1, 0, -1, 0])
+    sheet = np.array([0, 0, -1, 0, 1, 0, 0, 0, 1])
+    sheet_normal = np.array([-1, 0, 0, -1, 0, 0, -1, 0, 0])
+    assert norm(fib1.fiber - fiber) < tol
+    assert norm(fib1.sheet - sheet) < tol
+    assert norm(fib1.sheet_normal - sheet_normal) < tol
 
-    fib = ldrb.ldrb.compute_fiber_sheet_system(
+    fib2 = ldrb.ldrb.compute_fiber_sheet_system(
         alpha_endo_lv=-90,
         alpha_epi_lv=90,
         beta_endo_lv=0,
         beta_epi_lv=0,
         **data,
     )
-    assert norm(fib.fiber[:3] - np.array([0, -1, 0])) < tol
-    assert norm(fib.fiber[3:6] - np.array([0, -1 / np.sqrt(2), 1 / np.sqrt(2)])) < tol
-    assert norm(fib.fiber[6:] - np.array([0, 1, 0])) < tol
-    assert norm(fib.sheet_normal - sheet_normal) < tol
 
-    for alpha in [60, -60]:
+    fiber = np.array([0, -1, 0, 0, 0, 1, 0, 1, 0])
+    sheet = np.array([0, 0, 1, 0, 1, 0, 0, 0, -1])
+    assert norm(fib2.fiber - fiber) < tol
+    assert norm(fib2.sheet - sheet) < tol
+    assert norm(fib2.sheet_normal - sheet_normal) < tol
+
+    for alpha in [60, -60, 30, 40, 50, -30, -40, -50]:
         a = np.radians(alpha)
         fib = ldrb.ldrb.compute_fiber_sheet_system(
             alpha_endo_lv=alpha,
@@ -119,40 +120,12 @@ def test_lv_angles_alpha():
             beta_epi_lv=0,
             **data,
         )
-        assert norm(fib.fiber[:3] - np.array([0, np.sin(a), np.cos(a)])) < tol
-        assert (
-            norm(fib.fiber[3:6] - np.sign(alpha) * np.array([0, np.cos(a), np.sin(a)]))
-            < tol
-        )
-        assert norm(fib.fiber[6:] - np.array([0, np.sin(-a), np.cos(-a)])) < tol
 
+        fiber = np.array([0, np.sin(a), np.cos(a), 0, 0, 1, 0, -np.sin(a), np.cos(a)])
+        sheet = np.array([0, np.cos(a), -np.sin(a), 0, 1, 0, 0, np.cos(a), np.sin(a)])
+        assert norm(fib.fiber - fiber) < tol
+        assert norm(fib.sheet - sheet) < tol
         assert norm(fib.sheet_normal - sheet_normal) < tol
-
-        assert norm(fib.sheet[:3] - np.cross(fib.sheet_normal[:3], fib.fiber[:3])) < tol
-        assert (
-            norm(fib.sheet[3:6] - np.cross(fib.sheet_normal[3:6], fib.fiber[3:6])) < tol
-        )
-        assert norm(fib.sheet[6:] - np.cross(fib.sheet_normal[6:], fib.fiber[6:])) < tol
-
-    for alpha in [30, 40, 50, -30, -40, -50]:
-        a = np.radians(alpha)
-        fib = ldrb.ldrb.compute_fiber_sheet_system(
-            alpha_endo_lv=alpha,
-            alpha_epi_lv=-alpha,
-            beta_endo_lv=0,
-            beta_epi_lv=0,
-            **data,
-        )
-        assert norm(fib.fiber[:3] - np.array([0, np.sin(a), np.cos(a)])) < tol
-        assert norm(fib.fiber[6:] - np.array([0, np.sin(-a), np.cos(-a)])) < tol
-
-        assert norm(fib.sheet_normal - sheet_normal) < tol
-
-        assert norm(fib.sheet[:3] - np.cross(fib.sheet_normal[:3], fib.fiber[:3])) < tol
-        assert (
-            norm(fib.sheet[3:6] - np.cross(fib.sheet_normal[3:6], fib.fiber[3:6])) < tol
-        )
-        assert norm(fib.sheet[6:] - np.cross(fib.sheet_normal[6:], fib.fiber[6:])) < tol
 
 
 def test_lv_angles_beta():
@@ -170,10 +143,11 @@ def test_lv_angles_beta():
     data["apex_gradient"] = np.zeros_like(data["lv_gradient"])
     data["apex_gradient"][1::3] = 1.0
 
-    sheet_normal = np.array([0, 1, 0, -1 / np.sqrt(2), 1 / np.sqrt(2), 0, 0, -1, 0])
     fiber = np.array([0, 0, 1, 0, 0, 1, 0, 0, 1])
+    sheet = np.array([1, 0, 0, 0, 1, 0, -1, 0, 0])
+    sheet_normal = np.array([0, 1, 0, -1, 0, 0, 0, -1, 0])
 
-    fib = ldrb.ldrb.compute_fiber_sheet_system(
+    fib1 = ldrb.ldrb.compute_fiber_sheet_system(
         alpha_endo_lv=0,
         alpha_epi_lv=0,
         beta_endo_lv=90,
@@ -181,23 +155,21 @@ def test_lv_angles_beta():
         **data,
     )
 
-    assert np.linalg.norm(fib.fiber - fiber) < tol
-    assert norm(fib.sheet[:3] - np.array([1, 0, 0])) < tol
-    assert norm(fib.sheet[3:6] - np.array([1 / np.sqrt(2), 1 / np.sqrt(2), 0])) < tol
-    assert norm(fib.sheet[6:] - np.array([-1, 0, 0])) < tol
-    assert norm(fib.sheet_normal - sheet_normal) < tol
+    assert norm(fib1.fiber - fiber) < tol
+    assert norm(fib1.sheet - sheet) < tol
+    assert norm(fib1.sheet_normal - sheet_normal) < tol
 
-    fib = ldrb.ldrb.compute_fiber_sheet_system(
+    fiber = np.array([0, 0, 1, 0, 0, 1, 0, 0, 1])
+    sheet = np.array([-1, 0, 0, 0, 1, 0, 1, 0, 0])
+    sheet_normal = np.array([0, -1, 0, -1, 0, 0, 0, 1, 0])
+
+    fib2 = ldrb.ldrb.compute_fiber_sheet_system(
         alpha_endo_lv=0, alpha_epi_lv=0, beta_endo_lv=-90, beta_epi_lv=90, **data
     )
 
-    assert np.linalg.norm(fib.fiber - fiber) < tol
-    assert norm(fib.sheet[:3] - np.array([-1, 0, 0])) < tol
-    assert norm(fib.sheet[3:6] - np.array([-1 / np.sqrt(2), 1 / np.sqrt(2), 0])) < tol
-    assert norm(fib.sheet[6:] - np.array([1, 0, 0])) < tol
-    sheet_normal *= -1
-    sheet_normal[3] = -1 / np.sqrt(2)
-    assert norm(fib.sheet_normal - sheet_normal) < tol
+    assert norm(fib2.fiber - fiber) < tol
+    assert norm(fib2.sheet - sheet) < tol
+    assert norm(fib2.sheet_normal - sheet_normal) < tol
 
     for beta in [30, 40, 50, -30, -40, -50]:
         a = np.radians(beta)
@@ -208,17 +180,27 @@ def test_lv_angles_beta():
             beta_epi_lv=beta,
             **data,
         )
-        assert np.linalg.norm(fib.fiber - fiber) < tol
 
-        assert norm(fib.sheet[:3] - np.array([np.sin(a), np.cos(a), 0])) < tol
-        assert norm(fib.sheet[3:6] - np.array([np.sin(a), np.cos(a), 0])) < tol
-        assert norm(fib.sheet[6:] - np.array([np.sin(a), np.cos(a), 0])) < tol
-
-        assert norm(fib.sheet_normal[:3] - np.cross(fib.fiber[:3], fib.sheet[:3])) < tol
-        assert (
-            norm(fib.sheet_normal[3:6] - np.cross(fib.fiber[3:6], fib.sheet[3:6])) < tol
+        sheet = np.array(
+            [np.sin(a), np.cos(a), 0, np.sin(a), np.cos(a), 0, np.sin(a), np.cos(a), 0],
         )
-        assert norm(fib.sheet_normal[6:] - np.cross(fib.fiber[6:], fib.sheet[6:])) < tol
+        sheet_normal = np.array(
+            [
+                -np.cos(a),
+                np.sin(a),
+                0,
+                -np.cos(a),
+                np.sin(a),
+                0,
+                -np.cos(a),
+                np.sin(a),
+                0,
+            ],
+        )
+        assert norm(fib.fiber - fiber) < tol
+
+        assert norm(fib.sheet - sheet) < tol
+        assert norm(fib.sheet_normal - sheet_normal) < tol
 
 
 def test_ldrb_without_correct_markers_raises_RuntimeError(lv_geometry):
