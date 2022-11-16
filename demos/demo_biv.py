@@ -103,4 +103,4 @@ ldrb.fiber_to_xdmf(fiber, "biv_fiber")
 # ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
 
 # ![_](_static/figures/biv_fiber.png)
-# [Link to source code](https://github.com/finsberg/ldrb/blob/master/demos/demo_biv.py)
+# [Link to source code](https://github.com/finsberg/ldrb/blob/main/demos/demo_biv.py)
