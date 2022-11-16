@@ -266,7 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="generating-fibers-for-patient-specific-geometries">
 <h1>Generating fibers for patient specific geometries<a class="headerlink" href="#generating-fibers-for-patient-specific-geometries" title="Permalink to this headline">¶</a></h1>
-<p>In this demo we will show how to generate fiber orientations from a patient specific geometry. We will use a mesh of an LV that is constructed using gmsh (<a class="reference external" href="https://gmsh.info">https://gmsh.info</a>), see <a class="reference external" href="https://github.com/finsberg/ldrb/blob/master/demos/mesh.msh">https://github.com/finsberg/ldrb/blob/master/demos/mesh.msh</a></p>
+<p>In this demo we will show how to generate fiber orientations from a patient specific geometry. We will use a mesh of an LV that is constructed using gmsh (<a class="reference external" href="https://gmsh.info">https://gmsh.info</a>), see <a class="reference external" href="https://github.com/finsberg/ldrb/blob/main/demos/mesh.msh">https://github.com/finsberg/ldrb/blob/main/demos/mesh.msh</a></p>
 <p>It is important that the mesh contains physical surfaces of the endocardium (lv and rv if present), the base and the epicardium. You can find an example of how to generate such a geometry using the python API for gmsh here: <a class="reference external" href="https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160">https://github.com/finsberg/pulse/blob/0d7b5995f62f41df4eec9f5df761fa03da725f69/pulse/geometries.py#L160</a></p>
 <p>First we import the necessary packages. Note that we also import <code class="docutils literal notranslate"><span class="pre">meshio</span></code> which is used for converted from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
@@ -318,7 +318,7 @@ xdmf.write(fiber)</p>
         requestKernel: true,
         binderOptions: {
             repo: "finsberg/ldrb",
-            ref: "master",
+            ref: "main",
         },
         codeMirrorConfig: {
             theme: "abcdef",
