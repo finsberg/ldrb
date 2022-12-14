@@ -16,7 +16,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
       - id: black
 
@@ -26,7 +26,7 @@ repos:
       - id: flake8
 
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.3.0
+    rev: v2.4.0
     hooks:
       - id: add-trailing-comma
 
