@@ -258,9 +258,9 @@ def dolfin_ldrb(
     mesh : dolfin.Mesh
         The mesh
     fiber_space : str
-        A string on the form {familiy}_{degree} which
+        A string on the form {family}_{degree} which
         determines for what space the fibers should be calculated for.
-        If not provdied, then a first order Lagrange space will be used,
+        If not provided, then a first order Lagrange space will be used,
         i.e Lagrange_1.
     ffun : dolfin.MeshFunctionSizet (optional)
         A facet function containing markers for the boundaries.
@@ -268,9 +268,9 @@ def dolfin_ldrb(
         be used.
     markers : dict (optional)
         A dictionary with the markers for the
-        different bondaries defined in the facet function
+        different boundaries defined in the facet function
         or within the mesh itself.
-        The follwing markers must be provided:
+        The following markers must be provided:
         'base', 'lv', 'epi, 'rv' (optional).
         If the markers are not provided the following default
         vales will be used: base = 10, rv = 20, lv = 30, epi = 40
@@ -555,7 +555,7 @@ def project_gradients(
     mesh : dolfin.Mesh
         The mesh
     fiber_space : str
-        A string on the form {familiy}_{degree} which
+        A string on the form {family}_{degree} which
         determines for what space the fibers should be calculated for.
     scalar_solutions: dict
         A dictionary with the scalar solutions that you
@@ -605,14 +605,14 @@ def scalar_laplacians(
        A dolfin mesh
     markers : dict (optional)
         A dictionary with the markers for the
-        different bondaries defined in the facet function
+        different boundaries defined in the facet function
         or within the mesh itself.
-        The follwing markers must be provided:
+        The following markers must be provided:
         'base', 'lv', 'epi, 'rv' (optional).
         If the markers are not provided the following default
         vales will be used: base = 10, rv = 20, lv = 30, epi = 40.
     fiber_space : str
-        A string on the form {familiy}_{degree} which
+        A string on the form {family}_{degree} which
         determines for what space the fibers should be calculated for.
     use_krylov_solver: bool
         If True use Krylov solver, by default False
@@ -657,7 +657,7 @@ def scalar_laplacians(
         boundaries=boundaries,
     )
 
-    # Compte the apex to base solutons
+    # Compte the apex to base solutions
     num_vertices = mesh.num_vertices()
     num_cells = mesh.num_cells()
     if mesh.mpi_comm().size > 1:
@@ -756,7 +756,7 @@ def bayer(
         verbose=verbose,
     )
 
-    # Find the rest of the laplace soltions
+    # Find the rest of the laplace solutions
     V = apex.function_space()
     u = df.TrialFunction(V)
     v = df.TestFunction(V)
@@ -893,7 +893,7 @@ def solve_krylov(
     A, b = df.assemble_system(a, L, bcs)
     solver.set_operator(A)
     solver.solve(u.vector(), b)
-    df.info("Sucessfully solved using Krylov solver")
+    df.info("Successfully solved using Krylov solver")
     return solver
 
 

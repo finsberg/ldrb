@@ -40,3 +40,9 @@ repos:
     hooks:
       - id: mypy
         exclude: ^demos/
+
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v6.16.0
+    hooks:
+      - id: cspell
+        files: ldrb|demos|tests|README.md

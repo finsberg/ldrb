@@ -10,7 +10,7 @@ def bislerp(
 ) -> np.ndarray:
     r"""
     Linear interpolation of two orthogonal matrices.
-    Assiume that :math:`Q_a` and :math:`Q_b` refers to
+    Assume that :math:`Q_a` and :math:`Q_b` refers to
     timepoint :math:`0` and :math:`1` respectively.
     Using spherical linear interpolation (slerp) find the
     orthogonal matrix at timepoint :math:`t`.
@@ -72,7 +72,7 @@ def system_at_dof(
 ) -> np.ndarray:
     """
     Compte the fiber, sheet and sheet normal at a
-    single degre of freedom
+    single degree of freedom
 
     Arguments
     ---------

@@ -19,7 +19,7 @@ ffun = geometry.ffun
 # A dictionary with keys and values for the markers
 markers = geometry.markers
 
-# Also if you want to to this demo in parallell you should create the mesh
+# Also if you want to to this demo in parallel you should create the mesh
 # in serial and save it to e.g xml
 # +
 # df.File('lv_mesh.xml') << mesh
@@ -28,7 +28,7 @@ markers = geometry.markers
 with df.XDMFFile(mesh.mpi_comm(), "mesh.xdmf") as xdmf:
     xdmf.write(mesh)
 
-# And when you run the code in paralall you should load the mesh from the file.
+# And when you run the code in parallel you should load the mesh from the file.
 # +
 # mesh = df.Mesh('lv_mesh.xml')
 # -
@@ -77,7 +77,7 @@ with df.HDF5File(mesh.mpi_comm(), "biv.h5", "w") as h5file:
     h5file.write(sheet, "/sheet")
     h5file.write(sheet_normal, "/sheet_normal")
 
-# If you run in parallel you should skip the visualisation step and do that in
+# If you run in parallel you should skip the visualization step and do that in
 # serial in stead. In that case you can read the the functions from the xml
 # Using the following code
 
@@ -98,7 +98,7 @@ with df.HDF5File(mesh.mpi_comm(), "biv.h5", "r") as h5file:
 # You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don't work (yet) using mpirun
 
 # (These function are not tested in parallel)
-ldrb.fiber_to_xdmf(fiber, "biv_fiber")
+ldrb.fiber_to_xdmf(fiber, "biv_fiber_new1")
 # ldrb.fiber_to_xdmf(sheet, "biv_sheet")
 # ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
 

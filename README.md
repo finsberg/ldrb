@@ -50,7 +50,7 @@ ldrb.fiber_to_xdmf(fiber, "fiber")
 ## Install with pip
 In order to install the software you need to have
 installed [FEniCS](https://fenicsproject.org) (versions older than 2016
-are not supprted)
+are not supported)
 
 The package can be installed with pip.
 ```
@@ -61,11 +61,11 @@ or if you need the most recent version you can install the source
 python -m pip install git+https://github.com/finsberg/ldrb.git
 ```
 
-# Documetation
+# Documentation
 Documentation is hosted at http://finsberg.github.io/ldrb
 
 # Getting started
-Check out the [demos](https://henrikfinsberg.com/ldrb/demo_lv.html)
+Check out the [demos](http://finsberg.github.io/ldrb/demo_lv.html)
 
 # License
 `ldrb` is licensed under the GNU LGPL, version 3 or (at your option) any later version.
