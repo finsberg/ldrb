@@ -13,7 +13,7 @@ import ldrb
 
 mesh, ffun, markers = ldrb.gmsh2dolfin("mesh.msh")
 
-# Update the markers wihch are stored within the mesh
+# Update the markers which are stored within the mesh
 
 ldrb_markers = {
     "base": markers["BASE"][0],
@@ -44,7 +44,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
 # with dolfin.XDMFFile(mesh.mpi_comm(), "patient_fiber.xdmf") as xdmf:
 #     xdmf.write(fiber)
 
-# Use this function to save fibrer with angles as scalars
+# Use this function to save fiber with angles as scalars
 
 ldrb.fiber_to_xdmf(fiber, "patient_fiber")
 

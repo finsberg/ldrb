@@ -68,7 +68,7 @@ def convert_msh_to_xdmf(msh_file, triangle_mesh_name, tetra_mesh_name):
         msg = (
             "Cannot convert from gmsh to xdmf in parallel. "
             "Please run the conversion in serial and then run the "
-            "ldrb algorithm in parallell afterwards. "
+            "ldrb algorithm in parallel afterwards. "
         )
         raise RuntimeError(msg)
     if not has_meshio():
@@ -575,7 +575,7 @@ def space_from_string(space_string: str, mesh: df.Mesh, dim: int) -> df.Function
     Arguments
     ---------
     space_string : str
-        A string on the form {familiy}_{degree} which
+        A string on the form {family}_{degree} which
         determines the space. Example 'Lagrange_1'.
     mesh : dolfin.Mesh
         The mesh

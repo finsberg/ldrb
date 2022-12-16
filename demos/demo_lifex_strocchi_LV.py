@@ -1,6 +1,6 @@
 # # Life X - 01_strocchi_LV
 #
-# Life X recently published their own implementation of the LDRB algorithm and with that they also publushed a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at https://zenodo.org/record/5810269#.YeEjWi8w1B0, which also contains a DOI: https://doi.org/10.5281/zenodo.5810269.
+# Life X recently published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at https://zenodo.org/record/5810269#.YeEjWi8w1B0, which also contains a DOI: https://doi.org/10.5281/zenodo.5810269.
 #
 # This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called `lifex_fiber_generation_examples/mesh`.
 #
@@ -21,12 +21,12 @@ mesh, ffun, _ = ldrb.gmsh2dolfin(
 # Run this first in serial and exit here
 # exit()
 
-# To run the in paralell you can do
+# To run the in parallel you can do
 # ```
 # mpirun -n 4 python demo_lifex_strocchi_LV.py
 # ```
 
-# These are the actualy markers (but we only supprt one base at the moment)
+# These are the actually markers (but we only support one base at the moment)
 
 original_markers = {"epi": 10, "endo": 20, "aortic_valve": 50, "mitral_valve": 60}
 
@@ -39,7 +39,7 @@ markers = {"epi": 10, "lv": 20, "base": 40}
 ffun.array()[ffun.array() == original_markers["aortic_valve"]] = markers["base"]
 ffun.array()[ffun.array() == original_markers["mitral_valve"]] = markers["base"]
 
-# Select linear langange elements
+# Select linear Lagrange elements
 
 fiber_space = "P_1"
 

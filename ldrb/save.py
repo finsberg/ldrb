@@ -309,7 +309,7 @@ def fun_to_xdmf(fun, fname, name="function"):
     )
 
     fun_entry = entry.format(frame=fun_geo + fun_top + fun_str, iter=0)
-    T = body.format(body=fun_entry, name="Visualzation of {}".format(name))
+    T = body.format(body=fun_entry, name="Visualization of {}".format(name))
 
     with open("{}.xdmf".format(fname), "w") as f:
         f.write(T)
@@ -337,7 +337,7 @@ def fiber_to_xdmf(fun, fname, comm=mpi_comm_world()):
     nverts = int(fun.vector().size() / dim)
     name = "fiber"
 
-    fun_scal = scalar_attribute.format(
+    fun_scalar = scalar_attribute.format(
         name="angle",
         nverts=nverts,
         center="Node",
@@ -365,10 +365,10 @@ def fiber_to_xdmf(fun, fname, comm=mpi_comm_world()):
     )
 
     fun_entry = entry_single.format(
-        frame=fun_geo + fun_top + fun_scal + fun_vec,
+        frame=fun_geo + fun_top + fun_scalar + fun_vec,
         iter=0,
     )
-    T = body.format(body=fun_entry, name="Visualzation of {}".format(name))
+    T = body.format(body=fun_entry, name="Visualization of {}".format(name))
 
     with open("{}.xdmf".format(fname), "w") as f:
         f.write(T)

@@ -1,0 +1,20 @@
+dictionaryDefinitions:
+  - name: ldrb
+    path: .cspell_dict.txt
+    addWords: true
+dictionaries:
+  - ldrb
+ignoreWords: [
+    quickstart,
+    toctree,
+    maxdepth,
+    genindex,
+    modindex,
+    mathbf,
+    mathrm,
+    mathbb,
+    mathcal,
+    operatorname,
+    docname
+    docnames,
+  ]
