@@ -36,7 +36,7 @@ markers = geometry.markers
 ```
 
 ```python
-# Also if you want to to this demo in parallell you should create the mesh
+# Also if you want to to this demo in parallel you should create the mesh
 # in serial and save it to e.g xml
 ```
 ```python
@@ -49,7 +49,7 @@ with df.XDMFFile(mesh.mpi_comm(), "mesh.xdmf") as xdmf:
 ```
 
 ```python
-# And when you run the code in paralall you should load the mesh from the file.
+# And when you run the code in parallel you should load the mesh from the file.
 ```
 ```python
 # mesh = df.Mesh('lv_mesh.xml')
@@ -105,7 +105,7 @@ with df.HDF5File(mesh.mpi_comm(), "lv.h5", "w") as h5file:
     h5file.write(sheet_normal, "/sheet_normal")
 ```
 
-If you run in parallel you should skip the visualisation step and do that in
+If you run in parallel you should skip the visualization step and do that in
 serial in stead. In that case you can read the the functions from the xml
 Using the following code
 

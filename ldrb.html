@@ -363,7 +363,7 @@ apicobasal (second) and transmural (third) direction.</p>
 <dt class="sig sig-object py" id="ldrb.calculus.bislerp">
 <span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">bislerp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Qa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.bislerp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Linear interpolation of two orthogonal matrices.
-Assiume that <span class="math notranslate nohighlight">\(Q_a\)</span> and <span class="math notranslate nohighlight">\(Q_b\)</span> refers to
+Assume that <span class="math notranslate nohighlight">\(Q_a\)</span> and <span class="math notranslate nohighlight">\(Q_b\)</span> refers to
 timepoint <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span> respectively.
 Using spherical linear interpolation (slerp) find the
 orthogonal matrix at timepoint <span class="math notranslate nohighlight">\(t\)</span>.</p>
@@ -389,7 +389,7 @@ and sheet-normal axis determine by the angles <span class="math notranslate nohi
 <dt class="sig sig-object py" id="ldrb.calculus.system_at_dof">
 <span class="sig-prename descclassname"><span class="pre">ldrb.calculus.</span></span><span class="sig-name descname"><span class="pre">system_at_dof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_lv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_rv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_ab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_endo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_epi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#ldrb.calculus.system_at_dof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compte the fiber, sheet and sheet normal at a
-single degre of freedom</p>
+single degree of freedom</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -498,17 +498,17 @@ fiber_space string.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.
-If not provdied, then a first order Lagrange space will be used,
+If not provided, then a first order Lagrange space will be used,
 i.e Lagrange_1.</p></li>
 <li><p><strong>ffun</strong> (<em>dolfin.MeshFunctionSizet</em><em> (</em><em>optional</em><em>)</em>) – A facet function containing markers for the boundaries.
 If not provided, the markers stored within the mesh will
 be used.</p></li>
 <li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
-different bondaries defined in the facet function
+different boundaries defined in the facet function
 or within the mesh itself.
-The follwing markers must be provided:
+The following markers must be provided:
 ‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
 If the markers are not provided the following default
 vales will be used: base = 10, rv = 20, lv = 30, epi = 40</p></li>
@@ -597,7 +597,7 @@ of the solutions.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.</p></li>
 <li><p><strong>scalar_solutions</strong> (<em>dict</em>) – A dictionary with the scalar solutions that you
 want to compute the gradients of.</p></li>
@@ -615,13 +615,13 @@ want to compute the gradients of.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – A dolfin mesh</p></li>
 <li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
-different bondaries defined in the facet function
+different boundaries defined in the facet function
 or within the mesh itself.
-The follwing markers must be provided:
+The following markers must be provided:
 ‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
 If the markers are not provided the following default
 vales will be used: base = 10, rv = 20, lv = 30, epi = 40.</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.</p></li>
 <li><p><strong>use_krylov_solver</strong> (<em>bool</em>) – If True use Krylov solver, by default False</p></li>
 <li><p><strong>krylov_solver_atol</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If a Krylov solver is used, this option specifies a
@@ -850,7 +850,7 @@ representation of the space</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines the space. Example ‘Lagrange_1’.</p></li>
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
 <li><p><strong>dim</strong> (<em>int</em>) – 1 for scalar space, 3 for vector space.</p></li>
@@ -903,17 +903,17 @@ at the <span class="math notranslate nohighlight">\(x=0\)</span> plane.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.
-If not provdied, then a first order Lagrange space will be used,
+If not provided, then a first order Lagrange space will be used,
 i.e Lagrange_1.</p></li>
 <li><p><strong>ffun</strong> (<em>dolfin.MeshFunctionSizet</em><em> (</em><em>optional</em><em>)</em>) – A facet function containing markers for the boundaries.
 If not provided, the markers stored within the mesh will
 be used.</p></li>
 <li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
-different bondaries defined in the facet function
+different boundaries defined in the facet function
 or within the mesh itself.
-The follwing markers must be provided:
+The following markers must be provided:
 ‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
 If the markers are not provided the following default
 vales will be used: base = 10, rv = 20, lv = 30, epi = 40</p></li>
@@ -998,7 +998,7 @@ original paper, namely</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.</p></li>
 <li><p><strong>scalar_solutions</strong> (<em>dict</em>) – A dictionary with the scalar solutions that you
 want to compute the gradients of.</p></li>
@@ -1016,13 +1016,13 @@ want to compute the gradients of.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – A dolfin mesh</p></li>
 <li><p><strong>markers</strong> (<em>dict</em><em> (</em><em>optional</em><em>)</em>) – A dictionary with the markers for the
-different bondaries defined in the facet function
+different boundaries defined in the facet function
 or within the mesh itself.
-The follwing markers must be provided:
+The following markers must be provided:
 ‘base’, ‘lv’, ‘epi, ‘rv’ (optional).
 If the markers are not provided the following default
 vales will be used: base = 10, rv = 20, lv = 30, epi = 40.</p></li>
-<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>fiber_space</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines for what space the fibers should be calculated for.</p></li>
 <li><p><strong>use_krylov_solver</strong> (<em>bool</em>) – If True use Krylov solver, by default False</p></li>
 <li><p><strong>krylov_solver_atol</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If a Krylov solver is used, this option specifies a
@@ -1048,7 +1048,7 @@ representation of the space</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {familiy}_{degree} which
+<li><p><strong>space_string</strong> (<em>str</em>) – A string on the form {family}_{degree} which
 determines the space. Example ‘Lagrange_1’.</p></li>
 <li><p><strong>mesh</strong> (<em>dolfin.Mesh</em>) – The mesh</p></li>
 <li><p><strong>dim</strong> (<em>int</em>) – 1 for scalar space, 3 for vector space.</p></li>

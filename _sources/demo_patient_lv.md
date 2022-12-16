@@ -17,7 +17,7 @@ Convert from gmsh mesh to fenics
 mesh, ffun, markers = ldrb.gmsh2dolfin("mesh.msh")
 ```
 
-Update the markers wihch are stored within the mesh
+Update the markers which are stored within the mesh
 
 ```python
 ldrb_markers = {
@@ -57,7 +57,7 @@ with dolfin.XDMFFile(mesh.mpi_comm(), "patient_fiber.xdmf") as xdmf:
     xdmf.write(fiber)
 
 
-Use this function to save fibrer with angles as scalars
+Use this function to save fiber with angles as scalars
 
 ```python
 ldrb.fiber_to_xdmf(fiber, "patient_fiber")

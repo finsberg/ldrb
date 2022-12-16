@@ -266,7 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="life-x-01-strocchi-lv">
 <h1>Life X - 01_strocchi_LV<a class="headerlink" href="#life-x-01-strocchi-lv" title="Permalink to this headline">¶</a></h1>
-<p>Life X recently published their own implementation of the LDRB algorithm and with that they also publushed a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
+<p>Life X recently published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
 <p>This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called <code class="docutils literal notranslate"><span class="pre">lifex_fiber_generation_examples/mesh</span></code>.</p>
 <p>First we import the necessary packages. Note that we also import <code class="docutils literal notranslate"><span class="pre">meshio</span></code> which is used for converted from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span>
@@ -285,11 +285,11 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="c1"># exit()</span>
 </pre></div>
 </div>
-<p>To run the in paralell you can do</p>
+<p>To run the in parallel you can do</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">4</span> <span class="n">python</span> <span class="n">demo_lifex_strocchi_LV</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p>These are the actualy markers (but we only supprt one base at the moment)</p>
+<p>These are the actually markers (but we only support one base at the moment)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">original_markers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;endo&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;aortic_valve&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;mitral_valve&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -302,7 +302,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;mitral_valve&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Select linear langange elements</p>
+<p>Select linear Lagrange elements</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_1&quot;</span>
 </pre></div>
 </div>

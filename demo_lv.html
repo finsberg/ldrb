@@ -290,7 +290,7 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Also if you want to to this demo in parallell you should create the mesh</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Also if you want to to this demo in parallel you should create the mesh</span>
 <span class="c1"># in serial and save it to e.g xml</span>
 </pre></div>
 </div>
@@ -302,7 +302,7 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># And when you run the code in paralall you should load the mesh from the file.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># And when you run the code in parallel you should load the mesh from the file.</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># mesh = df.Mesh(&#39;lv_mesh.xml&#39;)</span>
@@ -352,7 +352,7 @@ You can install <code class="docutils literal notranslate"><span class="pre">msh
     <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;/sheet_normal&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you run in parallel you should skip the visualisation step and do that in
+<p>If you run in parallel you should skip the visualization step and do that in
 serial in stead. In that case you can read the the functions from the xml
 Using the following code</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">space_from_string</span><span class="p">(</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>

@@ -276,7 +276,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Update the markers wihch are stored within the mesh</p>
+<p>Update the markers which are stored within the mesh</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
     <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
@@ -306,7 +306,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p>Save to xdmf
 with dolfin.XDMFFile(mesh.mpi_comm(), “patient_fiber.xdmf”) as xdmf:
 xdmf.write(fiber)</p>
-<p>Use this function to save fibrer with angles as scalars</p>
+<p>Use this function to save fiber with angles as scalars</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;patient_fiber&quot;</span><span class="p">)</span>
 </pre></div>
 </div>

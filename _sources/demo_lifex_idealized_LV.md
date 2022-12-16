@@ -1,6 +1,6 @@
 # Life X - idealized_LV
 
-Life X recently published their own implementation of the LDRB algorithm and with that they also publushed a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at https://zenodo.org/record/5810269#.YeEjWi8w1B0, which also contains a DOI: https://doi.org/10.5281/zenodo.5810269.
+Life X recently published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at https://zenodo.org/record/5810269#.YeEjWi8w1B0, which also contains a DOI: https://doi.org/10.5281/zenodo.5810269.
 
 This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called `lifex_fiber_generation_examples/mesh`.
 
@@ -33,7 +33,7 @@ ldrb_markers = {
 }
 ```
 
-Select linear langange elements
+Select linear Lagrange elements
 
 ```python
 fiber_space = "P_1"
