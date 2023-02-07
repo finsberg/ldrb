@@ -78,7 +78,6 @@ if case == "biv":
 #
 
 else:
-
     long, circ, rad = ldrb.dolfin_ldrb(
         mesh=mesh,
         fiber_space=space,

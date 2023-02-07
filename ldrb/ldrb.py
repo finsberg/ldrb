@@ -567,7 +567,6 @@ def project_gradients(
     data = {}
     V_cg = df.FunctionSpace(mesh, df.VectorElement("Lagrange", mesh.ufl_cell(), 1))
     for case, scalar_solution in scalar_solutions.items():
-
         scalar_solution_int = df.interpolate(scalar_solution, V)
 
         if case != "lv_rv":
@@ -689,7 +688,6 @@ def find_cases_and_boundaries(
     ffun: df.MeshFunction,
     markers: Optional[Dict[str, int]],
 ) -> Tuple[List[str], List[str], Dict[str, int]]:
-
     if markers is None:
         markers = utils.default_markers()
 
@@ -722,7 +720,6 @@ def check_boundaries_are_marked(
     if num_boundary_facets != sum(
         [np.sum(ffun.array() == markers[boundary]) for boundary in boundaries],
     ):
-
         raise RuntimeError(
             (
                 "Not all boundary faces are marked correctly. Make sure all "
@@ -744,7 +741,6 @@ def bayer(
     krylov_solver_rtol: Optional[float] = None,
     krylov_solver_max_its: Optional[int] = None,
 ) -> Dict[str, df.Function]:
-
     apex = apex_to_base(
         mesh,
         markers["base"],
@@ -867,7 +863,6 @@ def solve_krylov(
     ksp_error_if_not_converged=False,
     pc_type="hypre",
 ) -> df.PETScKrylovSolver:
-
     pc_hypre_type = "boomeramg"
     ksp_monitor = verbose
     ksp_view = verbose

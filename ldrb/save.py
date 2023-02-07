@@ -114,7 +114,6 @@ def dolfin_to_hd5(obj, h5name, time="", comm=mpi_comm_world(), name=None):
     file_mode = "a" if os.path.isfile(h5name) else "w"
 
     if isinstance(obj, df.Function):
-
         if value_size(obj) == 1:
             return save_scalar_function(comm, obj, h5name, group, file_mode)
         else:
@@ -145,12 +144,10 @@ def dolfin_to_hd5(obj, h5name, time="", comm=mpi_comm_world(), name=None):
             "geo_dim": obj.geometry().dim(),
         }
     else:
-
         raise ValueError("Unknown type {}".format(type(obj)))
 
 
 def save_scalar_function(comm, obj, h5name, h5group="", file_mode="w"):
-
     V = obj.function_space()
 
     dim = V.mesh().geometry().dim()
@@ -195,7 +192,6 @@ def save_scalar_function(comm, obj, h5name, h5group="", file_mode="w"):
 
 
 def save_vector_function(comm, obj, h5name, h5group="", file_mode="w"):
-
     V = obj.function_space()
     gs = obj.split(deepcopy=True)
 
@@ -212,7 +208,6 @@ def save_vector_function(comm, obj, h5name, h5group="", file_mode="w"):
     vector_group = "/".join([h5group, "vector"])
     if comm.rank == 0:
         with h5py.File(h5name, file_mode) as h5file:
-
             if h5group in h5file:
                 del h5file[h5group]
             h5file.create_dataset(coord_group, data=coords)
@@ -272,7 +267,6 @@ def load_dict_from_h5(fname, h5group="", comm=mpi_comm_world()):
 
 
 def fun_to_xdmf(fun, fname, name="function"):
-
     h5name = "{}.h5".format(fname)
     dolfin_to_hd5(fun, h5name, name=name)
 
@@ -316,7 +310,6 @@ def fun_to_xdmf(fun, fname, name="function"):
 
 
 def fiber_to_xdmf(fun, fname, comm=mpi_comm_world()):
-
     h5name = "{}.h5".format(fname)
 
     if os.path.isfile(h5name):
