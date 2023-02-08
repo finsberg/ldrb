@@ -9,7 +9,6 @@ def norm(v):
 
 
 def test_axis():
-
     u = np.array([1.0, 0.0, 0.0])
     v = np.array([0.0, 0.5, 0.0])
     Q = ldrb.calculus.axis(u, v)
@@ -68,7 +67,6 @@ def lv_geometry():
 
 
 def test_lv_angles_alpha():
-
     data = {}
     eps = 0
     tol = 1e-12
@@ -129,7 +127,6 @@ def test_lv_angles_alpha():
 
 
 def test_lv_angles_beta():
-
     data = {}
     eps = 0
     tol = 1e-12

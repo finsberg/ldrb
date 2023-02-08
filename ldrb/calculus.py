@@ -233,7 +233,6 @@ def _compute_fiber_sheet_system(
     grad_ab = np.zeros(3)
 
     for i in range(len(xdofs)):
-
         lv = lv_scalar[sdofs[i]]
         rv = rv_scalar[sdofs[i]]
         epi = epi_scalar[sdofs[i]]

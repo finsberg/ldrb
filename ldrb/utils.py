@@ -89,7 +89,6 @@ def convert_msh_to_xdmf(msh_file, triangle_mesh_name, tetra_mesh_name):
 
 
 def gmsh2dolfin(msh_file, unlink: bool = True):
-
     name = Path(msh_file).stem
 
     triangle_mesh_name = Path(f"triangle_mesh_{name}.xdmf")
@@ -142,13 +141,11 @@ def mark_biv_mesh(
     tol: float = 0.01,
     values: Dict[str, int] = {"lv": 0, "septum": 1, "rv": 2},
 ) -> df.MeshFunction:
-
     from .ldrb import scalar_laplacians
 
     scalars = scalar_laplacians(mesh=mesh, ffun=ffun, markers=markers)
 
     for cell in df.cells(mesh):
-
         lv = scalars["lv"](cell.midpoint())
         rv = scalars["rv"](cell.midpoint())
         epi = scalars["epi"](cell.midpoint())
@@ -178,7 +175,6 @@ def mark_facets(mesh: df.Mesh, ffun: df.MeshFunction):
     Mark mesh according to facet function
     """
     for facet in df.facets(mesh):
-
         if ffun[facet] == 2**64 - 1:
             ffun[facet] = 0
 
