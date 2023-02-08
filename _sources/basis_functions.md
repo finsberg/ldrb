@@ -89,7 +89,6 @@ For the single ventricle it is much simpler
 
 ```python
 else:
-
     long, circ, rad = ldrb.dolfin_ldrb(
         mesh=mesh,
         fiber_space=space,
