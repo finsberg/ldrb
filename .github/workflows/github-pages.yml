@@ -1,15 +1,12 @@
 name: github pages
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     container:
-      image: finsberg/fenics-extra
+      image: ghcr.io/scientificcomputing/fenics-gmsh:2023-02-20
     steps:
       - uses: actions/checkout@v2
 
@@ -33,7 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install h5py --no-binary=h5py
           python3 -m pip install ".[docs]"
 
       - name: Build docs
@@ -42,6 +38,7 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html
