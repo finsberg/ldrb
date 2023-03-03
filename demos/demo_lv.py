@@ -8,10 +8,11 @@
 import dolfin as df
 
 import ldrb
+import cardiac_geometries
 
 # Here we just create a lv mesh. Here you can use yor own mesh instead.
 
-geometry = ldrb.create_lv_mesh()
+geometry = cardiac_geometries.create_lv_ellipsoid()
 
 # The mesh
 
@@ -22,6 +23,11 @@ ffun = geometry.ffun
 # A dictionary with keys and values for the markers
 
 markers = geometry.markers
+markers = {
+    "base": geometry.markers["BASE"][0],
+    "epi": geometry.markers["EPI"][0],
+    "lv": geometry.markers["ENDO"][0],
+}
 
 # Also if you want to to this demo in parallel you should create the mesh
 # in serial and save it to e.g xml
