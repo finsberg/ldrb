@@ -38,8 +38,7 @@ sphinx:
     - "sphinx.ext.autodoc"
     - "sphinx.ext.napoleon"
   config:
-    html_js_files:
-      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+    html_last_updated_fmt: "%b %d, %Y"
 
 parse:
   myst_enable_extensions:
