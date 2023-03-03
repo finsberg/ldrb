@@ -14,12 +14,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        container: ["finsberg/fenics-extra", "finsberg/pyadjoint-extra"]
-
     container:
-      image: ${{ matrix.container }}
+      image: ghcr.io/scientificcomputing/fenics-gmsh:2023-03-01a
 
     steps:
       - uses: actions/checkout@v3
@@ -32,14 +28,13 @@ jobs:
             ~/.cache/instant
             ~/.cache/dijitso
             ~/.cache/pip
-          key: ${{ matrix.container }}-cache_v2
+          key: cache_v2
           restore-keys: |
-            ${{ matrix.container }}-cache_v2
+            cache_v2
 
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install h5py --no-binary=h5py
           python3 -m pip install -e ".[test]"
 
       - name: Test with pytest

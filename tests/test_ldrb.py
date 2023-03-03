@@ -1,3 +1,4 @@
+import cardiac_geometries
 import numpy as np
 import pytest
 
@@ -58,12 +59,27 @@ def test_bislerp():
 
 @pytest.fixture(scope="session")
 def biv_geometry():
-    return ldrb.create_biv_mesh()
+    geo = cardiac_geometries.create_biv_ellipsoid()
+    markers = {
+        "base": geo.markers["BASE"][0],
+        "epi": geo.markers["EPI"][0],
+        "lv": geo.markers["ENDO_LV"][0],
+        "rv": geo.markers["ENDO_RV"][0],
+    }
+    geo.markers = markers
+    return geo
 
 
 @pytest.fixture(scope="session")
 def lv_geometry():
-    return ldrb.create_lv_mesh()
+    geo = cardiac_geometries.create_lv_ellipsoid()
+    markers = {
+        "base": geo.markers["BASE"][0],
+        "epi": geo.markers["EPI"][0],
+        "lv": geo.markers["ENDO"][0],
+    }
+    geo.markers = markers
+    return geo
 
 
 def test_lv_angles_alpha():
