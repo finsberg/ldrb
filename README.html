@@ -1,254 +1,572 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations &#8212; ldrb</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Creating fibers on a simple LV ellipsoid" href="demo_lv.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="light">
 
-    
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
-        
-      
-      
-      <img src="_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">ldrb</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1 current">
-  <a class="reference internal" href="#">
-   Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Demo
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="demo_lv.html">
-   Creating fibers on a simple LV ellipsoid
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="demo_biv.html">
-   Creating fibers on a simple BiV ellipsoid
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="demo_patient_lv.html">
-   Generating fibers for patient specific geometries
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="basis_functions.html">
-   Local basis functions
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="demo_lifex_strocchi_LV.html">
-   Life X - 01_strocchi_LV
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="demo_lifex_idealized_LV.html">
-   Life X - idealized_LV
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  API documentation
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="ldrb.html">
-   ldrb package
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="modules.html">
-   ldrb
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
   </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ldrb.html">
-     ldrb package
-    </a>
-   </li>
-  </ul>
- </li>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="#">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image">
+    <img src="_static/logo.png" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lv.html">
+                        Creating fibers on a simple LV ellipsoid
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_biv.html">
+                        Creating fibers on a simple BiV ellipsoid
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_patient_lv.html">
+                        Generating fibers for patient specific geometries
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="basis_functions.html">
+                        Local basis functions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lifex_strocchi_LV.html">
+                        Life X - 01_strocchi_LV
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lifex_idealized_LV.html">
+                        Life X - idealized_LV
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="ldrb.html">
+                        ldrb package
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        ldrb
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lv.html">
+                        Creating fibers on a simple LV ellipsoid
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_biv.html">
+                        Creating fibers on a simple BiV ellipsoid
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_patient_lv.html">
+                        Generating fibers for patient specific geometries
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="basis_functions.html">
+                        Local basis functions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lifex_strocchi_LV.html">
+                        Life X - 01_strocchi_LV
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="demo_lifex_idealized_LV.html">
+                        Life X - idealized_LV
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="ldrb.html">
+                        ldrb package
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        ldrb
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="#">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image">
+    <img src="_static/logo.png" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Demo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="demo_lv.html">Creating fibers on a simple LV ellipsoid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_biv.html">Creating fibers on a simple BiV ellipsoid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_patient_lv.html">Generating fibers for patient specific geometries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basis_functions.html">Local basis functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_lifex_strocchi_LV.html">Life X - 01_strocchi_LV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_lifex_idealized_LV.html">Life X - idealized_LV</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API documentation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ldrb.html">ldrb package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">ldrb</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="ldrb.html">ldrb package</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
+</nav>
+    </div>
+  </div>
+  
 
-<div class="navbar_extra_footer">
-  <a href="https://www.simula.no/research/projects/department-computational-physiology">Computational Physiology at Simula</a>
-</div>
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-</div>
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
+      </div>
+      <main id="main-content" class="bd-main">
         
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/README.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/finsberg/ldrb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">repository</span>
+</a>
+</a>
+      
+      <li><a href="https://github.com/finsberg/ldrb/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">open issue</span>
+</a>
+</a>
+      
+  </ul>
+</div>
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="_sources/README.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</a>
+      
+      <li>
+<button onclick="printPdf(this)"
+  class="btn btn-sm dropdown-item"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</a>
+      
+  </ul>
+</div>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/finsberg/ldrb"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/finsberg/ldrb/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#">
@@ -295,20 +613,143 @@ const thebe_selector_output = ".output, .cell_output"
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
+
+            <article class="bd-article" role="main">
+              
+  <p><a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/main.yml"><img alt="CI" src="https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg" /></a>
+<a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml"><img alt="github pages" src="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg" /></a>
+<a class="reference external" href="https://codecov.io/gh/finsberg/ldrb"><img alt="codecov" src="https://codecov.io/gh/finsberg/ldrb/branch/main/graph/badge.svg?token=J69bEFdomc" /></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations">
+<h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations<a class="headerlink" href="#laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations" title="Permalink to this heading">#</a></h1>
+<p>A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.</p>
+<blockquote>
+<div><p>Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
+A novel rule-based algorithm for assigning myocardial fiber orientation
+to computational heart models. Annals of biomedical engineering, 40(10),
+pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/</a>)</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decide on the angles you want to use</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV endocardium</span>
+    <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV epicardium</span>
+    <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV endocardium</span>
+    <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV epicardium</span>
+    <span class="n">alpha_endo_sept</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum endocardium</span>
+    <span class="n">alpha_epi_sept</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum epicardium</span>
+    <span class="n">beta_endo_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum endocardium</span>
+    <span class="n">beta_epi_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum epicardium</span>
+    <span class="n">alpha_endo_rv</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV endocardium</span>
+    <span class="n">alpha_epi_rv</span><span class="o">=-</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV epicardium</span>
+    <span class="n">beta_endo_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV endocardium</span>
+    <span class="n">beta_epi_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV epicardium</span>
+<span class="p">)</span>
+
+<span class="c1"># Choose space for the fiber fields</span>
+<span class="c1"># This is a string on the form {family}_{degree}</span>
+<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
+
+<span class="c1"># Compute the microstructure</span>
+<span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
+<span class="p">)</span>
+<span class="c1"># Store files using a built in xdmf viewer that also works for functions</span>
+<span class="c1"># defined in quadrature spaces</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;fiber&quot;</span><span class="p">)</span>
+<span class="c1"># And visualize it in Paraview</span>
+</pre></div>
+</div>
+<p><img alt="_" src="https://github.com/finsberg/ldrb/raw/main/docs/_static/figures/biv_fiber.png" /></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
+<section id="install-with-pip">
+<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this heading">#</a></h2>
+<p>In order to install the software you need to have
+installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
+are not supported)</p>
+<p>The package can be installed with pip.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ldrb</span>
+</pre></div>
+</div>
+<p>or if you need the most recent version you can install the source</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">#</a></h1>
+<p>Documentation is hosted at <a class="reference external" href="http://finsberg.github.io/ldrb">http://finsberg.github.io/ldrb</a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<p>Check out the <a class="reference external" href="http://finsberg.github.io/ldrb/demo_lv.html">demos</a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is licensed under the GNU LGPL, version 3 or (at your option) any later version.
+<code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is Copyright (2011-2019) by the authors and Simula Research Laboratory.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="contributors">
+<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this heading">#</a></h1>
+<p>Henrik Finsberg (<a class="reference external" href="mailto:henriknf&#37;&#52;&#48;simula&#46;no">henriknf<span>&#64;</span>simula<span>&#46;</span>no</a>)</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "finsberg/ldrb",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='right-next' id="next-link" href="demo_lv.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Creating fibers on a simple LV ellipsoid</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
+</div>
+            </footer>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#">
    Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
@@ -350,147 +791,60 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-                        </nav>
-                    </div>
-                </div>
+</nav>
+</div>
+
             </div>
-            
-              <div>
-                
-  <p><a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/main.yml"><img alt="CI" src="https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg" /></a>
-<a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml"><img alt="github pages" src="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg" /></a>
-<a class="reference external" href="https://codecov.io/gh/finsberg/ldrb"><img alt="codecov" src="https://codecov.io/gh/finsberg/ldrb/branch/main/graph/badge.svg?token=J69bEFdomc" /></a></p>
-<div class="tex2jax_ignore mathjax_ignore section" id="laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations">
-<h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations<a class="headerlink" href="#laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations" title="Permalink to this headline">¶</a></h1>
-<p>A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.</p>
-<blockquote>
-<div><p>Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
-A novel rule-based algorithm for assigning myocardial fiber orientation
-to computational heart models. Annals of biomedical engineering, 40(10),
-pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/</a>)</p>
-</div></blockquote>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decide on the angles you want to use</span>
-<span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV endocardium</span>
-    <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV epicardium</span>
-    <span class="n">beta_endo_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV endocardium</span>
-    <span class="n">beta_epi_lv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the LV epicardium</span>
-    <span class="n">alpha_endo_sept</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum endocardium</span>
-    <span class="n">alpha_epi_sept</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the Septum epicardium</span>
-    <span class="n">beta_endo_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum endocardium</span>
-    <span class="n">beta_epi_sept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the Septum epicardium</span>
-    <span class="n">alpha_endo_rv</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV endocardium</span>
-    <span class="n">alpha_epi_rv</span><span class="o">=-</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># Fiber angle on the RV epicardium</span>
-    <span class="n">beta_endo_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV endocardium</span>
-    <span class="n">beta_epi_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV epicardium</span>
-<span class="p">)</span>
-
-<span class="c1"># Choose space for the fiber fields</span>
-<span class="c1"># This is a string on the form {family}_{degree}</span>
-<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
-
-<span class="c1"># Compute the microstructure</span>
-<span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
-    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
-<span class="p">)</span>
-<span class="c1"># Store files using a built in xdmf viewer that also works for functions</span>
-<span class="c1"># defined in quadrature spaces</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;fiber&quot;</span><span class="p">)</span>
-<span class="c1"># And visualize it in Paraview</span>
-</pre></div>
-</div>
-<p><img alt="_" src="https://github.com/finsberg/ldrb/raw/main/docs/_static/figures/biv_fiber.png" /></p>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="install-with-pip">
-<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
-<p>In order to install the software you need to have
-installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
-are not supported)</p>
-<p>The package can be installed with pip.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ldrb</span>
-</pre></div>
-</div>
-<p>or if you need the most recent version you can install the source</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
-<p>Documentation is hosted at <a class="reference external" href="http://finsberg.github.io/ldrb">http://finsberg.github.io/ldrb</a></p>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>Check out the <a class="reference external" href="http://finsberg.github.io/ldrb/demo_lv.html">demos</a></p>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is licensed under the GNU LGPL, version 3 or (at your option) any later version.
-<code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is Copyright (2011-2019) by the authors and Simula Research Laboratory.</p>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="contributors">
-<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h1>
-<p>Henrik Finsberg (<a class="reference external" href="mailto:henriknf&#37;&#52;&#48;simula&#46;no">henriknf<span>&#64;</span>simula<span>&#46;</span>no</a>)</p>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-</div>
-
-    <script type="text/x-thebe-config">
-    {
-        requestKernel: true,
-        binderOptions: {
-            repo: "finsberg/ldrb",
-            ref: "main",
-        },
-        codeMirrorConfig: {
-            theme: "abcdef",
-            mode: "python"
-        },
-        kernelOptions: {
-            kernelName: "python3",
-            path: "./."
-        },
-        predefinedOutput: true
-    }
-    </script>
-    <script>kernelName = 'python3'</script>
-
-              </div>
-              
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="demo_lv.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Creating fibers on a simple LV ellipsoid</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
+          
+          
         </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By Henrik Finsberg<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
-      </div>
-    </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Henrik Finsberg
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on Mar 03, 2023.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>
