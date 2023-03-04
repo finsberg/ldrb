@@ -9,7 +9,7 @@ from .save import fiber_to_xdmf
 from .save import fun_to_xdmf
 from .utils import space_from_string
 
-__version__ = "2023.1.0"
+__version__ = "2023.1.1"
 __author__ = "Henrik Finsberg (henriknf@simula.no)"
 
 __all__ = [
