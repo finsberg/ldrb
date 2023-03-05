@@ -594,12 +594,10 @@ This library can be installed with <code class="docutils literal notranslate"><s
     <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
     <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">}</span>
-<span class="c1">#</span>
-<span class="c1"># Also if you want to to this demo in parallel you should create the mesh</span>
-<span class="c1"># in serial and save it to e.g xdmf</span>
-<span class="c1">#</span>
 </pre></div>
 </div>
+<p>Also if you want to to this demo in parallel you should create the mesh
+in serial and save it to e.g xdmf</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 </pre></div>
@@ -756,7 +754,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-Last updated on Mar 04, 2023.<br>
+Last updated on Mar 05, 2023.<br>
 </p>
   </div>
   
