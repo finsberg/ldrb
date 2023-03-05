@@ -6,7 +6,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/scientificcomputing/fenics-gmsh:2023-02-20
+      image: ghcr.io/scientificcomputing/fenics-gmsh:2023-03-01a
     steps:
       - uses: actions/checkout@v2
 
