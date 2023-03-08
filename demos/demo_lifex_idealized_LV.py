@@ -11,9 +11,11 @@ import dolfin
 
 import ldrb
 
+import cardiac_geometries
+
 # Load the mesh and markers.
 
-mesh, ffun, markers = ldrb.gmsh2dolfin(
+mesh, ffun, markers = cardiac_geometries.gmsh2dolfin(
     "lifex_fiber_generation_examples/mesh/idealized_LV.msh",
 )
 
