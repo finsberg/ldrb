@@ -38,8 +38,12 @@ markers = {"epi": 10, "lv": 20, "base": 40}
 
 # And update the markers accordingly
 
-marker_functions.ffun.array()[marker_functions.ffun.array() == original_markers["aortic_valve"]] = markers["base"]
-marker_functions.ffun.array()[marker_functions.ffun.array() == original_markers["mitral_valve"]] = markers["base"]
+marker_functions.ffun.array()[
+    marker_functions.ffun.array() == original_markers["aortic_valve"]
+] = markers["base"]
+marker_functions.ffun.array()[
+    marker_functions.ffun.array() == original_markers["mitral_valve"]
+] = markers["base"]
 
 # Select linear Lagrange elements
 

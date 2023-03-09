@@ -39,7 +39,11 @@ angles = dict(
 # Run the LDRB algorithm
 
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh, fiber_space=fiber_space, ffun=marker_functions.ffun, markers=ldrb_markers, **angles
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=marker_functions.ffun,
+    markers=ldrb_markers,
+    **angles
 )
 
 # Save to xdmf
