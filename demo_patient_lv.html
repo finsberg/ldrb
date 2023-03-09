@@ -375,8 +375,11 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
 </pre></div>
 </div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cardiac_geometries</span>
+</pre></div>
+</div>
 <p>Convert from gmsh mesh to fenics</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Update the markers which are stored within the mesh</p>
@@ -402,7 +405,11 @@ document.write(`
 </div>
 <p>Run the LDRB algorithm</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
-    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">ldrb_markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+    <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span>
+    <span class="n">ffun</span><span class="o">=</span><span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="p">,</span>
+    <span class="n">markers</span><span class="o">=</span><span class="n">ldrb_markers</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">angles</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -496,7 +503,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Mar 08, 2023.
+  Last updated on Mar 09, 2023.
   <br/>
 </p>
   </div>

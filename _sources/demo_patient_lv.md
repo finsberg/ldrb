@@ -10,11 +10,15 @@ First we import the necessary packages. Note that we also import `meshio` which 
 import ldrb
 ```
 
+```python
+import cardiac_geometries
+```
+
 
 Convert from gmsh mesh to fenics
 
 ```python
-mesh, ffun, markers = ldrb.gmsh2dolfin("mesh.msh")
+mesh, markers, marker_functions = cardiac_geometries.gmsh2dolfin("mesh.msh")
 ```
 
 Update the markers which are stored within the mesh
@@ -48,7 +52,11 @@ Run the LDRB algorithm
 
 ```python
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=ldrb_markers, **angles
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=marker_functions.ffun,
+    markers=ldrb_markers,
+    **angles
 )
 ```
 

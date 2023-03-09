@@ -15,11 +15,15 @@ import dolfin
 import ldrb
 ```
 
+```python
+import cardiac_geometries
+```
+
 Load the mesh and markers. This is a large mesh that you probably want to run in parallel, but you need to first convert the mesh to a fenics mesh and that has to be done in serial. You can make sure that the mesh is saved by setting `unlink = False`
 
 ```python
 # Last argument here is the markers, but these are not used
-mesh, ffun, _ = ldrb.gmsh2dolfin(
+mesh, _, marker_functions = cardiac_geometries.gmsh2dolfin(
     "lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh",
     unlink=False,
 )
@@ -48,8 +52,12 @@ markers = {"epi": 10, "lv": 20, "base": 40}
 And update the markers accordingly
 
 ```python
-ffun.array()[ffun.array() == original_markers["aortic_valve"]] = markers["base"]
-ffun.array()[ffun.array() == original_markers["mitral_valve"]] = markers["base"]
+marker_functions.ffun.array()[
+    marker_functions.ffun.array() == original_markers["aortic_valve"]
+] = markers["base"]
+marker_functions.ffun.array()[
+    marker_functions.ffun.array() == original_markers["mitral_valve"]
+] = markers["base"]
 ```
 
 Select linear Lagrange elements
@@ -65,7 +73,7 @@ Compute the fiber-sheet system
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
     mesh=mesh,
     fiber_space=fiber_space,
-    ffun=ffun,
+    ffun=marker_functions.ffun,
     markers=markers,
     alpha_endo_lv=60,  # Fiber angle on the endocardium
     alpha_epi_lv=-60,  # Fiber angle on the epicardium
