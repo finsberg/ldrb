@@ -8,10 +8,12 @@
 
 import ldrb
 
+import cardiac_geometries
+
 
 # Convert from gmsh mesh to fenics
 
-mesh, ffun, markers = ldrb.gmsh2dolfin("mesh.msh")
+mesh, markers, marker_functions = cardiac_geometries.gmsh2dolfin("mesh.msh")
 
 # Update the markers which are stored within the mesh
 
@@ -37,7 +39,11 @@ angles = dict(
 # Run the LDRB algorithm
 
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=ldrb_markers, **angles
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=marker_functions.ffun,
+    markers=ldrb_markers,
+    **angles
 )
 
 # Save to xdmf

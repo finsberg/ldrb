@@ -11,9 +11,11 @@ import dolfin
 
 import ldrb
 
+import cardiac_geometries
+
 # Load the mesh and markers.
 
-mesh, ffun, markers = ldrb.gmsh2dolfin(
+mesh, markers, marker_functions = cardiac_geometries.gmsh2dolfin(
     "lifex_fiber_generation_examples/mesh/idealized_LV.msh",
 )
 
@@ -35,7 +37,7 @@ fiber_space = "P_1"
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
     mesh=mesh,
     fiber_space=fiber_space,
-    ffun=ffun,
+    ffun=marker_functions.ffun,
     markers=ldrb_markers,
     alpha_endo_lv=60,  # Fiber angle on the endocardium
     alpha_epi_lv=-60,  # Fiber angle on the epicardium
