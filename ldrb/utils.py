@@ -256,12 +256,12 @@ class Projector:
                 solver_type,
                 preconditioner_type,
             )
+            self.solver.set_operator(self._A)
         else:
             raise RuntimeError(
                 f"Unknown solver type: {solver_type}, method has to be lu"
                 + f", or {np.hstack(lu_methods, krylov_methods)}",
             )
-        self.solver.set_operator(self._A)
 
     def project(self, u: df.Function, f: ufl.core.expr.Expr) -> None:
         """
