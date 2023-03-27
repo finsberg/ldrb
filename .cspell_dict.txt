@@ -27,6 +27,7 @@ finsberg
 flipud
 gmres
 gmsh
+hstack
 hypre
 inarray
 infile

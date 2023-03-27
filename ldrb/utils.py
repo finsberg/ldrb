@@ -191,7 +191,7 @@ def space_from_string(space_string: str, mesh: df.Mesh, dim: int) -> df.Function
     space_string : str
         A string on the form {family}_{degree} which
         determines the space. Example 'Lagrange_1'.
-    mesh : dolfin.Mesh
+    mesh : df.Mesh
         The mesh
     dim : int
         1 for scalar space, 3 for vector space.
@@ -222,3 +222,56 @@ def space_from_string(space_string: str, mesh: df.Mesh, dim: int) -> df.Function
         raise df.error("Cannot create function space of dimension {dim}")
 
     return V
+
+
+class Projector:
+    def __init__(
+        self,
+        V: df.FunctionSpace,
+        solver_type: str = "lu",
+        preconditioner_type: str = "default",
+    ):
+        """
+        Projection class caching solver and matrix assembly
+        Args:
+            V (df.FunctionSpace): Function-space to project in to
+            solver_type (str, optional): Type of solver. Defaults to "lu".
+            preconditioner_type (str, optional): Type of preconditioner. Defaults to "default".
+        Raises:
+            RuntimeError: _description_
+        """
+        u = df.TrialFunction(V)
+        self._v = df.TestFunction(V)
+        self._dx = df.Measure("dx", domain=V.mesh())
+        self._b = df.Function(V)
+        self._A = df.assemble(ufl.inner(u, self._v) * self._dx)
+        lu_methods = df.lu_solver_methods().keys()
+        krylov_methods = df.krylov_solver_methods().keys()
+        if solver_type == "lu" or solver_type in lu_methods:
+            if preconditioner_type != "default":
+                raise RuntimeError("LUSolver cannot be preconditioned")
+            self.solver = df.LUSolver(self._A, "default")
+        elif solver_type in krylov_methods:
+            self.solver = df.PETScKrylovSolver(
+                solver_type,
+                preconditioner_type,
+            )
+        else:
+            raise RuntimeError(
+                f"Unknown solver type: {solver_type}, method has to be lu"
+                + f", or {np.hstack(lu_methods, krylov_methods)}",
+            )
+        self.solver.set_operator(self._A)
+
+    def project(self, u: df.Function, f: ufl.core.expr.Expr) -> None:
+        """
+        Project `f` into `u`.
+        Args:
+            u (df.Function): The function to project into
+            f (ufl.core.expr.Expr): The ufl expression to project
+        """
+        df.assemble(ufl.inner(f, self._v) * self._dx, tensor=self._b.vector())
+        self.solver.solve(u.vector(), self._b.vector())
+
+    def __call__(self, u: df.Function, f: ufl.core.expr.Expr) -> None:
+        self.project(u=u, f=f)
