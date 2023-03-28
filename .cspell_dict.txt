@@ -50,6 +50,7 @@ njit
 numba
 numref
 nverts
+outdir
 outvector
 Paraview
 pointwise
