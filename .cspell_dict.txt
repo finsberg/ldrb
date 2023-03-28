@@ -1,6 +1,7 @@
 allreduce
 apicobasal
 arange
+arccos
 arcsin
 argmax
 atol
@@ -27,6 +28,7 @@ finsberg
 flipud
 gmres
 gmsh
+hstack
 hypre
 inarray
 infile
