@@ -474,12 +474,10 @@ Using the following code</p>
 </pre></div>
 </div>
 <p>You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don’t work (yet) using mpirun</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (These function are not tested in parallel)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;biv_fiber&quot;</span><span class="p">)</span>
-<span class="c1"># ldrb.fiber_to_xdmf(sheet, &quot;biv_sheet&quot;)</span>
-<span class="c1"># ldrb.fiber_to_xdmf(sheet_normal, &quot;biv_sheet_normal&quot;)</span>
-</pre></div>
-</div>
+<p>(These function are not tested in parallel)
+ldrb.fiber_to_xdmf(fiber, “biv_fiber”)
+ldrb.fiber_to_xdmf(sheet, “biv_sheet”)
+ldrb.fiber_to_xdmf(sheet_normal, “biv_sheet_normal”)</p>
 <p><img alt="_" src="_images/biv_fiber.png" />
 <a class="reference external" href="https://github.com/finsberg/ldrb/blob/main/demos/demo_biv.py">Link to source code</a></p>
 </section>

@@ -369,30 +369,49 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="life-x-01-strocchi-lv">
 <h1>Life X - 01_strocchi_LV<a class="headerlink" href="#life-x-01-strocchi-lv" title="Permalink to this heading">#</a></h1>
-<p>Life X recently published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
+<p>Life X has published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
 <p>This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called <code class="docutils literal notranslate"><span class="pre">lifex_fiber_generation_examples/mesh</span></code>.</p>
-<p>First we import the necessary packages. Note that we also import <code class="docutils literal notranslate"><span class="pre">meshio</span></code> which is used for converted from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
+<p>First we import the necessary packages. Note that we also import <a class="reference external" href="https://computationalphysiology.github.io/cardiac_geometries/"><code class="docutils literal notranslate"><span class="pre">cardiac-geometries</span></code></a> which is used for converting from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">ldrb</span>
+<span class="kn">import</span> <span class="nn">cardiac_geometries</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ldrb</span>
+<p>First we will load the mesh and markers. This is a large mesh that you probably want to run in parallel, but you need to first convert the mesh to a fenics mesh and that has to be done in serial. You can make sure that the mesh is saved by setting <code class="docutils literal notranslate"><span class="pre">unlink</span> <span class="pre">=</span> <span class="pre">False</span></code>.
+To run the in parallel you can e.g do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">4</span> <span class="n">python3</span> <span class="n">demo_lifex_strocchi_LV</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cardiac_geometries</span>
+<p>which will run the demo on 4 processors.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will specify an output directory for the mesh</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;01_strocchi_LV&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Load the mesh and markers. This is a large mesh that you probably want to run in parallel, but you need to first convert the mesh to a fenics mesh and that has to be done in serial. You can make sure that the mesh is saved by setting <code class="docutils literal notranslate"><span class="pre">unlink</span> <span class="pre">=</span> <span class="pre">False</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Last argument here is the markers, but these are not used</span>
-<span class="n">mesh</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span>
-    <span class="s2">&quot;lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh&quot;</span><span class="p">,</span>
-    <span class="n">unlink</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># Run this first in serial and exit here</span>
-<span class="c1"># exit()</span>
-</pre></div>
-</div>
-<p>To run the in parallel you can do</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">4</span> <span class="n">python</span> <span class="n">demo_lifex_strocchi_LV</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># If we run in serial we will convert the gmsh file to dolfin, otherwise we load the mesh and facet function directly from the folder.</span>
+<span class="k">if</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MPI</span><span class="o">.</span><span class="n">comm_world</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">mesh</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span>
+        <span class="s2">&quot;lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh&quot;</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="n">outdir</span><span class="p">,</span>
+        <span class="n">unlink</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ffun</span> <span class="o">=</span> <span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span>
+    <span class="c1"># exit()   # If you want to run in parallel you can exit here</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mesh not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first&quot;</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ffun not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first&quot;</span><span class="p">)</span>
+    <span class="n">ffun</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ffun</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
 </pre></div>
 </div>
 <p>These are the actually markers (but we only support one base at the moment)</p>
@@ -404,12 +423,8 @@ document.write(`
 </pre></div>
 </div>
 <p>And update the markers accordingly</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span>
-    <span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;aortic_valve&quot;</span><span class="p">]</span>
-<span class="p">]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
-<span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span>
-    <span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;mitral_valve&quot;</span><span class="p">]</span>
-<span class="p">]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;aortic_valve&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
+<span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;mitral_valve&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Select linear Lagrange elements</p>
@@ -420,7 +435,7 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
     <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
     <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span>
-    <span class="n">ffun</span><span class="o">=</span><span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span><span class="p">,</span>
+    <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span>
     <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span>
     <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the endocardium</span>
     <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Fiber angle on the epicardium</span>
