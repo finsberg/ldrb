@@ -1,6 +1,7 @@
 allreduce
 apicobasal
 arange
+arccos
 arcsin
 argmax
 atol

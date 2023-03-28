@@ -162,7 +162,7 @@ def compute_fiber_sheet_system(
 
     tol = 0.1
 
-    from .calculus import _compute_fiber_sheet_system
+    from .calculus import compute_fiber_sheet_system as _compute_fiber_sheet_system
 
     _compute_fiber_sheet_system(
         f0,

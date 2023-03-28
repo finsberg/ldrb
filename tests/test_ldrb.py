@@ -235,13 +235,3 @@ def test_lv_regression(lv_geometry):
         ffun=lv_geometry.ffun,
         markers=lv_geometry.markers,
     )
-
-
-if __name__ == "__main__":
-    # test_axis()
-    # test_lv_angles()
-    # test_biv_regression()
-    # test_lv_regression()
-    # m = lv_geometry()
-    # test_markers(m)
-    pass
