@@ -123,7 +123,7 @@ with df.HDF5File(mesh.mpi_comm(), "biv.h5", "r") as h5file:
 # You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don't work (yet) using mpirun
 
 # (These function are not tested in parallel)
-ldrb.fiber_to_xdmf(fiber, "biv_fiber")
+# ldrb.fiber_to_xdmf(fiber, "biv_fiber")
 # ldrb.fiber_to_xdmf(sheet, "biv_sheet")
 # ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
 
