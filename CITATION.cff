@@ -5,6 +5,6 @@ authors:
   given-names: "Henrik"
   orcid: "https://orcid.org/0000-0003-3766-2393"
 title: "Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations"
-version: "2023.1.1"
+version: "2023.2.0"
 date-released: 2022-11-16
 url: "https://github.com/finsberg/ldrb"
