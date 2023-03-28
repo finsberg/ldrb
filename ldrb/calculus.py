@@ -25,6 +25,23 @@ def quat_dot(q1: np.ndarray, q2: np.ndarray) -> float:
     return q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3]
 
 
+@numba.njit(_float_1D_array(_float_1D_array))
+def normalize(u: np.ndarray) -> np.ndarray:
+    """L2-Normalize vector with
+
+    Parameters
+    ----------
+    u : np.ndarray
+        Vector
+
+    Returns
+    -------
+    np.ndarray
+        Normalized vector
+    """
+    return u / np.linalg.norm(u)
+
+
 @numba.njit(_float_1D_array(_float_1D_array, _float_1D_array, numba.float64))
 def slerp(q1: np.ndarray, q2: np.ndarray, t: float) -> np.ndarray:
     """Spherical linear interpolation from `q1` to `q2` at `t`
@@ -228,23 +245,6 @@ def bislerp(
     qm_norm = normalize(qm_slerp)
 
     return quat2rot(qm_norm)
-
-
-@numba.njit(_float_1D_array(_float_1D_array))
-def normalize(u: np.ndarray) -> np.ndarray:
-    """L2-Normalize vector with
-
-    Parameters
-    ----------
-    u : np.ndarray
-        Vector
-
-    Returns
-    -------
-    np.ndarray
-        Normalized vector
-    """
-    return u / np.linalg.norm(u)
 
 
 @numba.njit(_float_2D_array(_float_1D_array, _float_1D_array))
