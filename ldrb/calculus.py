@@ -221,16 +221,7 @@ def bislerp(
     max_dot = 0.0
 
     idx = 0
-    for qm in [
-        qa,
-        -qa,
-        quat_i * qa,
-        -quat_i * qa,
-        quat_j * qa,
-        -quat_j * qa,
-        quat_k * qa,
-        -quat_k * qa,
-    ]:
+    for qm in quat_array:
         dot = abs(quat_dot(qm, qb))
         if dot > max_dot:
             max_dot = dot
