@@ -202,9 +202,9 @@ def bislerp(
     qa = rot2quat(Qa)
     qb = rot2quat(Qb)
 
-    quat_i = np.array([0, 1, 0, 0])
-    quat_j = np.array([0, 0, 1, 0])
-    quat_k = np.array([0, 0, 0, 1])
+    quat_i = np.array([0, 1.0, 0, 0])
+    quat_j = np.array([0, 0, 1.0, 0])
+    quat_k = np.array([0, 0, 0, 1.0])
 
     quat_array = [
         qa,
@@ -216,22 +216,19 @@ def bislerp(
         quat_k * qa,
         -quat_k * qa,
     ]
+    max_dot = -1.0
 
-    max_idx = 0
-    max_dot = 0.0
+    qm = quat_array[0]
 
-    idx = 0
-    for qm in quat_array:
-        dot = abs(quat_dot(qm, qb))
+    for v in quat_array:
+        dot = quat_dot(v, qb)
         if dot > max_dot:
             max_dot = dot
-            max_idx = idx
-        idx += 1
+            qm = v
 
     if max_dot > 1 - tol:
         return Qb
 
-    qm = quat_array[max_idx]
     qm_slerp = slerp(qm, qb, t)
     qm_norm = normalize(qm_slerp)
 
