@@ -199,7 +199,7 @@ def bislerp(
         return Qa
 
     tol = 1e-12
-    qa = rot2quat(Qb)
+    qa = rot2quat(Qa)
     qb = rot2quat(Qb)
 
     quat_i = np.array([0, 1, 0, 0])
@@ -231,7 +231,7 @@ def bislerp(
         quat_k * qa,
         -quat_k * qa,
     ]:
-        dot = quat_dot(qm, qb)
+        dot = abs(quat_dot(qm, qb))
         if dot > max_dot:
             max_dot = dot
             max_idx = idx
