@@ -175,10 +175,6 @@ def bislerp(
     qa = rot2quat(Qa)
     qb = rot2quat(Qb)
 
-    # i_qa = np.array([0, qa[1], 0, 0])
-    # j_qa = np.array([0, 0, qa[2], 0])
-    # k_qa = np.array([0, 0, 0, qa[3]])
-
     a = qa[0]
     b = qa[1]
     c = qa[2]
@@ -300,16 +296,15 @@ def compute_fiber_sheet_system(
     beta_epi_rv,
     beta_endo_sept,
     beta_epi_sept,
-    tol,
+    depth_tol=0.1,
+    tol_rv=0.01,
+    tol_lv=0.01,
+    tol_epi=0.05,
 ):
     grad_lv = np.zeros(3)
     grad_rv = np.zeros(3)
     grad_epi = np.zeros(3)
     grad_ab = np.zeros(3)
-
-    tol_rv = 0.01
-    tol_lv = 0.01
-    tol_epi = 0.05
 
     for i in range(len(xdofs)):
         lv = lv_scalar[sdofs[i]]
@@ -349,14 +344,14 @@ def compute_fiber_sheet_system(
                 alpha_epi = alpha_epi_rv
                 beta_epi = beta_epi_rv
         else:
-            if lv_rv >= 1 - tol:
+            if lv_rv >= 1 - depth_tol:
                 # We are in the LV region
                 marker_scalar[sdofs[i]] = 1
                 alpha_endo = alpha_endo_lv
                 beta_endo = beta_endo_lv
                 alpha_epi = alpha_epi_lv
                 beta_epi = beta_epi_lv
-            elif lv_rv <= tol:
+            elif lv_rv <= depth_tol:
                 # We are in the RV region
                 marker_scalar[sdofs[i]] = 2
                 alpha_endo = alpha_endo_rv
@@ -371,7 +366,7 @@ def compute_fiber_sheet_system(
                 alpha_epi = alpha_epi_sept
                 beta_epi = beta_epi_sept
 
-        if lv + rv < tol:
+        if lv + rv < depth_tol:
             depth = 0.5
         else:
             depth = rv / (lv + rv)
