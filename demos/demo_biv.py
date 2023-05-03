@@ -15,7 +15,7 @@ import cardiac_geometries
 # Here we just create a lv mesh using `cardiac-geometries``
 #
 
-geometry = cardiac_geometries.create_biv_ellipsoid(char_length=0.2)
+geometry = cardiac_geometries.create_biv_ellipsoid()
 
 #
 # The mesh is stored as an attribute mesh
@@ -73,8 +73,7 @@ with df.XDMFFile("ffun.xdmf") as xdmf:
 # Choose space for the fiber fields
 # This is a string on the form {family}_{degree}
 
-# fiber_space = "Lagrange_2"
-fiber_space = "Quadrature_2"
+fiber_space = "Lagrange_2"
 
 # Compute the microstructure
 
@@ -124,9 +123,9 @@ with df.HDF5File(mesh.mpi_comm(), "biv.h5", "r") as h5file:
 # You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don't work (yet) using mpirun
 
 # (These function are not tested in parallel)
-ldrb.fiber_to_xdmf(fiber, "biv_fiber")
-ldrb.fiber_to_xdmf(sheet, "biv_sheet")
-ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
+# ldrb.fiber_to_xdmf(fiber, "biv_fiber")
+# ldrb.fiber_to_xdmf(sheet, "biv_sheet")
+# ldrb.fiber_to_xdmf(sheet_normal, "biv_sheet_normal")
 
 # ![_](_static/figures/biv_fiber.png)
 # [Link to source code](https://github.com/finsberg/ldrb/blob/main/demos/demo_biv.py)
