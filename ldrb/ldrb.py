@@ -90,10 +90,6 @@ def compute_fiber_sheet_system(
     beta_epi_rv: Optional[float] = None,
     beta_endo_sept: Optional[float] = None,
     beta_epi_sept: Optional[float] = None,
-    depth_tol: float = 0.1,
-    tol_rv: float = 0.01,
-    tol_lv: float = 0.01,
-    tol_epi: float = 0.05,
 ) -> FiberSheetSystem:
     """
     Compute the fiber-sheets system on all degrees of freedom.
@@ -195,10 +191,6 @@ def compute_fiber_sheet_system(
         beta_epi_rv,
         beta_endo_sept,
         beta_epi_sept,
-        depth_tol=depth_tol,
-        tol_rv=tol_rv,
-        tol_lv=tol_lv,
-        tol_epi=tol_epi,
     )
 
     return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
@@ -252,10 +244,6 @@ def dolfin_ldrb(
     beta_epi_rv: Optional[float] = None,
     beta_endo_sept: Optional[float] = None,
     beta_epi_sept: Optional[float] = None,
-    depth_tol: float = 0.1,
-    tol_rv: float = 0.01,
-    tol_lv: float = 0.01,
-    tol_epi: float = 0.05,
 ):
     r"""
     Create fiber, cross fibers and sheet directions
@@ -382,10 +370,6 @@ def dolfin_ldrb(
         beta_epi_rv=beta_epi_rv,
         beta_endo_sept=beta_endo_sept,
         beta_epi_sept=beta_epi_sept,
-        depth_tol=depth_tol,
-        tol_rv=tol_rv,
-        tol_lv=tol_lv,
-        tol_epi=tol_epi,
         **data,
     )  # type:ignore
 
@@ -549,6 +533,9 @@ def project_gradients(
 
             # Add gradient data
             data[case + "_gradient"] = gradient.vector().get_local()
+
+            df.File(f"{case}.pvd") << scalar_solution_int
+            df.File(f"{case}_grad.pvd") << gradient
 
         # Add scalar data
         if case != "apex":
