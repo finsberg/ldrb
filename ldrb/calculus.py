@@ -6,25 +6,6 @@ _float_1D_array = numba.types.Array(numba.float64, 1, "C")
 _float_2D_array = numba.types.Array(numba.float64, 2, "C")
 
 
-@numba.njit(numba.float64(_float_1D_array, _float_1D_array))
-def quat_dot(q1: np.ndarray, q2: np.ndarray) -> float:
-    """Quaternion dot product
-
-    Parameters
-    ----------
-    q1 : np.ndarray
-        First quaternion
-    q2 : np.ndarray
-        Second quaternion
-
-    Returns
-    -------
-    float
-        The quaternion dot product
-    """
-    return q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3]
-
-
 @numba.njit(_float_1D_array(_float_1D_array))
 def normalize(u: np.ndarray) -> np.ndarray:
     """L2-Normalize vector with
@@ -39,7 +20,10 @@ def normalize(u: np.ndarray) -> np.ndarray:
     np.ndarray
         Normalized vector
     """
-    return u / np.linalg.norm(u)
+    u_norm = np.linalg.norm(u)
+    if u_norm > 0.0:
+        return u / u_norm
+    return u
 
 
 @numba.njit(_float_1D_array(_float_1D_array, _float_1D_array, numba.float64))
@@ -60,75 +44,60 @@ def slerp(q1: np.ndarray, q2: np.ndarray, t: float) -> np.ndarray:
     np.ndarray
         The spherical linear interpolation between `q1` and `q2` at `t`
     """
-    dot = quat_dot(q1, q2)
-    if dot > 1 - 1e-12:
+    dot = q1.dot(q2)
+    q3 = q2
+    if dot < 0.0:
+        dot = -dot
+        q3 = -q2
+
+    if dot < 0.9999:
         angle = np.arccos(dot)
         a = np.sin(angle * (1 - t)) / np.sin(angle)
         b = np.sin(angle * t) / np.sin(angle)
+        return a * q1 + b * q3
 
-        q = q2
-        q *= b
-        q1a = q1
-        q1a *= a
-        q += q1a
-    else:
-        q = q1
-        q *= 1 - t
-        q2t = q2
-        q2t *= t
-        q += q2t
-    return q
+    # Angle is close to zero - do linear interpolation
+    return q1 * (1 - t) + q3 * t
 
 
 @numba.njit(_float_1D_array(_float_2D_array))
 def rot2quat(Q: np.ndarray) -> np.ndarray:
-    """Convert rotation matrix to quaternion
+    t = Q[0][0] + Q[1][1] + Q[2][2]
 
-    Parameters
-    ----------
-    Q : np.ndarray
-        Rotation matrix
+    if t > 0:
+        r = np.sqrt(1.0 + t)
+        s = 0.5 / r
 
-    Returns
-    -------
-    np.ndarray
-        Quaternion
-    """
-    M11 = Q[0][0]
-    M12 = Q[1][0]
-    M13 = Q[2][0]
-    M21 = Q[0][1]
-    M22 = Q[1][1]
-    M23 = Q[2][1]
-    M31 = Q[0][2]
-    M32 = Q[1][2]
-    M33 = Q[2][2]
+        a = 0.5 * r
+        b = (Q[2][1] - Q[1][2]) * s
+        c = (Q[0][2] - Q[2][0]) * s
+        d = (Q[1][0] - Q[0][1]) * s
 
-    w2 = 0.25 * (1 + M11 + M22 + M33)
-    err = 1e-15
+    elif Q[0][0] > Q[1][1] and Q[0][0] > Q[2][2]:
+        s = 2 * np.sqrt(1.0 + Q[0][0] - Q[1][1] - Q[2][2])
 
-    if w2 > err:
-        w = np.sqrt(w2)
-        x = (M23 - M32) / (4.0 * w)
-        y = (M31 - M13) / (4.0 * w)
-        z = (M12 - M21) / (4.0 * w)
+        a = (Q[2][1] - Q[1][2]) / s
+        b = 0.25 * s
+        c = (Q[0][1] + Q[1][0]) / s
+        d = (Q[0][2] + Q[2][0]) / s
+
+    elif Q[1][1] > Q[0][0] and Q[1][1] > Q[2][2]:
+        s = 2 * np.sqrt(1.0 + Q[1][1] - Q[0][0] - Q[2][2])
+
+        a = (Q[0][2] - Q[2][0]) / s
+        b = (Q[0][1] + Q[1][0]) / s
+        c = 0.25 * s
+        d = (Q[1][2] + Q[2][1]) / s
+
     else:
-        w = 0.0
-        x2 = -0.5 * (M22 + M33)
-        if x2 > err:
-            x = np.sqrt(x2)
-            y = M12 / (2.0 * x)
-            z = M13 / (2.0 * x)
-        else:
-            x = 0.0
-            y2 = 0.5 * (1 - M33)
-            if y2 > err:
-                y = np.sqrt(y2)
-                z = M23 / (2.0 * y)
-            else:
-                y = 0.0
-                z = 1.0
-    return normalize(np.array([w, x, y, z]))
+        s = 2 * np.sqrt(1.0 + Q[2][2] - Q[0][0] - Q[1][1])
+
+        a = (Q[1][0] - Q[0][1]) / s
+        b = (Q[0][2] + Q[2][0]) / s
+        c = (Q[1][2] + Q[2][1]) / s
+        d = 0.25 * s
+
+    return normalize(np.array([a, b, c, d]))
 
 
 @numba.njit(_float_2D_array(_float_1D_array))
@@ -191,60 +160,61 @@ def bislerp(
     orthogonal matrix at timepoint :math:`t`.
     """
 
-    if ~Qa.any() and ~Qb.any():
-        return np.zeros((3, 3))
-    if ~Qa.any():
-        return Qb
-    if ~Qb.any():
-        return Qa
+    # if ~Qa.any() and ~Qb.any():
+    #     return np.zeros((3, 3))
+    # if ~Qa.any():
+    #     return Qb
+    # if ~Qb.any():
+    #     return Qa
 
-    tol = 1e-12
-    qa = rot2quat(Qb)
+    # tol = 1e-5
+
+    # if t < tol:
+    #     return Qa
+    # if t > 1 - tol:
+    #     return Qb
+
+    qa = rot2quat(Qa)
     qb = rot2quat(Qb)
 
-    quat_i = np.array([0, 1, 0, 0])
-    quat_j = np.array([0, 0, 1, 0])
-    quat_k = np.array([0, 0, 0, 1])
+    a = qa[0]
+    b = qa[1]
+    c = qa[2]
+    d = qa[3]
+
+    # i_qa = np.array([-b, a, -d, c])
+    # j_qa = np.array([-c, d, a, -b])
+    # k_qa = np.array([-d, -c, b, a])
+
+    qa_i = np.array([-b, a, d, -c])
+    qa_j = np.array([-c, -d, a, b])
+    qa_k = np.array([-d, c, -b, a])
+
+    # quat_array = [
+    #     qa,
+    #     i_qa,
+    #     j_qa,
+    #     k_qa,
+    # ]
 
     quat_array = [
         qa,
-        -qa,
-        quat_i * qa,
-        -quat_i * qa,
-        quat_j * qa,
-        -quat_j * qa,
-        quat_k * qa,
-        -quat_k * qa,
+        qa_i,
+        qa_j,
+        qa_k,
     ]
 
-    max_idx = 0
-    max_dot = 0.0
+    qm = quat_array[0]
+    max_dot = abs(qm.dot(qb))
 
-    idx = 0
-    for qm in [
-        qa,
-        -qa,
-        quat_i * qa,
-        -quat_i * qa,
-        quat_j * qa,
-        -quat_j * qa,
-        quat_k * qa,
-        -quat_k * qa,
-    ]:
-        dot = quat_dot(qm, qb)
+    for v in quat_array[1:]:
+        dot = abs(v.dot(qb))
         if dot > max_dot:
             max_dot = dot
-            max_idx = idx
-        idx += 1
+            qm = v
 
-    if max_dot > 1 - tol:
-        return Qb
-
-    qm = quat_array[max_idx]
     qm_slerp = slerp(qm, qb, t)
-    qm_norm = normalize(qm_slerp)
-
-    return quat2rot(qm_norm)
+    return quat2rot(qm_slerp)
 
 
 @numba.njit(_float_2D_array(_float_1D_array, _float_1D_array))
@@ -260,9 +230,7 @@ def axis(u: np.ndarray, v: np.ndarray) -> np.ndarray:
 
     e1 = normalize(u)
 
-    # Create an initial guess for e0
-    e2 = normalize(v)
-    e2 -= e1.dot(e2) * e1
+    e2 = v - (e1.dot(v)) * e1
     e2 = normalize(e2)
 
     e0 = np.cross(e1, e2)
@@ -300,101 +268,6 @@ def orient(Q: np.ndarray, alpha: float, beta: float) -> np.ndarray:
     return C
 
 
-@numba.njit(
-    _float_2D_array(
-        numba.float64,
-        numba.float64,
-        numba.float64,
-        _float_1D_array,
-        _float_1D_array,
-        _float_1D_array,
-        _float_1D_array,
-        numba.float64,
-        numba.float64,
-        numba.float64,
-        numba.float64,
-        numba.float64,
-    ),
-)
-def system_at_dof(
-    lv: float,
-    rv: float,
-    epi: float,
-    grad_lv: np.ndarray,
-    grad_rv: np.ndarray,
-    grad_epi: np.ndarray,
-    grad_ab: np.ndarray,
-    alpha_endo: float,
-    alpha_epi: float,
-    beta_endo: float,
-    beta_epi: float,
-    tol: float = 1e-7,
-) -> np.ndarray:
-    """
-    Compte the fiber, sheet and sheet normal at a
-    single degree of freedom
-
-    Arguments
-    ---------
-    lv : float
-        Value of the Laplace solution for the LV at the dof.
-    rv : float
-        Value of the Laplace solution for the RV at the dof.
-    epi : float
-        Value of the Laplace solution for the EPI at the dof.
-    grad_lv : np.ndarray
-        Gradient of the Laplace solution for the LV at the dof.
-    grad_rv : np.ndarray
-        Gradient of the Laplace solution for the RV at the dof.
-    grad_epi : np.ndarray
-        Gradient of the Laplace solution for the EPI at the dof.
-    grad_epi : np.ndarray
-        Gradient of the Laplace solution for the apex to base.
-        at the dof
-    alpha_endo : scalar
-        Fiber angle at the endocardium.
-    alpha_epi : scalar
-        Fiber angle at the epicardium.
-    beta_endo : scalar
-        Sheet angle at the endocardium.
-    beta_epi : scalar
-        Sheet angle at the epicardium.
-    tol : scalar
-        Tolerance for whether to consider the scalar values.
-        Default: 1e-7
-    """
-
-    if lv + rv < tol:
-        depth = 0.5
-    else:
-        depth = rv / (lv + rv)
-
-    alpha_s = alpha_endo * (1 - depth) - alpha_endo * depth
-    alpha_w = alpha_endo * (1 - epi) + alpha_epi * epi
-    beta_s = beta_endo * (1 - depth) - beta_endo * depth
-    beta_w = beta_endo * (1 - epi) + beta_epi * epi
-
-    Q_lv = np.zeros((3, 3))
-    if lv > tol:
-        Q_lv = axis(grad_ab, -1 * grad_lv)
-        Q_lv = orient(Q_lv, alpha_s, beta_s)
-
-    Q_rv = np.zeros((3, 3))
-    if rv > tol:
-        Q_rv = axis(grad_ab, grad_rv)
-        Q_rv = orient(Q_rv, alpha_s, beta_s)
-
-    Q_endo = bislerp(Q_lv, Q_rv, depth)
-
-    Q_epi = np.zeros((3, 3))
-    if epi > tol:
-        Q_epi = axis(grad_ab, grad_epi)
-        Q_epi = orient(Q_epi, alpha_w, beta_w)
-
-    Q_fiber = bislerp(Q_endo, Q_epi, epi)
-    return Q_fiber
-
-
 @numba.njit
 def compute_fiber_sheet_system(
     f0,
@@ -425,7 +298,6 @@ def compute_fiber_sheet_system(
     beta_epi_rv,
     beta_endo_sept,
     beta_epi_sept,
-    tol,
 ):
     grad_lv = np.zeros(3)
     grad_rv = np.zeros(3)
@@ -455,6 +327,7 @@ def compute_fiber_sheet_system(
         grad_ab[2] = apex_gradient[zdofs[i]]
 
         if epi > 0.5:
+            # We are not in the septum
             if lv_rv >= 0.5:
                 # We are in the LV region
                 marker_scalar[sdofs[i]] = 1
@@ -470,14 +343,14 @@ def compute_fiber_sheet_system(
                 alpha_epi = alpha_epi_rv
                 beta_epi = beta_epi_rv
         else:
-            if lv_rv >= 1 - tol:
+            if lv_rv >= 0.9:
                 # We are in the LV region
                 marker_scalar[sdofs[i]] = 1
                 alpha_endo = alpha_endo_lv
                 beta_endo = beta_endo_lv
                 alpha_epi = alpha_epi_lv
                 beta_epi = beta_epi_lv
-            elif lv_rv <= tol:
+            elif lv_rv <= 0.1:
                 # We are in the RV region
                 marker_scalar[sdofs[i]] = 2
                 alpha_endo = alpha_endo_rv
@@ -492,20 +365,27 @@ def compute_fiber_sheet_system(
                 alpha_epi = alpha_epi_sept
                 beta_epi = beta_epi_sept
 
-        Q_fiber = system_at_dof(
-            lv=lv,
-            rv=rv,
-            epi=epi,
-            grad_lv=grad_lv,
-            grad_rv=grad_rv,
-            grad_epi=grad_epi,
-            grad_ab=grad_ab,
-            alpha_endo=alpha_endo,
-            alpha_epi=alpha_epi,
-            beta_endo=beta_endo,
-            beta_epi=beta_epi,
-            tol=tol,
-        )
+        if lv + rv < 1e-12:
+            depth = 0.5
+        else:
+            depth = rv / (lv + rv)
+
+        alpha_s = alpha_endo * (1 - depth) - alpha_endo * depth
+        alpha_w = alpha_endo * (1 - epi) + alpha_epi * epi
+        beta_s = beta_endo * (1 - depth) - beta_endo * depth
+        beta_w = beta_endo * (1 - epi) + beta_epi * epi
+
+        Q_lv = axis(grad_ab, -grad_lv)
+        Q_lv = orient(Q_lv, alpha_s, beta_s)
+
+        Q_rv = axis(grad_ab, grad_rv)
+        Q_rv = orient(Q_rv, alpha_s, beta_s)
+
+        Q_epi = axis(grad_ab, grad_epi)
+        Q_epi = orient(Q_epi, alpha_w, beta_w)
+
+        Q_endo = bislerp(Q_lv, Q_rv, depth)
+        Q_fiber = bislerp(Q_endo, Q_epi, epi)
 
         f0[xdofs[i]] = Q_fiber[0, 0]
         f0[ydofs[i]] = Q_fiber[1, 0]

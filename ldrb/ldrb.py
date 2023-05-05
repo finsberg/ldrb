@@ -160,8 +160,6 @@ def compute_fiber_sheet_system(
     if marker_scalar is None:
         marker_scalar = np.zeros_like(lv_scalar)
 
-    tol = 0.1
-
     from .calculus import compute_fiber_sheet_system as _compute_fiber_sheet_system
 
     _compute_fiber_sheet_system(
@@ -193,7 +191,6 @@ def compute_fiber_sheet_system(
         beta_epi_rv,
         beta_endo_sept,
         beta_epi_sept,
-        tol,
     )
 
     return FiberSheetSystem(fiber=f0, sheet=s0, sheet_normal=n0)
@@ -536,6 +533,9 @@ def project_gradients(
 
             # Add gradient data
             data[case + "_gradient"] = gradient.vector().get_local()
+
+            df.File(f"{case}.pvd") << scalar_solution_int
+            df.File(f"{case}_grad.pvd") << gradient
 
         # Add scalar data
         if case != "apex":
