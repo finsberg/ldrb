@@ -56,7 +56,7 @@ fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
     fiber_space=fiber_space,
     ffun=marker_functions.ffun,
     markers=ldrb_markers,
-    **angles
+    **angles,
 )
 ```
 
