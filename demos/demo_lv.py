@@ -89,7 +89,11 @@ fiber_space = "Lagrange_1"
 # Compute the microstructure
 
 fiber, sheet, sheet_normal = ldrb.dolfin_ldrb(
-    mesh=mesh, fiber_space=fiber_space, ffun=ffun, markers=markers, **angles
+    mesh=mesh,
+    fiber_space=fiber_space,
+    ffun=ffun,
+    markers=markers,
+    **angles,
 )
 
 # Store the results
