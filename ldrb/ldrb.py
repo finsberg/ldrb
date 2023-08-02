@@ -534,9 +534,6 @@ def project_gradients(
             # Add gradient data
             data[case + "_gradient"] = gradient.vector().get_local()
 
-            df.File(f"{case}.pvd") << scalar_solution_int
-            df.File(f"{case}_grad.pvd") << gradient
-
         # Add scalar data
         if case != "apex":
             data[case + "_scalar"] = scalar_solution_int.vector().get_local()
