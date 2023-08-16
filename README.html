@@ -366,7 +366,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-with-pip">Install with pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">Conda</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
@@ -399,7 +401,13 @@ A novel rule-based algorithm for assigning myocardial fiber orientation
 to computational heart models. Annals of biomedical engineering, 40(10),
 pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3518842/</a>)</p>
 </div></blockquote>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decide on the angles you want to use</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate an example geometry using https://github.com/ComputationalPhysiology/cardiac_geometries</span>
+<span class="kn">import</span> <span class="nn">cardiac_geometries</span>  <span class="c1"># pip install cardiac-geometries</span>
+<span class="kn">import</span> <span class="nn">ldrb</span>
+
+<span class="n">geo</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_biv_ellipsoid</span><span class="p">(</span><span class="n">char_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># Decide on the angles you want to use</span>
 <span class="n">angles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">alpha_endo_lv</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV endocardium</span>
     <span class="n">alpha_epi_lv</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Fiber angle on the LV epicardium</span>
@@ -415,13 +423,21 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
     <span class="n">beta_epi_rv</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Sheet angle on the RV epicardium</span>
 <span class="p">)</span>
 
+<span class="c1"># Convert markers to correct format</span>
+<span class="n">markers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO_LV&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;rv&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO_RV&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">}</span>
+
 <span class="c1"># Choose space for the fiber fields</span>
 <span class="c1"># This is a string on the form {family}_{degree}</span>
 <span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
 
 <span class="c1"># Compute the microstructure</span>
 <span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
-    <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
+    <span class="n">mesh</span><span class="o">=</span><span class="n">geo</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="n">fiber_space</span><span class="o">=</span><span class="n">fiber_space</span><span class="p">,</span> <span class="n">ffun</span><span class="o">=</span><span class="n">geo</span><span class="o">.</span><span class="n">ffun</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span> <span class="o">**</span><span class="n">angles</span>
 <span class="p">)</span>
 <span class="c1"># Store files using a built in xdmf viewer that also works for functions</span>
 <span class="c1"># defined in quadrature spaces</span>
@@ -433,8 +449,8 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
-<section id="install-with-pip">
-<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this heading">#</a></h2>
+<section id="pip">
+<h2>pip<a class="headerlink" href="#pip" title="Permalink to this heading">#</a></h2>
 <p>In order to install the software you need to have
 installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
 are not supported)</p>
@@ -444,6 +460,24 @@ are not supported)</p>
 </div>
 <p>or if you need the most recent version you can install the source</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</section>
+<section id="conda">
+<h2>Conda<a class="headerlink" href="#conda" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is also available on <code class="docutils literal notranslate"><span class="pre">conda</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">ldrb</span>
+</pre></div>
+</div>
+</section>
+<section id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this heading">#</a></h2>
+<p>If you don’t already have FEniCS installed you can use one of the provided <a class="reference external" href="https://github.com/finsberg/ldrb/pkgs/container/ldrb">docker images</a>, e.g</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">ghcr</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="p">:</span><span class="n">latest</span>
+</pre></div>
+</div>
+<p>to pull the image and use the following command to start a container and sharing your current directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -v $PWD:/home/shared -w /home/shared -it ghcr.io/finsberg/ldrb:latest
 </pre></div>
 </div>
 </section>
@@ -530,7 +564,9 @@ are not supported)</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-with-pip">Install with pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">Conda</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
@@ -572,7 +608,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Aug 15, 2023.
+  Last updated on Aug 16, 2023.
   <br/>
 </p>
   </div>
