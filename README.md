@@ -1,6 +1,6 @@
 [![CI](https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/main.yml)
 [![github pages](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg)](https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml)
-[![codecov](https://codecov.io/gh/finsberg/ldrb/branch/main/graph/badge.svg?token=J69bEFdomc)](https://codecov.io/gh/finsberg/ldrb)
+
 
 # Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations
 
