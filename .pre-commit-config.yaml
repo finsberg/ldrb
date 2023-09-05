@@ -26,7 +26,7 @@ repos:
       - id: flake8
 
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v3.0.1
+    rev: v3.1.0
     hooks:
       - id: add-trailing-comma
 
@@ -42,7 +42,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v7.0.1
+    rev: v7.3.0
     hooks:
       - id: cspell
         files: ldrb|demos|tests|README.md
