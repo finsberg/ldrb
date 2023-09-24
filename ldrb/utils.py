@@ -4,7 +4,11 @@ from typing import Union
 
 import dolfin as df
 import numpy as np
-import ufl
+
+try:
+    import ufl_legacy as ufl
+except ImportError:
+    import ufl
 
 
 def default_markers() -> Dict[str, int]:
