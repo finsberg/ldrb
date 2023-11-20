@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import List
 from typing import Union
 
@@ -11,11 +10,11 @@ except ImportError:
     import ufl
 
 
-def default_markers() -> Dict[str, int]:
+def default_markers() -> dict[str, list[int]]:
     """
     Default markers for the mesh boundaries
     """
-    return dict(base=10, rv=20, lv=30, epi=40)
+    return dict(base=[10], rv=[20], lv=[30], epi=[40])
 
 
 if df.__version__.startswith("20"):
