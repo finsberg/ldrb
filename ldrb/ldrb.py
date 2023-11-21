@@ -1,15 +1,14 @@
-from __future__ import annotations
-import logging
 from collections import namedtuple
+import logging
 from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
 
 import dolfin as df
-import numpy as np
 from dolfin.mesh.meshfunction import MeshFunction
 from mpi4py import MPI
+import numpy as np
 
 from . import utils
 
@@ -654,13 +653,13 @@ def scalar_laplacians(
 
 
 def process_markers(
-    markers: dict[str, int | list[int]] | None
-) -> dict[str, list[int]]:
+    markers: Optional[Dict[str, int | List[int]]] = None
+) -> Dict[str, List[int]]:
 
     if markers is None:
         markers_to_lists = utils.default_markers()
 
-    markers_to_lists: dict[str, list[int]] = {}
+    markers_to_lists: Dict[str, List[int]] = {}
     assert markers is not None
     for name, values in markers.items():
         if not isinstance(values, list):
@@ -673,8 +672,8 @@ def process_markers(
 
 
 def find_cases_and_boundaries(
-    markers_to_process: dict[str, int | list[int]] | None,
-) -> Tuple[list[str], list[str], dict[str, list[int]]]:
+    markers_to_process: Optional[Dict[str, int | List[int]]],
+) -> Tuple[List[str], List[str], Dict[str, List[int]]]:
     markers = process_markers(markers_to_process)
 
     potential_cases = {"rv", "lv", "epi"}
