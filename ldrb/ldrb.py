@@ -1,9 +1,11 @@
+from __future__ import annotations
 from collections import namedtuple
 import logging
 from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import dolfin as df
 from dolfin.mesh.meshfunction import MeshFunction
@@ -17,7 +19,7 @@ FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
 
 def laplace(
     mesh: df.Mesh,
-    markers_to_process: Optional[dict[str, int | list[int]]],
+    markers_to_process: Optional[Dict[str, int | List[int]]],
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
     krylov_solver_atol: Optional[float] = None,
@@ -227,7 +229,7 @@ def dolfin_ldrb(
     mesh: df.Mesh,
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
-    markers: dict[str, int | list[int]] | None = None,
+    markers: Optional[Dict[str, Union[int, list[int]]]] = None,
     log_level: int = logging.INFO,
     krylov_solver_atol: Optional[float] = None,
     krylov_solver_rtol: Optional[float] = None,
@@ -417,7 +419,7 @@ def fiber_system_to_dolfin(
 
 def apex_to_base(
     mesh: df.Mesh,
-    base_marker: list[int],
+    base_marker: List[int],
     ffun: df.MeshFunction,
     solver: df.PETScKrylovSolver,
 ) -> df.Function:
@@ -699,7 +701,7 @@ def find_cases_and_boundaries(
 def check_boundaries_are_marked(
     mesh: df.Mesh,
     ffun: df.MeshFunction,
-    markers: dict[str, list[int]],
+    markers: Dict[str, List[int]],
     boundaries: List[str],
 ) -> None:
     # Check that all boundary faces are marked
@@ -724,9 +726,9 @@ def check_boundaries_are_marked(
 
 
 def bayer(
-    cases: list[str],
+    cases: List[str],
     mesh: df.Mesh,
-    markers: dict[str, list[int]],
+    markers: Dict[str, List[int]],
     ffun: df.MeshFunction,
     verbose: bool,
     strict: bool,

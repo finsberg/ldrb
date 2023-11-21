@@ -1,3 +1,4 @@
+from typing import Dict
 from typing import List
 from typing import Union
 
@@ -10,7 +11,7 @@ except ImportError:
     import ufl
 
 
-def default_markers() -> dict[str, list[int]]:
+def default_markers() -> Dict[str, List[int]]:
     """
     Default markers for the mesh boundaries
     """
