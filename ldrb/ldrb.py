@@ -1,15 +1,16 @@
 from __future__ import annotations
-from collections import namedtuple
+
 import logging
+from collections import namedtuple
 from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
 
 import dolfin as df
+import numpy as np
 from dolfin.mesh.meshfunction import MeshFunction
 from mpi4py import MPI
-import numpy as np
 
 from . import utils
 
@@ -463,8 +464,7 @@ def apex_to_base(
     apex = df.Function(V)
 
     base_bc = [
-        df.DirichletBC(V, 1, ffun, marker, "topological")
-        for marker in base_marker
+        df.DirichletBC(V, 1, ffun, marker, "topological") for marker in base_marker
     ]
 
     # Solver options
@@ -489,9 +489,7 @@ def apex_to_base(
     # Update rhs
     L = v * df.Constant(0) * df.dx
     apex_domain = df.CompiledSubDomain(
-        "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(
-            *apex_coord
-        ),
+        "near(x[0], {0}) && near(x[1], {1}) && near(x[2], {2})".format(*apex_coord),
     )
     apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
@@ -530,9 +528,7 @@ def project_gradients(
     V = utils.space_from_string(fiber_space, mesh, dim=1)
 
     data = {}
-    V_cg = df.FunctionSpace(
-        mesh, df.VectorElement("Lagrange", mesh.ufl_cell(), 1)
-    )
+    V_cg = df.FunctionSpace(mesh, df.VectorElement("Lagrange", mesh.ufl_cell(), 1))
     projector = utils.Projector(V_cg, solver_type="cg")
     for case, scalar_solution in scalar_solutions.items():
         scalar_solution_int = df.interpolate(scalar_solution, V)
@@ -608,13 +604,9 @@ def scalar_laplacians(
 
     # Boundary markers, solutions and cases
     cases, boundaries, markers = find_cases_and_boundaries(markers_to_process)
-    markers_str = "\n".join(
-        ["{}: {}".format(k, v) for k, v in markers.items()]
-    )
+    markers_str = "\n".join(["{}: {}".format(k, v) for k, v in markers.items()])
     df.info(
-        (
-            "Compute scalar laplacian solutions with the markers: \n" "{}"
-        ).format(
+        ("Compute scalar laplacian solutions with the markers: \n" "{}").format(
             markers_str,
         ),
     )
@@ -654,9 +646,8 @@ def scalar_laplacians(
 
 
 def process_markers(
-    markers: Optional[Dict[str, int | List[int]]]
+    markers: Optional[Dict[str, int | List[int]]],
 ) -> Dict[str, List[int]]:
-
     if markers is None:
         return utils.default_markers()
 
@@ -683,9 +674,7 @@ def find_cases_and_boundaries(
     boundaries = []
 
     for marker in markers:
-        msg = (
-            f"Unknown marker {marker}. Expected one of {potential_boundaries}"
-        )
+        msg = f"Unknown marker {marker}. Expected one of {potential_boundaries}"
         if marker not in potential_boundaries:
             logging.warning(msg)
         if marker in potential_boundaries:
@@ -706,20 +695,14 @@ def check_boundaries_are_marked(
     num_boundary_facets = df.BoundaryMesh(mesh, "exterior").num_cells()
 
     if num_boundary_facets != sum(
-        [
-            np.sum(ffun.array() == idx)
-            for marker in markers.values()
-            for idx in marker
-        ],
+        [np.sum(ffun.array() == idx) for marker in markers.values() for idx in marker],
     ):
         raise RuntimeError(
             (
                 "Not all boundary faces are marked correctly. Make sure all "
                 "boundary facets are marked as: {}"
                 ""
-            ).format(
-                ", ".join(["{} = {}".format(k, v) for k, v in markers.items()])
-            ),
+            ).format(", ".join(["{} = {}".format(k, v) for k, v in markers.items()])),
         )
 
 
@@ -824,7 +807,7 @@ def bayer(
                     "topological",
                 )
                 for marker in markers["rv"]
-            ]
+            ],
         )
 
         A, b = df.assemble_system(a, L, bcs)
