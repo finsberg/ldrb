@@ -5,7 +5,6 @@ from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
-from typing import Union
 
 import dolfin as df
 from dolfin.mesh.meshfunction import MeshFunction
@@ -265,7 +264,7 @@ def dolfin_ldrb(
         A facet function containing markers for the boundaries.
         If not provided, the markers stored within the mesh will
         be used.
-    markers : dict (optional)
+    markers : dict[str, int | list[int]] (optional)
         A dictionary with the markers for the
         different boundaries defined in the facet function
         or within the mesh itself.
