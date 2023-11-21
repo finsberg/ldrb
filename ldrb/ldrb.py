@@ -229,7 +229,7 @@ def dolfin_ldrb(
     mesh: df.Mesh,
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
-    markers: Optional[Dict[str, Union[int, list[int]]]] = None,
+    markers: Optional[Dict[str, int | List[int]]] = None,
     log_level: int = logging.INFO,
     krylov_solver_atol: Optional[float] = None,
     krylov_solver_rtol: Optional[float] = None,
