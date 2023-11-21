@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from collections import namedtuple
 from typing import Dict
@@ -17,7 +19,7 @@ FiberSheetSystem = namedtuple("FiberSheetSystem", "fiber, sheet, sheet_normal")
 
 def laplace(
     mesh: df.Mesh,
-    markers: Optional[Dict[str, int]],
+    markers_to_process: Optional[Dict[str, int | List[int]]],
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
     krylov_solver_atol: Optional[float] = None,
@@ -35,7 +37,7 @@ def laplace(
     df.info("Calculating scalar fields")
     scalar_solutions = scalar_laplacians(
         mesh=mesh,
-        markers=markers,
+        markers_to_process=markers_to_process,
         ffun=ffun,
         krylov_solver_atol=krylov_solver_atol,
         krylov_solver_rtol=krylov_solver_rtol,
@@ -160,7 +162,9 @@ def compute_fiber_sheet_system(
     if marker_scalar is None:
         marker_scalar = np.zeros_like(lv_scalar)
 
-    from .calculus import compute_fiber_sheet_system as _compute_fiber_sheet_system
+    from .calculus import (
+        compute_fiber_sheet_system as _compute_fiber_sheet_system,
+    )
 
     _compute_fiber_sheet_system(
         f0,
@@ -225,7 +229,7 @@ def dolfin_ldrb(
     mesh: df.Mesh,
     fiber_space: str = "CG_1",
     ffun: Optional[df.MeshFunction] = None,
-    markers: Optional[Dict[str, int]] = None,
+    markers: Optional[Dict[str, int | List[int]]] = None,
     log_level: int = logging.INFO,
     krylov_solver_atol: Optional[float] = None,
     krylov_solver_rtol: Optional[float] = None,
@@ -244,7 +248,7 @@ def dolfin_ldrb(
     beta_epi_rv: Optional[float] = None,
     beta_endo_sept: Optional[float] = None,
     beta_epi_sept: Optional[float] = None,
-):
+) -> FiberSheetSystem:
     r"""
     Create fiber, cross fibers and sheet directions
 
@@ -261,7 +265,7 @@ def dolfin_ldrb(
         A facet function containing markers for the boundaries.
         If not provided, the markers stored within the mesh will
         be used.
-    markers : dict (optional)
+    markers : dict[str, int | list[int]] (optional)
         A dictionary with the markers for the
         different boundaries defined in the facet function
         or within the mesh itself.
@@ -344,7 +348,7 @@ def dolfin_ldrb(
     data = laplace(
         mesh=mesh,
         fiber_space=fiber_space,
-        markers=markers,
+        markers_to_process=markers,
         ffun=ffun,
         krylov_solver_atol=krylov_solver_atol,
         krylov_solver_rtol=krylov_solver_rtol,
@@ -415,10 +419,10 @@ def fiber_system_to_dolfin(
 
 def apex_to_base(
     mesh: df.Mesh,
-    base_marker: int,
+    base_marker: List[int],
     ffun: df.MeshFunction,
     solver: df.PETScKrylovSolver,
-):
+) -> df.Function:
     """
     Find the apex coordinate and compute the laplace
     equation to find the apex to base solution
@@ -459,7 +463,9 @@ def apex_to_base(
 
     apex = df.Function(V)
 
-    base_bc = df.DirichletBC(V, 1, ffun, base_marker, "topological")
+    base_bc = [
+        df.DirichletBC(V, 1, ffun, marker, "topological") for marker in base_marker
+    ]
 
     # Solver options
     A, b = df.assemble_system(a, L, base_bc)
@@ -488,7 +494,8 @@ def apex_to_base(
     apex_bc = df.DirichletBC(V, 0, apex_domain, "pointwise")
 
     # Solve the poisson equation
-    bcs = [base_bc, apex_bc]
+    bcs = [apex_bc]
+    bcs.extend(base_bc)
 
     # Reuse existing solver
     A, b = df.assemble_system(a, L, bcs)
@@ -544,7 +551,7 @@ def project_gradients(
 
 def scalar_laplacians(
     mesh: df.Mesh,
-    markers: Optional[Dict[str, int]] = None,
+    markers_to_process: Optional[dict[str, int | list[int]]] = None,
     ffun: Optional[MeshFunction] = None,
     krylov_solver_atol: Optional[float] = None,
     krylov_solver_rtol: Optional[float] = None,
@@ -596,7 +603,7 @@ def scalar_laplacians(
         ffun = df.MeshFunction("size_t", mesh, 2, mesh.domains())
 
     # Boundary markers, solutions and cases
-    cases, boundaries, markers = find_cases_and_boundaries(markers)
+    cases, boundaries, markers = find_cases_and_boundaries(markers_to_process)
     markers_str = "\n".join(["{}: {}".format(k, v) for k, v in markers.items()])
     df.info(
         ("Compute scalar laplacian solutions with the markers: \n" "{}").format(
@@ -638,11 +645,27 @@ def scalar_laplacians(
     )
 
 
-def find_cases_and_boundaries(
-    markers: Optional[Dict[str, int]],
-) -> Tuple[List[str], List[str], Dict[str, int]]:
+def process_markers(
+    markers: Optional[Dict[str, int | List[int]]],
+) -> Dict[str, List[int]]:
     if markers is None:
-        markers = utils.default_markers()
+        return utils.default_markers()
+
+    markers_to_lists: Dict[str, List[int]] = {}
+    for name, values in markers.items():
+        if not isinstance(values, list):
+            markers_to_lists[name] = [values]
+        else:
+            assert isinstance(values, list)
+            markers_to_lists[name] = values
+
+    return markers_to_lists
+
+
+def find_cases_and_boundaries(
+    markers_to_process: Optional[Dict[str, int | List[int]]],
+) -> Tuple[List[str], List[str], Dict[str, List[int]]]:
+    markers = process_markers(markers_to_process)
 
     potential_cases = {"rv", "lv", "epi"}
     potential_boundaries = potential_cases | {"base", "mv", "av"}
@@ -665,13 +688,14 @@ def find_cases_and_boundaries(
 def check_boundaries_are_marked(
     mesh: df.Mesh,
     ffun: df.MeshFunction,
-    markers: Dict[str, int],
+    markers: Dict[str, List[int]],
     boundaries: List[str],
 ) -> None:
     # Check that all boundary faces are marked
     num_boundary_facets = df.BoundaryMesh(mesh, "exterior").num_cells()
+
     if num_boundary_facets != sum(
-        [np.sum(ffun.array() == markers[boundary]) for boundary in boundaries],
+        [np.sum(ffun.array() == idx) for marker in markers.values() for idx in marker],
     ):
         raise RuntimeError(
             (
@@ -683,10 +707,10 @@ def check_boundaries_are_marked(
 
 
 def bayer(
-    cases,
-    mesh,
-    markers,
-    ffun,
+    cases: List[str],
+    mesh: df.Mesh,
+    markers: Dict[str, List[int]],
+    ffun: df.MeshFunction,
     verbose: bool,
     strict: bool,
     krylov_solver_atol: Optional[float] = None,
@@ -739,16 +763,18 @@ def bayer(
                 ", ".join([c for c in cases if c != case]),
             ),
         )
+
         # Solve linear system
         bcs = [
             df.DirichletBC(
                 V,
                 1 if what == case else 0,
                 ffun,
-                markers[what],
+                marker,
                 "topological",
             )
             for what in cases
+            for marker in markers[what]
         ]
 
         A, b = df.assemble_system(a, L, bcs)
@@ -766,17 +792,23 @@ def bayer(
                 V,
                 1,
                 ffun,
-                markers["lv"],
+                marker,
                 "topological",
-            ),
-            df.DirichletBC(
-                V,
-                0,
-                ffun,
-                markers["rv"],
-                "topological",
-            ),
+            )
+            for marker in markers["lv"]
         ]
+        bcs.extend(
+            [
+                df.DirichletBC(
+                    V,
+                    0,
+                    ffun,
+                    marker,
+                    "topological",
+                )
+                for marker in markers["rv"]
+            ],
+        )
 
         A, b = df.assemble_system(a, L, bcs)
         solver.set_operator(A)

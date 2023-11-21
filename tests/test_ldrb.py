@@ -75,14 +75,21 @@ def biv_geometry():
     return geo
 
 
-@pytest.fixture(scope="session")
-def lv_geometry():
+@pytest.fixture(scope="session", params=["marker_is_int", "marker_is_list"])
+def lv_geometry(request):
     geo = cardiac_geometries.create_lv_ellipsoid()
-    markers = {
-        "base": geo.markers["BASE"][0],
-        "epi": geo.markers["EPI"][0],
-        "lv": geo.markers["ENDO"][0],
-    }
+    if request.param == "marker_is_int":
+        markers = {
+            "base": geo.markers["BASE"][0],
+            "epi": geo.markers["EPI"][0],
+            "lv": geo.markers["ENDO"][0],
+        }
+    else:
+        markers = {
+            "base": [geo.markers["BASE"][0]],
+            "epi": [geo.markers["EPI"][0]],
+            "lv": [geo.markers["ENDO"][0]],
+        }
     geo.markers = markers
     return geo
 
