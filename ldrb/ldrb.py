@@ -655,14 +655,13 @@ def scalar_laplacians(
 
 
 def process_markers(
-    markers: Optional[Dict[str, int | List[int]]] = None
+    markers: Optional[Dict[str, int | List[int]]]
 ) -> Dict[str, List[int]]:
 
     if markers is None:
-        markers_to_lists = utils.default_markers()
+        return utils.default_markers()
 
     markers_to_lists: Dict[str, List[int]] = {}
-    assert markers is not None
     for name, values in markers.items():
         if not isinstance(values, list):
             markers_to_lists[name] = [values]
