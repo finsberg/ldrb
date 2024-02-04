@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations &#8212; ldrb</title>
   
@@ -29,46 +28,50 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Creating fibers on a simple LV ellipsoid" href="demo_lv.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jan 21, 2024"/>
+    <meta name="docbuild:last-update" content="Feb 04, 2024"/>
   </head>
   
   
@@ -162,7 +165,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -411,7 +425,7 @@ document.write(`
   <p><a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/main.yml"><img alt="CI" src="https://github.com/finsberg/ldrb/actions/workflows/main.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml"><img alt="github pages" src="https://github.com/finsberg/ldrb/actions/workflows/github-pages.yml/badge.svg" /></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations">
-<h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations<a class="headerlink" href="#laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations" title="Permalink to this heading">#</a></h1>
+<h1>Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations<a class="headerlink" href="#laplace-dirichlet-rule-based-ldrb-algorithm-for-assigning-myocardial-fiber-orientations" title="Link to this heading">#</a></h1>
 <p>A software for assigning myocardial fiber orientations based on the Laplace Dirichlet Ruled-Based algorithm.</p>
 <blockquote>
 <div><p>Bayer, J.D., Blake, R.C., Plank, G. and Trayanova, N.A., 2012.
@@ -466,9 +480,9 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
 <p><img alt="_" src="https://github.com/finsberg/ldrb/raw/main/docs/_static/figures/biv_fiber.png" /></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
 <section id="pip">
-<h2>pip<a class="headerlink" href="#pip" title="Permalink to this heading">#</a></h2>
+<h2>pip<a class="headerlink" href="#pip" title="Link to this heading">#</a></h2>
 <p>In order to install the software you need to have
 installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
 are not supported)</p>
@@ -482,14 +496,14 @@ are not supported)</p>
 </div>
 </section>
 <section id="conda">
-<h2>Conda<a class="headerlink" href="#conda" title="Permalink to this heading">#</a></h2>
+<h2>Conda<a class="headerlink" href="#conda" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is also available on <code class="docutils literal notranslate"><span class="pre">conda</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">ldrb</span>
 </pre></div>
 </div>
 </section>
 <section id="docker">
-<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this heading">#</a></h2>
+<h2>Docker<a class="headerlink" href="#docker" title="Link to this heading">#</a></h2>
 <p>If you don’t already have FEniCS installed you can use one of the provided <a class="reference external" href="https://github.com/finsberg/ldrb/pkgs/container/ldrb">docker images</a>, e.g</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">ghcr</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="p">:</span><span class="n">latest</span>
 </pre></div>
@@ -501,20 +515,20 @@ are not supported)</p>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">#</a></h1>
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h1>
 <p>Documentation is hosted at <a class="reference external" href="http://finsberg.github.io/ldrb">http://finsberg.github.io/ldrb</a></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h1>
 <p>Check out the <a class="reference external" href="http://finsberg.github.io/ldrb/demo_lv.html">demos</a></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this heading">#</a></h1>
+<h1>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is licensed under the GNU LGPL, version 3 or (at your option) any later version.
 <code class="docutils literal notranslate"><span class="pre">ldrb</span></code> is Copyright (2011-2019) by the authors and Simula Research Laboratory.</p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="contributors">
-<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this heading">#</a></h1>
+<h1>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h1>
 <p>Henrik Finsberg (<a class="reference external" href="mailto:henriknf&#37;&#52;&#48;simula&#46;no">henriknf<span>&#64;</span>simula<span>&#46;</span>no</a>)</p>
 <div class="toctree-wrapper compound">
 </div>
@@ -624,7 +638,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jan 21, 2024.
+  Last updated on Feb 04, 2024.
   <br/>
 </p>
   </div>
