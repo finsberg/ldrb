@@ -391,7 +391,10 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#issues-with-h5py">Issues with h5py</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">Conda</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
 </ul>
@@ -479,13 +482,24 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
 installed <a class="reference external" href="https://fenicsproject.org">FEniCS</a> (versions older than 2016
 are not supported)</p>
 <p>The package can be installed with pip.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ldrb</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ldrb</span>
 </pre></div>
 </div>
 <p>or if you need the most recent version you can install the source</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">finsberg</span><span class="o">/</span><span class="n">ldrb</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
+<section id="issues-with-h5py">
+<h3>Issues with h5py<a class="headerlink" href="#issues-with-h5py" title="Link to this heading">#</a></h3>
+<p>You might run into issues with incompatible version of h5py. To resolve this you can try to first uninstall the existing version</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">uninstall</span> <span class="n">h5py</span>
+</pre></div>
+</div>
+<p>and then reinstall h5py from source using the command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">h5py</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">binary</span><span class="o">=</span><span class="n">h5py</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="conda">
 <h2>Conda<a class="headerlink" href="#conda" title="Link to this heading">#</a></h2>
@@ -585,7 +599,10 @@ are not supported)</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip">pip</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#issues-with-h5py">Issues with h5py</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">Conda</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
 </ul>
