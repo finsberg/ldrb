@@ -68,11 +68,21 @@ are not supported)
 
 The package can be installed with pip.
 ```
-python -m pip install ldrb
+python3 -m pip install ldrb
 ```
 or if you need the most recent version you can install the source
 ```
-python -m pip install git+https://github.com/finsberg/ldrb.git
+python3 -m pip install git+https://github.com/finsberg/ldrb.git
+```
+
+### Issues with h5py
+You might run into issues with incompatible version of h5py. To resolve this you can try to first uninstall the existing version
+```
+python3 -m pip uninstall h5py
+```
+and then reinstall h5py from source using the command
+```
+python3 -m pip install h5py --no-binary=h5py
 ```
 
 ## Conda
