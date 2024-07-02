@@ -81,7 +81,7 @@ with df.XDMFFile(mesh.mpi_comm(), "ffun.xdmf") as xdmf:
     xdmf.write(ffun)
 ```
 
-and read it agin
+and read it again
 
 ```python
 ffun = df.MeshFunction("size_t", mesh, 2)

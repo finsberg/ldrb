@@ -80,7 +80,7 @@ with df.XDMFFile(mesh.mpi_comm(), "ffun.xdmf") as xdmf:
 ```
 
 
-and read it agin
+and read it again
 
 
 ```python
