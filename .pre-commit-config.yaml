@@ -42,7 +42,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v8.9.0
+    rev: v8.10.1
     hooks:
       - id: cspell
         files: ldrb|demos|tests|README.md
