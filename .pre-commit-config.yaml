@@ -10,7 +10,7 @@ repos:
       - id: debug-statements
 
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.13.0
+    rev: v3.14.0
     hooks:
       - id: reorder-python-imports
         exclude: ^demos/
@@ -31,7 +31,7 @@ repos:
       - id: add-trailing-comma
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.5.0
+    rev: v2.7.0
     hooks:
       - id: setup-cfg-fmt
 
@@ -42,7 +42,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v8.14.0
+    rev: v8.15.1
     hooks:
       - id: cspell
         files: ldrb|demos|tests|README.md
