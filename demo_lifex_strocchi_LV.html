@@ -30,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -68,7 +68,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="Dec 26, 2024"/>
+    <meta name="docbuild:last-update" content="Feb 01, 2025"/>
   </head>
   
   
@@ -384,10 +384,10 @@
 <p>Life X has published their own implementation of the LDRB algorithm and with that they also published a lot of example meshes. This demo aims to try out this implementation of the LDRB algorithm on these example meshes. The LifeX example meshes can be found at <a class="reference external" href="https://zenodo.org/record/5810269#.YeEjWi8w1B0">https://zenodo.org/record/5810269#.YeEjWi8w1B0</a>, which also contains a DOI: <a class="reference external" href="https://doi.org/10.5281/zenodo.5810269">https://doi.org/10.5281/zenodo.5810269</a>.</p>
 <p>This demo assumes that you have downloaded the folder with the meshes in the same format as they are uploaded on zenodo, so that the gmsh files are located in a folder called <code class="docutils literal notranslate"><span class="pre">lifex_fiber_generation_examples/mesh</span></code>.</p>
 <p>First we import the necessary packages. Note that we also import <a class="reference external" href="https://computationalphysiology.github.io/cardiac_geometries/"><code class="docutils literal notranslate"><span class="pre">cardiac-geometries</span></code></a> which is used for converting from <code class="docutils literal notranslate"><span class="pre">.msh</span></code> (gmsh) to <code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> (FEnICS).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dolfin</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">ldrb</span>
-<span class="kn">import</span> <span class="nn">cardiac_geometries</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dolfin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ldrb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cardiac_geometries</span>
 </pre></div>
 </div>
 <p>First we will load the mesh and markers. This is a large mesh that you probably want to run in parallel, but you need to first convert the mesh to a fenics mesh and that has to be done in serial. You can make sure that the mesh is saved by setting <code class="docutils literal notranslate"><span class="pre">unlink</span> <span class="pre">=</span> <span class="pre">False</span></code>.
@@ -548,7 +548,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Dec 26, 2024.
+  Last updated on Feb 01, 2025.
   <br/>
 </p>
   </div>
