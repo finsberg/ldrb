@@ -8,7 +8,7 @@ jobs:
     container:
       image: ghcr.io/scientificcomputing/fenics-gmsh:2023-08-16
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Cache
         id: cache-primes
