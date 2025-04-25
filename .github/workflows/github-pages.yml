@@ -12,7 +12,7 @@ jobs:
 
       - name: Cache
         id: cache-primes
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/instant
