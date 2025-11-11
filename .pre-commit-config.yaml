@@ -16,7 +16,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.9.0
+    rev: 25.11.0
     hooks:
       - id: black
 
@@ -42,7 +42,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v9.2.0
+    rev: v9.3.0
     hooks:
       - id: cspell
         files: ldrb|demos|tests|README.md
