@@ -31,7 +31,7 @@ repos:
       - id: add-trailing-comma
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
       - id: setup-cfg-fmt
 
@@ -42,7 +42,7 @@ repos:
         exclude: ^demos/
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v9.3.3
+    rev: v9.4.0
     hooks:
       - id: cspell
         files: ldrb|demos|tests|README.md
