@@ -375,7 +375,7 @@ def dolfin_ldrb(
         beta_endo_sept=beta_endo_sept,
         beta_epi_sept=beta_epi_sept,
         **data,
-    )  # type:ignore
+    )  # type: ignore
 
     if save_markers:
         Vv = utils.space_from_string(fiber_space, mesh, dim=1)
