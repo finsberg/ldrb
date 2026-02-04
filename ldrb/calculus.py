@@ -1,7 +1,6 @@
 import numba
 import numpy as np
 
-
 _float_1D_array = numba.types.Array(numba.float64, 1, "C")
 _float_2D_array = numba.types.Array(numba.float64, 2, "C")
 

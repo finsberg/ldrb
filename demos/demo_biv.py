@@ -10,7 +10,6 @@ import dolfin as df
 import ldrb
 import cardiac_geometries
 
-
 #
 # Here we just create a lv mesh using `cardiac-geometries``
 #

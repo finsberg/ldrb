@@ -10,7 +10,6 @@ import ldrb
 
 import cardiac_geometries
 
-
 # Convert from gmsh mesh to fenics
 
 mesh, markers, marker_functions = cardiac_geometries.gmsh2dolfin("mesh.msh")

@@ -4,7 +4,6 @@ import pytest
 
 import ldrb
 
-
 tol = 1e-12
 
 
