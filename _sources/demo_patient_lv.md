@@ -14,7 +14,6 @@ import ldrb
 import cardiac_geometries
 ```
 
-
 Convert from gmsh mesh to fenics
 
 ```python
