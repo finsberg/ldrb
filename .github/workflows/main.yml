@@ -18,7 +18,7 @@ jobs:
       image: ghcr.io/scientificcomputing/fenics-gmsh:2023-08-16
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Cache
         id: cache-primes
