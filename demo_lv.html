@@ -64,7 +64,7 @@
     <link rel="prev" title="Laplace-Dirichlet Rule-Based (LDRB) algorithm for assigning myocardial fiber orientations" href="README.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jul 27, 2026"/>
+    <meta name="docbuild:last-update" content="Aug 18, 2026"/>
   </head>
   
   
@@ -419,32 +419,32 @@ This library can be installed with <code class="docutils literal notranslate"><s
 <p>A dictionary with keys and values for the markers as stored in the attribute <code class="docutils literal notranslate"><span class="pre">markers</span></code>. These markers are loaded from the underlying gmsh files, and has to be slightly modified to work with <code class="docutils literal notranslate"><span class="pre">ldrb</span></code> as <code class="docutils literal notranslate"><span class="pre">ldrb</span></code> expected a dictionary with the keys being <code class="docutils literal notranslate"><span class="pre">&quot;base&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;epi&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;lv&quot;</span></code> (and alternatively <code class="docutils literal notranslate"><span class="pre">&quot;rv&quot;</span></code>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span>
 <span class="n">markers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"base"</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"BASE"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"epi"</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"EPI"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"lv"</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"ENDO"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Also if you want to to this demo in parallel you should create the mesh
 in serial and save it to e.g xdmf</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"mesh.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And when you run the code in parallel you should load the mesh from the file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
-<span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="s2">"mesh.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You should also save the facet function</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"ffun.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ffun</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>and read it again</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">"size_t"</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="s2">"ffun.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ffun</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="c1"># Decide on the angles you want to use</span>
@@ -461,7 +461,7 @@ in serial and save it to e.g xdmf</p>
 </div>
 <p>Choose space for the fiber fields
 This is a string on the form {family}_{degree}</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;Lagrange_1&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">"Lagrange_1"</span>
 </pre></div>
 </div>
 <p>Compute the microstructure</p>
@@ -475,10 +475,10 @@ This is a string on the form {family}_{degree}</p>
 </pre></div>
 </div>
 <p>Store the results</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;lv.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;/fiber&quot;</span><span class="p">)</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">&quot;/sheet&quot;</span><span class="p">)</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;/sheet_normal&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"lv.h5"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">"/fiber"</span><span class="p">)</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">"/sheet"</span><span class="p">)</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">"/sheet_normal"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you run in parallel you should skip the visualization step and do that in
@@ -492,17 +492,17 @@ Using the following code</p>
 <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;lv.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;/fiber&quot;</span><span class="p">)</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">&quot;/sheet&quot;</span><span class="p">)</span>
-    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;/sheet_normal&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">df</span><span class="o">.</span><span class="n">HDF5File</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"lv.h5"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">"/fiber"</span><span class="p">)</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">"/sheet"</span><span class="p">)</span>
+    <span class="n">h5file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">"/sheet_normal"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can also store files in XDMF which will also compute the fiber angle as scalars on the glyph to be visualised in Paraview. Note that these functions don’t work (yet) using mpirun</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (These function are not tested in parallel)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;lv_fiber&quot;</span><span class="p">)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">&quot;lv_sheet&quot;</span><span class="p">)</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">&quot;lv_sheet_normal&quot;</span><span class="p">)</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">"lv_fiber"</span><span class="p">)</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet</span><span class="p">,</span> <span class="s2">"lv_sheet"</span><span class="p">)</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">sheet_normal</span><span class="p">,</span> <span class="s2">"lv_sheet_normal"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="_" src="_images/lv_fiber.png" />
@@ -594,7 +594,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jul 27, 2026.
+  Last updated on Aug 18, 2026.
   <br/>
 </p>
   </div>

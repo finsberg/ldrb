@@ -65,7 +65,7 @@
     <link rel="next" title="Creating fibers on a simple LV ellipsoid" href="demo_lv.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jul 27, 2026"/>
+    <meta name="docbuild:last-update" content="Aug 18, 2026"/>
   </head>
   
   
@@ -457,15 +457,15 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
 
 <span class="c1"># Convert markers to correct format</span>
 <span class="n">markers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO_LV&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;rv&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO_RV&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"base"</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"BASE"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"lv"</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"ENDO_LV"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"rv"</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"ENDO_RV"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"epi"</span><span class="p">:</span> <span class="n">geo</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="s2">"EPI"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="c1"># Choose space for the fiber fields</span>
 <span class="c1"># This is a string on the form {family}_{degree}</span>
-<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
+<span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">"P_2"</span>
 
 <span class="c1"># Compute the microstructure</span>
 <span class="n">fiber</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">sheet_normal</span> <span class="o">=</span> <span class="n">ldrb</span><span class="o">.</span><span class="n">dolfin_ldrb</span><span class="p">(</span>
@@ -473,7 +473,7 @@ pp.2243-2254.(<a class="reference external" href="https://www.ncbi.nlm.nih.gov/p
 <span class="p">)</span>
 <span class="c1"># Store files using a built in xdmf viewer that also works for functions</span>
 <span class="c1"># defined in quadrature spaces</span>
-<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;fiber&quot;</span><span class="p">)</span>
+<span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">"fiber"</span><span class="p">)</span>
 <span class="c1"># And visualize it in Paraview</span>
 </pre></div>
 </div>
@@ -652,7 +652,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jul 27, 2026.
+  Last updated on Aug 18, 2026.
   <br/>
 </p>
   </div>

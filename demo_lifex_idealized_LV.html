@@ -64,7 +64,7 @@
     <link rel="prev" title="Life X - 01_strocchi_LV" href="demo_lifex_strocchi_LV.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jul 27, 2026"/>
+    <meta name="docbuild:last-update" content="Aug 18, 2026"/>
   </head>
   
   
@@ -409,20 +409,20 @@ document.write(`
 </div>
 <p>Load the mesh and markers.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span>
-    <span class="s2">&quot;lifex_fiber_generation_examples/mesh/idealized_LV.msh&quot;</span><span class="p">,</span>
+    <span class="s2">"lifex_fiber_generation_examples/mesh/idealized_LV.msh"</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Here the markers are actually parsed with meshio, but they have the wrong name so we just rename them</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Epicardium&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Endocardium&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;Basal plane&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"epi"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"Epicardium"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"lv"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"Endocardium"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"base"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"Basal plane"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Select linear Lagrange elements</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_1&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">"P_1"</span>
 </pre></div>
 </div>
 <p>Compute the fiber-sheet system</p>
@@ -439,7 +439,7 @@ document.write(`
 </pre></div>
 </div>
 <p>And save the results</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;idealized_LV_fiber.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"idealized_LV_fiber.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fiber</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -529,7 +529,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jul 27, 2026.
+  Last updated on Aug 18, 2026.
   <br/>
 </p>
   </div>

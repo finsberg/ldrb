@@ -64,7 +64,7 @@
     <link rel="prev" title="Creating fibers on a simple BiV ellipsoid" href="demo_biv.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jul 27, 2026"/>
+    <meta name="docbuild:last-update" content="Aug 18, 2026"/>
   </head>
   
   
@@ -405,19 +405,19 @@ document.write(`
 </pre></div>
 </div>
 <p>Convert from gmsh mesh to fenics</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span><span class="s2">"mesh.msh"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Update the markers which are stored within the mesh</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb_markers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;BASE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;ENDO&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;EPI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"base"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"BASE"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"lv"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"ENDO"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">"epi"</span><span class="p">:</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"EPI"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Select a space for the fibers (here linear lagrange element)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_2&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">"P_2"</span>
 </pre></div>
 </div>
 <p>Create a dictionary of fiber angles</p>
@@ -443,7 +443,7 @@ document.write(`
 with dolfin.XDMFFile(mesh.mpi_comm(), “patient_fiber.xdmf”) as xdmf:
 xdmf.write(fiber)</p>
 <p>Use this function to save fiber with angles as scalars</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">&quot;patient_fiber&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ldrb</span><span class="o">.</span><span class="n">fiber_to_xdmf</span><span class="p">(</span><span class="n">fiber</span><span class="p">,</span> <span class="s2">"patient_fiber"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="_" src="_images/patient_fiber.png" /></p>
@@ -532,7 +532,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jul 27, 2026.
+  Last updated on Aug 18, 2026.
   <br/>
 </p>
   </div>

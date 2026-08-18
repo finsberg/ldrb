@@ -64,7 +64,7 @@
     <link rel="prev" title="Local basis functions" href="basis_functions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jul 27, 2026"/>
+    <meta name="docbuild:last-update" content="Aug 18, 2026"/>
   </head>
   
   
@@ -411,29 +411,29 @@ To run the in parallel you can e.g do</p>
 </div>
 <p>which will run the demo on 4 processors.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will specify an output directory for the mesh</span>
-<span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;01_strocchi_LV&quot;</span><span class="p">)</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"01_strocchi_LV"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># If we run in serial we will convert the gmsh file to dolfin, otherwise we load the mesh and facet function directly from the folder.</span>
 <span class="k">if</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MPI</span><span class="o">.</span><span class="n">comm_world</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
     <span class="n">mesh</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">marker_functions</span> <span class="o">=</span> <span class="n">cardiac_geometries</span><span class="o">.</span><span class="n">gmsh2dolfin</span><span class="p">(</span>
-        <span class="s2">&quot;lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh&quot;</span><span class="p">,</span>
+        <span class="s2">"lifex_fiber_generation_examples/mesh/01_strocchi_LV.msh"</span><span class="p">,</span>
         <span class="n">outdir</span><span class="o">=</span><span class="n">outdir</span><span class="p">,</span>
         <span class="n">unlink</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ffun</span> <span class="o">=</span> <span class="n">marker_functions</span><span class="o">.</span><span class="n">ffun</span>
     <span class="c1"># exit()   # If you want to run in parallel you can exit here</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mesh not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">"mesh.xdmf"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mesh not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first"</span><span class="p">)</span>
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;mesh.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">"mesh.xdmf"</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ffun not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first&quot;</span><span class="p">)</span>
-    <span class="n">ffun</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">&quot;size_t&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;ffun.xdmf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">"ffun.xdmf"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ffun not found in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s2">. Please run in serial first"</span><span class="p">)</span>
+    <span class="n">ffun</span> <span class="o">=</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">MeshFunction</span><span class="p">(</span><span class="s2">"size_t"</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">((</span><span class="n">outdir</span> <span class="o">/</span> <span class="s2">"ffun.xdmf"</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ffun</span><span class="p">)</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
@@ -441,20 +441,20 @@ To run the in parallel you can e.g do</p>
 </pre></div>
 </div>
 <p>These are the actually markers (but we only support one base at the moment)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">original_markers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;endo&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;aortic_valve&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;mitral_valve&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">original_markers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"epi"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"endo"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">"aortic_valve"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">"mitral_valve"</span><span class="p">:</span> <span class="mi">60</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>So we just use these markers instead</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;epi&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;lv&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"epi"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"lv"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And update the markers accordingly</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;aortic_valve&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
-<span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">&quot;mitral_valve&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">"aortic_valve"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"base"</span><span class="p">]</span>
+<span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="n">ffun</span><span class="o">.</span><span class="n">array</span><span class="p">()</span> <span class="o">==</span> <span class="n">original_markers</span><span class="p">[</span><span class="s2">"mitral_valve"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="s2">"base"</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Select linear Lagrange elements</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">&quot;P_1&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fiber_space</span> <span class="o">=</span> <span class="s2">"P_1"</span>
 </pre></div>
 </div>
 <p>Compute the fiber-sheet system</p>
@@ -471,7 +471,7 @@ To run the in parallel you can e.g do</p>
 </pre></div>
 </div>
 <p>And save the results</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">&quot;01_strocchi_LV_fiber.xdmf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dolfin</span><span class="o">.</span><span class="n">XDMFFile</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">mpi_comm</span><span class="p">(),</span> <span class="s2">"01_strocchi_LV_fiber.xdmf"</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
     <span class="n">xdmf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fiber</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -562,7 +562,7 @@ By Henrik Finsberg
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jul 27, 2026.
+  Last updated on Aug 18, 2026.
   <br/>
 </p>
   </div>
