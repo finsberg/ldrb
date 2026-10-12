@@ -10,13 +10,13 @@ repos:
       - id: debug-statements
 
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.17.0
+    rev: v3.18.0
     hooks:
       - id: reorder-python-imports
         exclude: ^demos/
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.10.0
+    rev: 26.10.1
     hooks:
       - id: black
 
@@ -31,7 +31,7 @@ repos:
       - id: add-trailing-comma
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v3.2.0
+    rev: v3.3.0
     hooks:
       - id: setup-cfg-fmt
 
